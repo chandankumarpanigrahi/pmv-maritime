@@ -1,0 +1,30 @@
+.videoBg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+}
+
+.overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg,
+            rgba(26, 26, 46, 0.9) 0%,
+            rgba(26, 26, 46, 0.75) 50%,
+            rgba(0, 123, 167, 0.25) 100%);
+    z-index: 10;
+}
+
+.content {
+    position: relative;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    padding-top: 110px;
+    /* Offset for fixed header */
+}
