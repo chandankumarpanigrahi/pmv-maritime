@@ -11,9 +11,9 @@ import { FaArrowRight } from "react-icons/fa";
 import { LuShipWheel } from "react-icons/lu";
 
 // Images
-import image1 from "../../../public/Images/about-image-1.jpg";
-import image2 from "../../../public/Images/about-image-2.jpg";
-import image3 from "../../../public/Images/about-image-3.jpg";
+import image1 from "../../../public/images/about-image-1.jpg";
+import image2 from "../../../public/images/about-image-2.jpg";
+import image3 from "../../../public/images/about-image-3.jpg";
 
 // Icon Image
 import icon1 from "../../../public/icons/shield.png";
