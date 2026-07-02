@@ -10,9 +10,9 @@ import styles from "./style.module.css"
 import { FaArrowRight } from "react-icons/fa";
 import { LuShipWheel } from "react-icons/lu";
 
-import image1 from "../../../public/images/about-image-1.jpg";
-import image2 from "../../../public/images/about-image-2.jpg";
-import image3 from "../../../public/images/about-image-3.jpg";
+import image1 from "../../../public/assets/images/about-image-1.jpg";
+import image2 from "../../../public/assets/images/about-image-2.jpg";
+import image3 from "../../../public/assets/images/about-image-3.jpg";
 
 // Icon Image
 import icon1 from "../../../public/icons/shield.png";
@@ -42,7 +42,7 @@ const serviceHighlights = [
   {
     icon: icon4,
     title: "350+",
-    description: "Experts & PROFESSIONALS",
+    description: "Experts & Professionals",
   },
 ];
 

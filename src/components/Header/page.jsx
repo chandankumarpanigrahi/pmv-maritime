@@ -7,8 +7,8 @@ import Link from "next/link";
 import { LuMenu } from "react-icons/lu";
 
 // Images
-import logoLight from "../../../public/images/logo-light.png"
-import logoDark from "../../../public/images/logo.png"
+import logoLight from "../../../public/assets/images/logo-light.png"
+import logoDark from "../../../public/assets/images/logo.png"
 import CtaHeader from "../Cta Header/page";
 
 
