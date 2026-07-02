@@ -1,0 +1,30 @@
+.slider {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  padding: 40px 0;
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+}
+
+.track {
+  display: flex;
+  width: max-content;
+  animation: marquee var(--speed, 25s) linear infinite;
+}
+
+/* Premium pause-on-hover effect */
+.track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}

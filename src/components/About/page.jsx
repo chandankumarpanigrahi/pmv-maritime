@@ -71,7 +71,7 @@ export default function About() {
           </div>
           <Link
             href="/services"
-            className="group w-fit text-[14px] flex gap-5 items-center pl-3 md:pl-4 pr-2 md:pr-3 py-1.5 md:py-2 bg-rose-700 hover:bg-rose-800 text-white font-bold tracking-wider uppercase rounded shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
+            className="group w-fit text-[14px] flex gap-5 items-center pl-3 md:pl-4 pr-2 md:pr-3 py-1.5 md:py-2 bg-rose-700 hover:bg-rose-800 text-white font-bold tracking-wider uppercase shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
           >
             Explore Services <FaArrowRight className="group-hover:-rotate-45 transition-all duration-300 ease-in-out" />
           </Link>
