@@ -85,6 +85,7 @@ export default function About() {
             alt={`about-image-${idx + 1}`}
             fill
             priority={idx === 0}
+            sizes="(max-width: 768px) 100vw, 33vw"
             className={`object-cover transition-opacity duration-1000 ease-in-out ${idx === activeIndex ? "opacity-100" : "opacity-0"
               }`}
           />
