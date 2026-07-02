@@ -42,7 +42,7 @@ const serviceHighlights = [
   {
     icon: icon4,
     title: "350+",
-    description: "EXPERTS & PROFESSIONALS",
+    description: "Experts & PROFESSIONALS",
   },
 ];
 
