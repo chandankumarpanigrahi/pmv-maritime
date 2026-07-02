@@ -66,7 +66,7 @@ export default function Hero() {
       <div className={`${styles.content} container mx-auto px-4 sm:px-12 lg:px-0 flex flex-col justify-between`}>
 
         <div className="flex flex-col items-center mb-8 md:mb-0 md:items-start max-w-4xl mt-16 md:mt-auto">
-          <div className="inline-flex w-fit items-center gap-2 px-3 py-2 bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs font-semibold uppercase tracking-wider mb-2">
+          <div className="inline-flex w-fit items-center gap-2 px-3 py-2 bg-white/8 backdrop-blur-md text-white text-xs font-semibold uppercase tracking-wider mb-2">
             Global Operations
           </div>
 
@@ -76,7 +76,7 @@ export default function Hero() {
           </h1>
 
           {/* Subtitle */}
-          <p className="text-[14px] text-center md:text-left sm:text-md md:text-lg text-slate-200/95 leading-relaxed mb-3 md:mb-8 max-w-xl font-light">
+          <p className="text-[14px] text-center md:text-left sm:text-md md:text-lg text-slate-200/95 leading-relaxed mb-3 md:mb-8 max-w-xl">
             Setting the global standard for maritime safety, logistics, and innovation. Our integrated services power the world&apos;s most critical ocean-bound operations.
           </p>
 

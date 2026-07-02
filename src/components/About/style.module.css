@@ -1,1 +1,18 @@
+@media screen and (min-width:768px) {
+    .numberCardsArea {
+        width: 100%;
+    }
+}
 
+@media screen and (min-width:480px) and (max-width:768px) {
+    .numberCardsArea {
+        width: 50%;
+    }
+}
+
+@media screen and (max-width:480px) {
+    .numberCardsArea {
+        width: 100%;
+        justify-content: center;
+    }
+}

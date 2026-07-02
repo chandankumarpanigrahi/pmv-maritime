@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import SubHeading from "@/design/sub-heading/page";
 import Link from "next/link";
 import Image from "next/image";
+import styles from "./style.module.css"
 
 // Icons
 import { FaArrowRight } from "react-icons/fa";
@@ -14,7 +15,37 @@ import image1 from "../../../public/Images/about-image-1.jpg";
 import image2 from "../../../public/Images/about-image-2.jpg";
 import image3 from "../../../public/Images/about-image-3.jpg";
 
+// Icon Image
+import icon1 from "../../../public/icons/shield.png";
+import icon2 from "../../../public/icons/support.png";
+import icon3 from "../../../public/icons/leaf.png";
+import icon4 from "../../../public/icons/user.png";
+
+
 const images = [image1, image2, image3];
+
+const serviceHighlights = [
+  {
+    icon: icon1,
+    title: "98%",
+    description: "On time Service Delivery",
+  },
+  {
+    icon: icon2,
+    title: "24/7",
+    description: "Operation Support",
+  },
+  {
+    icon: icon3,
+    title: "150",
+    description: "Lower Carbon Footprint",
+  },
+  {
+    icon: icon4,
+    title: "350+",
+    description: "EXPERTS & PROFESSIONALS",
+  },
+];
 
 export default function About() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -31,13 +62,13 @@ export default function About() {
       <div className="w-full md:w-5/12 flex flex-col border border-gray-200">
         <div className="flex flex-col pt-8 px-4 md:px-8 pb-4 border-b border-gray-200">
           <SubHeading title="About Us" />
-          <h1 className="font-oswald text-4xl md:text-5xl text-sky-700 font-bold mb-5 md:mb-8">Beyond the <br /><span className="text-sky-900"> Maritime Services</span> <br /> and Operations<span className="text-rose-700">.</span></h1>
-          <p className="text-md md:text-lg text-gray-600 font-medium"><span className="text-gray-800 font-bold">PMV Maritime</span> operates at the intersection of technical precision and visionary management. We don&apos;t just move cargo; we curate the flow of global commerce with a commitment to sustainability and digital-first operations.</p>
+          <h1 className="font-oswald text-3xl md:text-4xl text-sky-700 font-bold mb-5 md:mb-8">Beyond the <br /><span className="text-sky-900"> Maritime Services</span> <br /> and Operations<span className="text-rose-700">.</span></h1>
+          <p className="text-sm md:text-[16px] text-gray-600 font-medium"><span className="text-gray-800 font-bold">PMV Maritime</span> operates at the intersection of technical precision and visionary management. We don&apos;t just move cargo; we curate the flow of global commerce with a commitment to sustainability and digital-first operations.</p>
         </div>
         <div className="flex flex-col gap-5 py-4 px-4 md:px-8">
           <div className="flex flex-row gap-4">
             <LuShipWheel className="text-rose-700" size={50} />
-            <p className="text-sm md:text-[17px] w-full md:w-[90%] text-gray-900">We combine expertise, technology and global reach to deliver safe, efficient and sustainable maritime solutions.</p>
+            <p className="text-sm md:text-[15px] w-full md:w-[90%] text-gray-900">We combine expertise, technology and global reach to deliver safe, efficient and sustainable maritime solutions.</p>
           </div>
           <Link
             href="/services"
@@ -77,7 +108,23 @@ export default function About() {
           ))}
         </div>
       </div>
-      <div className="hidden md:block md:w-3/12"></div>
-    </div>
+      <div className="flex flex-row flex-wrap md:flex-col w-full md:w-3/12 h-fit md:h-auto border border-gray-200">
+        {serviceHighlights.map((highlight, index) => (
+          <div key={index} className={`${styles.numberCardsArea} flex h-[120px] md:h-1/4 px-4 py-5 md:py-0 justify-start items-center border-r border-b border-gray-200 last:border-b-0`}>
+            <div className="flex flex-row gap-2">
+              <Image
+                src={highlight.icon}
+                alt={`icon-image-${index + 1}`}
+                className="w-[64px] h-[64px] px-0.5 object-contain"
+              />
+              <div className="w-full flex flex-col gap-2">
+                <h1 className="font-oswald text-4xl md:text-5xl text-sky-700 font-bold pt-1">{highlight.title}</h1>
+                <p className="text-[12px] md:text-[13px] text-gray-600 font-medium uppercase leading-tight wrap-break-word">{highlight.description}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div >
   );
 }
