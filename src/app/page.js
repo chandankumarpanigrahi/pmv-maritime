@@ -1,11 +1,14 @@
 "use client";
 
 import About from "@/components/About/page";
+import ContactUs from "@/components/Contact Us/page";
 import CTA from "@/components/CTA/page";
+import Footer from "@/components/Footer/page";
 import Hero from "@/components/Hero/page";
 import LogoScroll from "@/components/Logo Scroll/page";
 import PopularServices from "@/components/Popular Services/page";
-import Services from "@/components/Services/page";
+import Projects from "@/components/Projects Section/page";
+import Services from "@/components/Services Section/page";
 
 export default function Home() {
   return (
@@ -17,7 +20,9 @@ export default function Home() {
       <Services />
       <PopularServices />
       <CTA />
-      <div className="w-full h-30 bg-primary mt-20"></div>
+      <Projects />
+      <ContactUs />
+      <Footer />
     </main>
   );
 }

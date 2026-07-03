@@ -49,7 +49,7 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${nunitoSans.variable} ${oswald.variable} h-full antialiased`}
     >
-      <body className="flex flex-col">
+      <body className="flex flex-col relative">
         <Header />
         {children}
       </body>

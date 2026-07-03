@@ -98,15 +98,15 @@ export default function Hero() {
         </div>
 
         {/* Feature/Stats Section */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-6 mb-3 lg:mb-6 mt-auto">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-x-4 gap-y-8 mb-3 lg:mb-6 mt-auto">
           {statsData.map((stat, index) => (
-            <div key={index} className="w-1/3 md:w-auto flex flex-col gap-0 md:gap-2 px-2 md:px-8">
+            <div key={index} className="w-full flex flex-col items-center text-center md:items-start md:text-left gap-0 md:gap-2 px-2 md:px-8 last:col-span-2 md:last:col-span-1">
               {stat.icon}
               <div className="text-5xl md:text-6xl font-oswald text-white mt-3 md:mt-0">
                 {stat.number}
                 <span className="text-primary pl-1">{stat.suffix}</span>
               </div>
-              <p className="text-white/60 uppercase tracking-wide max-w-[40%] text-[12px] md:text-sm font-semibold mt-2 md:mt-0">
+              <p className="text-white/60 uppercase tracking-wide max-w-[90%] md:max-w-none text-[12px] md:text-sm font-semibold mt-2 md:mt-0">
                 {stat.label}
               </p>
             </div>
