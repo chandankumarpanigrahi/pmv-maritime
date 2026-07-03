@@ -19,7 +19,7 @@ import image3 from "../../../public/assets/images/about-image-3.jpg";
 const images = [image1, image2, image3];
 export default function Services() {
   return (
-    <div className="flex flex-col md:flex-row container mx-auto items-stretch relative">
+    <div className="flex flex-col md:flex-row container max-w-7xl mx-auto items-stretch relative">
       <Image
         src={bannerBg}
         alt="Banner Background"

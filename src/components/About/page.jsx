@@ -57,7 +57,7 @@ export default function About() {
   }, []);
 
   return (
-    <div className="flex flex-col md:flex-row container mx-auto items-stretch">
+    <div className="flex flex-col md:flex-row container max-w-7xl mx-auto items-stretch">
       <div className="w-full md:w-5/12 flex flex-col border border-gray-200">
         <div className="flex flex-col pt-8 px-4 md:px-8 pb-4 border-b border-gray-200">
           <SubHeading title="About Us" />

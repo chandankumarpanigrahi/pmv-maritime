@@ -50,7 +50,7 @@ export default function Header({ transparent = false }) {
           : "bg-white/95 backdrop-blur-md py-3 shadow-lg border-b border-slate-100"
           }`}
       >
-        <div className="container mx-auto px-4 md:px-0 flex flex-row justify-between items-center">
+        <div className="container max-w-7xl mx-auto px-4 md:px-0 flex flex-row justify-between items-center">
           {/* Logo Toggle */}
           <Link href="/">
             <Image
@@ -154,7 +154,7 @@ export default function Header({ transparent = false }) {
           : "-translate-y-full opacity-0 pointer-events-none"
           } ${scrolled ? "top-[111px]" : "top-[112px] md:top-[138px]"}`}
       >
-        <div className="container mx-auto px-6 py-10 grid grid-cols-3 gap-8 border-b shadow-2xl border-white/15 backdrop-blur-xl bg-slate-950/60">
+        <div className="container max-w-7xl mx-auto px-6 py-10 grid grid-cols-3 gap-8 border-b shadow-2xl border-white/15 backdrop-blur-xl bg-slate-950/60">
           {/* Column 1: Services Directory */}
           <div className="flex flex-col gap-4">
             <h3 className="font-oswald text-rose-500 text-lg uppercase tracking-wider font-semibold border-b border-white/10 pb-2">

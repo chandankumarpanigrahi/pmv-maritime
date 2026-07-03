@@ -18,7 +18,7 @@ export default function LogoScroll() {
   const doubleList = [...repeatedLogos, ...repeatedLogos];
 
   return (
-    <div className={`${styles.slider} w-full container mx-auto border border-gray-200 border-t-0`}>
+    <div className={`${styles.slider} w-full container max-w-7xl mx-auto border border-gray-200 border-t-0`}>
       <div
         className={`${styles.track} flex gap-12 md:gap-20`}
         style={{ "--speed": scrollSpeed }}

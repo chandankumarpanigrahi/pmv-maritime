@@ -55,7 +55,7 @@ export default function Hero() {
       </video>
 
       <div className={styles.overlay}></div>
-      <div className="hidden md:grid absolute z-11 inset-0 w-full h-full grid-cols-1 md:grid-cols-5 gap-6 mb-16 lg:mb-24 container mx-auto opacity-10">
+      <div className="hidden md:grid absolute z-11 inset-0 w-full h-full grid-cols-1 md:grid-cols-5 gap-6 mb-16 lg:mb-24 container max-w-7xl mx-auto opacity-10">
         <div className="h-full border-l border-sky-100"></div>
         <div className="h-full border-l border-sky-100"></div>
         <div className="h-full border-l border-sky-100"></div>
@@ -63,7 +63,7 @@ export default function Hero() {
         <div className="h-full border-l border-r border-sky-100"></div>
       </div>
 
-      <div className={`${styles.content} container mx-auto px-4 sm:px-12 lg:px-0 flex flex-col justify-between`}>
+      <div className={`${styles.content} container max-w-7xl mx-auto px-4 sm:px-12 lg:px-0 flex flex-col justify-between`}>
 
         <div className="flex flex-col items-center mb-8 md:mb-0 md:items-start max-w-4xl mt-16 md:mt-auto">
           <div className="inline-flex w-fit items-center gap-2 px-3 py-2 bg-white/8 backdrop-blur-md text-white text-xs font-semibold uppercase tracking-wider mb-2">
@@ -98,7 +98,7 @@ export default function Hero() {
         </div>
 
         {/* Feature/Stats Section */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-6 mb-16 lg:mb-16 mt-auto">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-6 mb-3 lg:mb-6 mt-auto">
           {statsData.map((stat, index) => (
             <div key={index} className="w-1/3 md:w-auto flex flex-col gap-0 md:gap-2 px-2 md:px-8">
               {stat.icon}
