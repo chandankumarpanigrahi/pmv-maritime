@@ -5,6 +5,7 @@
    ======================== */
 :root {
   --crimson-red: #AD1D41;
+  --crimson-red-hover: #921232;
   --cerulean-blue: #007BA7;
   --cerulean-blue-dark: #005978;
   --border-color: #D4D4D4;
@@ -17,6 +18,11 @@
 @theme {
   --font-sans: var(--font-nunito-sans), sans-serif;
   --font-oswald: var(--font-oswald), sans-serif;
+
+  --color-primary: var(--crimson-red);
+  --color-primary-hover: var(--crimson-red-hover);
+  --color-secondary: var(--cerulean-blue);
+  --color-secondary-dark: var(--cerulean-blue-dark);
 }
 
 body {

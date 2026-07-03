@@ -84,13 +84,13 @@ export default function Hero() {
           <div className="flex flex-col w-fit md:flex-row gap-2 md:gap-4 items-center">
             <Link
               href="/services"
-              className="group flex gap-5 items-center pl-3 md:pl-6 pr-2 md:pr-5 py-1.5 md:py-3 bg-sky-700 hover:bg-rose-700 text-white font-bold border border-sky-700 hover:border-rose-700 tracking-wider uppercase rounded shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
+              className="group flex gap-5 items-center pl-3 md:pl-5 pr-2 md:pr-4 py-1.5 md:py-2 bg-secondary hover:bg-secondary-dark text-white font-bold border border-secondary hover:border-secondary-dark tracking-wider uppercase rounded shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
             >
               Explore Services <FaArrowRight className="group-hover:-rotate-45 transition-all duration-300 ease-in-out" />
             </Link>
             <Link
               href="/contact"
-              className="flex gap-5 items-center pl-3 md:pl-6 pr-2 md:pr-5 py-1.5 md:py-3 bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 text-white font-bold tracking-wider uppercase rounded backdrop-blur-sm transition-all duration-300 transform hover:-translate-y-0.5"
+              className="flex gap-5 items-center pl-3 md:pl-5 pr-2 md:pr-4 py-1.5 md:py-2 bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 text-white font-bold tracking-wider uppercase rounded backdrop-blur-sm transition-all duration-300 transform hover:-translate-y-0.5"
             >
               Contact Us
             </Link>
@@ -102,9 +102,9 @@ export default function Hero() {
           {statsData.map((stat, index) => (
             <div key={index} className="w-1/3 md:w-auto flex flex-col gap-0 md:gap-2 px-2 md:px-8">
               {stat.icon}
-              <div className="text-5xl md:text-7xl font-oswald text-white mt-3 md:mt-0">
+              <div className="text-5xl md:text-6xl font-oswald text-white mt-3 md:mt-0">
                 {stat.number}
-                <span className="text-rose-700 pl-1">{stat.suffix}</span>
+                <span className="text-primary pl-1">{stat.suffix}</span>
               </div>
               <p className="text-white/60 uppercase tracking-wide max-w-[40%] text-[12px] md:text-sm font-semibold mt-2 md:mt-0">
                 {stat.label}
