@@ -1,0 +1,6 @@
+.bachgroundAnchor {
+    background-image: url("../../../public/assets/images/banner-anchor.png");
+    background-position: center;
+    background-repeat: repeat;
+    background-size: 50px;
+}

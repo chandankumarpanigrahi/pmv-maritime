@@ -32,3 +32,7 @@ body {
 .font-oswald {
   font-family: var(--font-oswald), sans-serif;
 }
+
+.max-w-7xl {
+  max-width: 1380px !important;
+}

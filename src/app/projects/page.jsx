@@ -174,8 +174,12 @@ export default function Projects() {
 
   return (
     <>
-      <SubBanner />
-      <div className="hidden flex flex-col md:flex-row container max-w-7xl mx-auto items-stretch relative">
+      <SubBanner
+        Heading="Our Projects"
+        breadcrumbItems={[
+          { label: "Our Projects", href: "/projects" }
+        ]} />
+      <div className="flex flex-col md:flex-row container max-w-7xl mx-auto items-stretch relative">
         <div className="w-full flex flex-col border border-t-0 border-gray-200">
           <div className="flex flex-col md:flex-row py-8 px-4 md:px-8">
             <div className="flex flex-col w-full md:w-7/12">
@@ -315,10 +319,10 @@ export default function Projects() {
                       </div>
 
                       {/* View Case Study link */}
-                      <div className="flex items-center gap-1.5 text-xs md:text-[13px] font-bold text-primary hover:text-primary-hover group/link transition-colors duration-300 mt-3 pt-2">
+                      <Link href={project.link} className="flex items-center gap-1.5 text-xs md:text-[13px] font-bold text-primary hover:text-primary-hover group/link transition-colors duration-300 mt-3 pt-2">
                         <span>View Case Study</span>
                         <FaArrowRight className="text-xs transition-transform duration-300 group-hover/link:translate-x-1" />
-                      </div>
+                      </Link>
                     </div>
                   </div>
                 </div>

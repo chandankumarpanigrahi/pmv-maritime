@@ -1,13 +1,62 @@
+import Link from "next/link";
 import React from "react";
+import { BiHomeAlt2 } from "react-icons/bi";
+import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 
-export default function SubHeading(props) {
+export default function Breadcrumb({
+  items = [],
+  separator = <MdOutlineKeyboardArrowRight className="text-gray-400 shrink-0" />,
+  showHome = true,
+  className = "",
+  homeElement = <BiHomeAlt2 className="text-lg" />,
+}) {
   return (
-    <div className={`flex w-fit gap-3 items-center ${props.className || ""}`}>
-      <div className="relative h-[3px]">
-        <div className="w-[35px] h-[2px] bg-primary"></div>
-        <div className="w-[8px] h-[8px] bg-primary rounded-full absolute inset-0 top-px left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
-      </div>
-      <h3 className="uppercase font-oswald text-primary text-xl font-semibold">{props.title}</h3>
-    </div>
+    <nav
+      aria-label="Breadcrumb"
+      className={`bg-white w-full h-fit px-4 py-3 border border-gray-200 items-center flex relative z-2 text-sm select-none ${className}`}
+    >
+      <ol className="flex items-center gap-2 flex-wrap">
+        {showHome && (
+          <li className="flex items-center gap-2">
+            <Link
+              href="/"
+              className="cursor-pointer text-primary hover:text-secondary-dark transition-colors flex items-center justify-center"
+              aria-label="Home"
+              id="breadcrumb-home"
+            >
+              {homeElement}
+            </Link>
+            {items.length > 0 && separator}
+          </li>
+        )}
+
+        {items.map((item, index) => {
+          const isLast = index === items.length - 1;
+          const key = `breadcrumb-item-${index}`;
+
+          return (
+            <li key={key} className="flex items-center gap-2">
+              {isLast || !item.href ? (
+                <span
+                  className="text-primary font-medium cursor-default"
+                  aria-current="page"
+                >
+                  {item.label}
+                </span>
+              ) : (
+                <Link
+                  href={item.href}
+                  className="text-gray-600 hover:text-primary transition-colors font-normal"
+                  id={`breadcrumb-link-${item.label.toLowerCase().replace(/\s+/g, "-")}`}
+                >
+                  {item.label}
+                </Link>
+              )}
+              {!isLast && separator}
+            </li>
+          );
+        })}
+      </ol>
+    </nav>
   );
 }

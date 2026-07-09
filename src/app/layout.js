@@ -1,6 +1,15 @@
 import { Nunito_Sans, Oswald } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header/page";
+import Footer from "@/components/Footer/page";
+import Maintenance from "@/components/Maintenance/page";
+
+// ============================
+// 🔧 MAINTENANCE MODE TOGGLE
+// Set to `true` to show maintenance page
+// Set to `false` to show normal website
+// ============================
+const MAINTENANCE_MODE = true;
 
 const nunitoSans = Nunito_Sans({
   variable: "--font-nunito-sans",
@@ -50,8 +59,15 @@ export default function RootLayout({ children }) {
       className={`${nunitoSans.variable} ${oswald.variable} h-full antialiased`}
     >
       <body className="flex flex-col relative">
-        <Header />
-        {children}
+        {MAINTENANCE_MODE ? (
+          <Maintenance />
+        ) : (
+          <>
+            <Header />
+            {children}
+            <Footer />
+          </>
+        )}
       </body>
     </html>
   );

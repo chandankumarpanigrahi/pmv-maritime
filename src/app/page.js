@@ -3,7 +3,6 @@
 import About from "@/components/About/page";
 import ContactUs from "@/components/Contact Us/page";
 import CTA from "@/components/CTA/page";
-import Footer from "@/components/Footer/page";
 import Hero from "@/components/Hero/page";
 import LogoScroll from "@/components/Logo Scroll/page";
 import PopularServices from "@/components/Popular Services/page";
@@ -22,7 +21,6 @@ export default function Home() {
       <CTA />
       <Projects />
       <ContactUs />
-      <Footer />
     </main>
   );
 }

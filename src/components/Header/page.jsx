@@ -64,7 +64,7 @@ export default function Header({ transparent = false }) {
           <div className="hidden md:flex flex-row gap-8 items-center">
             <Link
               href="/"
-              className={`uppercase font-bold text-lg transition-all duration-300 border-b-2 pb-1 ${isTransparentMode
+              className={`translate-y-0.5 uppercase font-bold text-lg transition-all duration-300 border-b-2 pb-1 ${isTransparentMode
                 ? isActive("/")
                   ? "text-rose-400 border-rose-400"
                   : "text-white hover:text-rose-400 border-transparent"
@@ -77,7 +77,7 @@ export default function Header({ transparent = false }) {
             </Link>
             <Link
               href="/about"
-              className={`uppercase font-bold text-lg transition-all duration-300 border-b-2 pb-1 ${isTransparentMode
+              className={`translate-y-0.5 uppercase font-bold text-lg transition-all duration-300 border-b-2 pb-1 ${isTransparentMode
                 ? isActive("/about")
                   ? "text-rose-400 border-rose-400"
                   : "text-white hover:text-rose-400 border-transparent"
@@ -90,7 +90,7 @@ export default function Header({ transparent = false }) {
             </Link>
             <Link
               href="/services"
-              className={`uppercase font-bold text-lg transition-all duration-300 border-b-2 pb-1 ${isTransparentMode
+              className={`translate-y-0.5 uppercase font-bold text-lg transition-all duration-300 border-b-2 pb-1 ${isTransparentMode
                 ? isActive("/services")
                   ? "text-rose-400 border-rose-400"
                   : "text-white hover:text-rose-400 border-transparent"
