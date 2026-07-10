@@ -9,7 +9,7 @@ import Maintenance from "@/components/Maintenance/page";
 // Set to `true` to show maintenance page
 // Set to `false` to show normal website
 // ============================
-const MAINTENANCE_MODE = true;
+const MAINTENANCE_MODE = false;
 
 const nunitoSans = Nunito_Sans({
   variable: "--font-nunito-sans",

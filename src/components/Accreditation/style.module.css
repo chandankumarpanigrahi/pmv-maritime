@@ -1,0 +1,62 @@
+.marqueeContainer {
+  display: flex;
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+}
+
+.marqueeTrack {
+  display: flex;
+  flex-shrink: 0;
+  width: max-content;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.marqueeTrack.scrollRightToLeft {
+  animation: scroll-rl 40s linear infinite;
+}
+
+.marqueeTrack.scrollLeftToRight {
+  animation: scroll-lr 40s linear infinite;
+}
+
+.marqueeTrack:hover {
+  animation-play-state: paused;
+}
+
+.marqueeItem {
+  flex-shrink: 0;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .marqueeItem {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+  }
+}
+
+@keyframes scroll-rl {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes scroll-lr {
+  0% {
+    transform: translateX(-50%);
+  }
+
+  100% {
+    transform: translateX(0%);
+  }
+}

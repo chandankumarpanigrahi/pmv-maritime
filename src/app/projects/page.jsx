@@ -180,63 +180,25 @@ export default function Projects() {
           { label: "Our Projects", href: "/projects" }
         ]} />
       <div className="flex flex-col md:flex-row container max-w-7xl mx-auto items-stretch relative">
-        <div className="w-full flex flex-col border border-t-0 border-gray-200">
-          <div className="flex flex-col md:flex-row py-8 px-4 md:px-8">
+        <Image
+          src={bannerBg}
+          alt="Banner Background"
+          className="object-cover opacity-50 pointer-events-none z-0 absolute right-0"
+        />
+        <div className="w-full flex flex-col border border-t-0 border-gray-200 bg-[#f7f5f8]">
+          <div className="flex flex-col md:flex-row py-8 px-4 md:px-8 border-b border-gray-200">
             <div className="flex flex-col w-full md:w-7/12">
               <SubHeading title="Our Projects" className="mb-4 md:mb-6" />
-              <h1 className="font-oswald text-2xl md:text-4xl text-secondary font-bold mb-3 md:mb-6">Delivering Impact<span className="text-primary">.</span><br />Driving <span className="text-secondary-dark">Maritime Excellence</span><span className="text-primary">.</span></h1>
+              <h1 className="font-oswald text-2xl md:text-4xl text-secondary font-bold mb-3 md:mb-6">Delivering Impact <span className="text-primary">.</span><br />Driving <span className="text-secondary-dark">Maritime Excellence</span><span className="text-primary">.</span></h1>
               <p className="text-sm md:text-[15px] max-w-full md:max-w-[60%] text-gray-600 font-medium">From complex operations to innovative solutions, explore how PMV Maritime creates value across the globe.</p>
             </div>
-            <div className="w-full md:w-5/12 flex flex-col mt-6 md:mt-0">
-              <div className="grid grid-cols-2 md:grid-cols-4 w-full mb-8 md:mb-6 mt-2">
-                {/* Projects Completed */}
-                <div className="flex flex-col items-center text-center px-2 py-4 md:py-0 border-r border-b md:border-b-0 border-gray-200/80">
-                  <LuShip className="w-7 h-7 text-secondary mb-3" />
-                  <span className="text-2xl md:text-3xl font-extrabold text-primary leading-none">120+</span>
-                  <span className="text-[11px] md:text-xs text-gray-500 font-medium mt-1 leading-tight">
-                    Projects Completed
-                  </span>
-                </div>
-
-                {/* Countries Served */}
-                <div className="flex flex-col items-center text-center px-2 py-4 md:py-0 border-b md:border-b-0 md:border-l-0 md:border-r border-gray-200/80">
-                  <LuGlobe className="w-7 h-7 text-secondary mb-3" />
-                  <span className="text-2xl md:text-3xl font-extrabold text-primary leading-none">25+</span>
-                  <span className="text-[11px] md:text-xs text-gray-500 font-medium mt-1 leading-tight">
-                    Countries Served
-                  </span>
-                </div>
-
-                {/* Client Satisfied */}
-                <div className="flex flex-col items-center text-center px-2 py-4 md:py-0 border-r border-gray-200/80">
-                  <LuUsers className="w-7 h-7 text-secondary mb-3" />
-                  <span className="text-2xl md:text-3xl font-extrabold text-primary leading-none">99%</span>
-                  <span className="text-[11px] md:text-xs text-gray-500 font-medium mt-1 leading-tight">
-                    Client Satisfied
-                  </span>
-                </div>
-
-                {/* Industry Awards */}
-                <div className="flex flex-col items-center text-center px-2 py-4 md:py-0">
-                  <LuAward className="w-7 h-7 text-secondary mb-3" />
-                  <span className="text-2xl md:text-3xl font-extrabold text-primary leading-none">15+</span>
-                  <span className="text-[11px] md:text-xs text-gray-500 font-medium mt-1 leading-tight">
-                    Industry Awards
-                  </span>
-                </div>
-              </div>
-              <Link
-                href="/projects"
-                className="mt-auto mr-auto md:mr-0 ml-0 md:ml-auto group w-fit text-md flex gap-5 items-center mb-3 pl-3 md:pl-4 pr-2 md:pr-3 py-1.5 md:py-2 bg-white border-secondary text-secondary border hover:border-secondary-hover hover:text-secondary-hover font-bold transition-all duration-300"
-              >
-                View All Projects <FaArrowRight className="group-hover:-rotate-45 transition-all duration-300 ease-in-out" />
-              </Link>
+            <div className="w-full md:w-5/12 hidden flex-col mt-6 md:mt-0">
             </div>
           </div>
 
           {/* Tabs Headers */}
-          <div className="w-full border-b border-gray-200">
-            <div className="flex overflow-x-auto gap-6 md:gap-8 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden snap-x snap-mandatory">
+          <div className="w-full border-b pt-2 bg-white relative z-2 border-gray-200">
+            <div className="flex overflow-x-auto  gap-6 md:gap-8 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden snap-x snap-mandatory">
               {projectCategories.map((category, idx) => {
                 const isActive = activeTab === idx;
                 return (
@@ -245,7 +207,7 @@ export default function Projects() {
                     onClick={() => {
                       setActiveTab(idx);
                     }}
-                    className={`pb-3 px-3 pt-2 text-sm md:text-[15px] whitespace-nowrap cursor-pointer transition-all duration-300 border-b-3 -mb-[1.5px] uppercase tracking-wider text-left snap-start flex-shrink-0 group ${isActive
+                    className={`pb-3 px-3 pt-2 text-sm md:text-[15px] whitespace-nowrap cursor-pointer transition-all duration-300 border-b-4 -mb-[1.5px] uppercase tracking-wider text-left snap-start flex-shrink-0 group ${isActive
                       ? "border-primary text-secondary-dark font-bold"
                       : "border-transparent text-gray-400 hover:text-gray-600 font-semibold"
                       }`}

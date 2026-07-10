@@ -17,10 +17,11 @@ export default function SubBanner({ Heading, breadcrumbItems, ...breadcrumbProps
           <div className="flex flex-col relative z-5 h-auto p-10 my-auto justify-center">
             <h2 className="text-5xl font-semibold text-white font-oswald">{Heading}</h2>
           </div>
+          <div className="bg-white w-full h-11 border border-gray-200 relative z-2"></div>
           <Breadcrumb items={breadcrumbItems} {...breadcrumbProps} />
-          <Image src={BannerImage} alt="Ship Sub Banner Image" fill className="object-contain object-right relative z-4" />
-          <Image src={LightTriangle} alt="Ship Sub Banner Image" fill className="object-contain object-right relative z-1" />
-          <Image src={DarkTriangle} alt="Ship Sub Banner Image" fill className="object-contain object-right relative z-3" />
+          <Image src={BannerImage} alt="Ship Sub Banner Image" fill className="hidden md:flex object-contain object-right relative z-4" />
+          <Image src={LightTriangle} alt="Ship Sub Banner Image" fill className="hidden md:flex object-contain object-right relative z-1" />
+          <Image src={DarkTriangle} alt="Ship Sub Banner Image" fill className="hidden md:flex object-contain object-right relative z-3" />
         </div>
       </div>
     </div>

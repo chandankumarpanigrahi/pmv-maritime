@@ -21,7 +21,6 @@ import image2 from "../../../public/assets/images/about-image-2.jpg";
 import image3 from "../../../public/assets/images/about-image-3.jpg";
 
 const projectCategories = [
-  "All Projects",
   "Port Operations",
   "Fleet Management",
   "Maritime Consultancy",
@@ -53,6 +52,28 @@ const projectsData = [
     link: "/projects/terminal-modernization"
   },
   {
+    title: "Automated Crane & Yard Management",
+    tag: "Port Automation",
+    category: "Port Operations",
+    description: "Integrated automated stacking crane systems with real-time yard coordination software, increasing cargo throughput by 40% and optimizing slot utilization.",
+    location: "Hamburg",
+    year: "2024",
+    stat: "40% Throughput Boost",
+    image: image1,
+    link: "/projects/crane-yard-automation"
+  },
+  {
+    title: "Smart Berth Allocation System",
+    tag: "Berth Optimization",
+    category: "Port Operations",
+    description: "Deployed AI-driven berth scheduling system to dynamically coordinate vessel arrivals, reducing waiting times at anchorage by 50%.",
+    location: "Rotterdam",
+    year: "2023",
+    stat: "50% Less Waiting Time",
+    image: image3,
+    link: "/projects/berth-allocation-optimization"
+  },
+  {
     title: "Cold Chain Network Optimization",
     tag: "Cold Chain",
     category: "Fleet Management",
@@ -68,9 +89,9 @@ const projectsData = [
 export default function Projects() {
   const [activeTab, setActiveTab] = useState(0);
   // Filter projects based on activeTab (category)
-  const filteredProjects = activeTab === 0
-    ? projectsData
-    : projectsData.filter(project => project.category === projectCategories[activeTab]);
+  const filteredProjects = projectsData.filter(
+    project => project.category === projectCategories[activeTab]
+  );
 
   return (
     <div className="flex flex-col md:flex-row container max-w-7xl mx-auto items-stretch relative">
@@ -148,6 +169,13 @@ export default function Projects() {
                 </button>
               );
             })}
+            <Link
+              href="/projects"
+              className="pb-3 px-3 pt-2 text-sm md:text-[15px] whitespace-nowrap cursor-pointer transition-all duration-300 border-b-3 -mb-[1.5px] uppercase tracking-wider text-left snap-start flex-shrink-0 text-gray-400 hover:text-gray-600 font-semibold border-transparent flex items-center gap-1 group"
+            >
+              <span>All Projects</span>
+              <FaArrowRight className="text-xs transition-all duration-300 transform -rotate-45 translate-x-[-6px] -translate-y-0.5 opacity-0 group-hover:translate-x-1 group-hover:opacity-100 text-primary" />
+            </Link>
           </div>
         </div>
 
