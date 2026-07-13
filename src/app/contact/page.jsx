@@ -138,13 +138,13 @@ export default function Contact() {
 
                   {/* Pins & Tooltips */}
                   {[
-                    { id: "canada", city: "Toronto", country: "Canada", top: "22%", left: "14%", image: cityImage0 },
-                    { id: "uk", city: "London", country: "UK", top: "27%", left: "46.2%", image: cityImage1 },
-                    { id: "india", city: "Bhubaneswar", country: "India", top: "49.5%", left: "69.5%", image: cityImage2 },
-                    { id: "lagos", city: "Lagos", country: "Africa (Nigeria)", top: "57%", left: "48%", image: cityImage3 },
-                    { id: "uae", city: "Dubai", country: "UAE", top: "42%", left: "59.2%", image: cityImage4, isHQ: true },
-                    { id: "netherlands", city: "Rotterdam", country: "Netherlands", top: "30%", left: "48.5%", image: cityImage5 },
-                    { id: "australia", city: "Malvern", country: "Australia", top: "77.5%", left: "85.5%", image: cityImage6 }
+                    { id: "canada", city: "Toronto", country: "Canada", top: "20%", left: "13%", image: cityImage0 },
+                    { id: "uk", city: "London", country: "UK", top: "25%", left: "46.2%", image: cityImage1 },
+                    { id: "india", city: "Bhubaneswar", country: "India", top: "46%", left: "69%", image: cityImage2 },
+                    { id: "lagos", city: "Lagos", country: "Africa (Nigeria)", top: "52%", left: "47%", image: cityImage3 },
+                    { id: "uae", city: "Dubai", country: "UAE", top: "40%", left: "61%", image: cityImage4, isHQ: true },
+                    { id: "netherlands", city: "Rotterdam", country: "Netherlands", top: "30%", left: "52.5%", image: cityImage5 },
+                    { id: "australia", city: "Malvern", country: "Australia", top: "71%", left: "86%", image: cityImage6 }
                   ].map((loc) => (
                     <div
                       key={loc.id}
