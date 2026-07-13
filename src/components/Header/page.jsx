@@ -40,12 +40,12 @@ export default function Header({ transparent = false }) {
   return (
     <div className="fixed top-0 w-full z-50">
       {/* Hide CtaHeader when scrolled to keep sticky menu compact */}
-      <div className={`transition-all duration-300 origin-top ${scrolled ? "h-0 overflow-hidden opacity-0 scale-y-0" : "h-auto opacity-100"}`}>
+      <div className={`transition-all duration-300 relative md:z-100009 origin-top ${scrolled ? "h-0 overflow-hidden opacity-0 scale-y-0" : "h-auto opacity-100"}`}>
         <CtaHeader />
       </div>
 
       <header
-        className={`w-full transition-all duration-300 ease-in-out ${isTransparentMode
+        className={`w-full transition-all relative md:z-100009 duration-300 ease-in-out ${isTransparentMode
           ? "bg-transparent py-4"
           : "bg-white/95 backdrop-blur-md py-3 shadow-lg border-b border-slate-100"
           }`}
@@ -149,12 +149,12 @@ export default function Header({ transparent = false }) {
 
       {/* Top-down Animated Mega Menu Overlay (Desktop only) */}
       <div
-        className={`hidden md:block fixed left-0 w-full text-white transition-all duration-500 ease-in-out transform z-40 ${menuOpen
+        className={`hidden md:block fixed left-0 w-full text-white transition-all duration-500 ease-in-out transform md:z-100000 ${menuOpen
           ? "translate-y-0 opacity-100 pointer-events-auto"
           : "-translate-y-full opacity-0 pointer-events-none"
           } ${scrolled ? "top-[111px]" : "top-[112px] md:top-[138px]"}`}
       >
-        <div className="container max-w-7xl mx-auto px-6 py-10 grid grid-cols-3 gap-8 border-b shadow-2xl border-white/15 backdrop-blur-xl bg-slate-950/80">
+        <div className="container max-w-7xl mx-auto px-6 py-10 grid grid-cols-3 gap-8 border-b shadow-2xl border-white/15 backdrop-blur-xl bg-slate-950/90">
           {/* Column 1: Services Directory */}
           <div className="flex flex-col gap-4">
             <h3 className="font-oswald text-rose-500 text-lg uppercase tracking-wider font-semibold border-b border-white/10 pb-2">
@@ -198,20 +198,20 @@ export default function Header({ transparent = false }) {
               Quick Links
             </h3>
             <div className="flex flex-col gap-1 text-sm font-semibold text-slate-300">
+              <Link href="/" onClick={() => setMenuOpen(false)} className="p-2 hover:text-white hover:pl-3 transition-all duration-300">
+                Home
+              </Link>
               <Link href="/about" onClick={() => setMenuOpen(false)} className="p-2 hover:text-white hover:pl-3 transition-all duration-300">
-                Company Profile
+                About Us
               </Link>
-              <Link href="/about#team" onClick={() => setMenuOpen(false)} className="p-2 hover:text-white hover:pl-3 transition-all duration-300">
-                Our Marine Experts
+              <Link href="/services" onClick={() => setMenuOpen(false)} className="p-2 hover:text-white hover:pl-3 transition-all duration-300">
+                Our Services
               </Link>
-              <Link href="/services#certifications" onClick={() => setMenuOpen(false)} className="p-2 hover:text-white hover:pl-3 transition-all duration-300">
-                Accreditations
-              </Link>
-              <Link href="/contact" onClick={() => setMenuOpen(false)} className="p-2 hover:text-white hover:pl-3 transition-all duration-300">
-                Career Opportunities
+              <Link href="/projects" onClick={() => setMenuOpen(false)} className="p-2 hover:text-white hover:pl-3 transition-all duration-300">
+                Our Projects
               </Link>
               <Link href="/contact" onClick={() => setMenuOpen(false)} className="p-2 hover:text-white hover:pl-3 transition-all duration-300">
-                Submit an RFP / Quote Request
+                Contact Us
               </Link>
             </div>
           </div>
@@ -303,7 +303,7 @@ export default function Header({ transparent = false }) {
                 onClick={() => setMenuOpen(false)}
                 className={`transition-colors ${isActive("/about") ? "text-rose-500" : "text-white"}`}
               >
-                About
+                About Us
               </Link>
               <Link
                 href="/services"

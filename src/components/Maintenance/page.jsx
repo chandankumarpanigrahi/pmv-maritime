@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { LuMail, LuPhone, LuAnchor, LuLock } from "react-icons/lu";
+import { LuMail, LuPhone, LuAnchor, LuLock, LuEye, LuEyeOff } from "react-icons/lu";
 
 import logo from "../../../public/assets/images/logo-light.png";
 import bannerAnchor from "../../../public/assets/images/banner-anchor.png";
@@ -10,6 +10,7 @@ import bannerAnchor from "../../../public/assets/images/banner-anchor.png";
 export default function Maintenance() {
   const [showModal, setShowModal] = useState(false);
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -20,6 +21,7 @@ export default function Maintenance() {
         setShowModal(true);
         setError("");
         setPassword("");
+        setShowPassword(false);
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -145,14 +147,23 @@ export default function Maintenance() {
               <p className="text-slate-400 text-xs mb-6">Enter the administrator password to temporarily bypass maintenance mode for 20 minutes.</p>
               
               <form onSubmit={handlePasswordSubmit} className="w-full">
-                <input 
-                  type="password"
-                  placeholder="Enter administrator password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-sky-900 border border-sky-800 rounded px-4 py-2.5 text-white text-sm focus:outline-none focus:border-primary mb-3"
-                  autoFocus
-                />
+                <div className="relative mb-3">
+                  <input 
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter administrator password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full bg-sky-900 border border-sky-800 rounded pl-4 pr-10 py-2.5 text-white text-sm focus:outline-none focus:border-primary"
+                    autoFocus
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white focus:outline-none cursor-pointer flex items-center justify-center"
+                  >
+                    {showPassword ? <LuEyeOff className="text-lg" /> : <LuEye className="text-lg" />}
+                  </button>
+                </div>
                 {error && (
                   <p className="text-primary text-xs font-semibold text-left mb-3">
                     {error}
