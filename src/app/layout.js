@@ -1,15 +1,18 @@
+"use client";
+
 import { Nunito_Sans, Oswald } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header/page";
 import Footer from "@/components/Footer/page";
 import Maintenance from "@/components/Maintenance/page";
+import React, { useState, useEffect } from "react";
 
 // ============================
 // 🔧 MAINTENANCE MODE TOGGLE
 // Set to `true` to show maintenance page
 // Set to `false` to show normal website
 // ============================
-const MAINTENANCE_MODE = false;
+const MAINTENANCE_MODE = true;
 
 const nunitoSans = Nunito_Sans({
   variable: "--font-nunito-sans",
@@ -23,43 +26,42 @@ const oswald = Oswald({
   weight: ["300", "400", "500", "600", "700"],
 });
 
-export const metadata = {
-  title: "PMV Maritime Solutions",
-  description: "PMV Maritime operates at the intersection of technical precision and visionary management, delivering world-class marine surveys, technical vessel consultancy, audits, and professional maritime training.",
-  keywords: [
-    "PMV Maritime",
-    "marine survey",
-    "vessel inspection",
-    "technical consultancy",
-    "maritime training",
-    "vessel management",
-    "maritime logistics",
-    "vessel audit",
-    "cargo inspection",
-    "marine engineering",
-    "classification society support",
-    "ship safety audit",
-    "crew training"
-  ],
-  authors: [{ name: "PMV Maritime Solutions" }],
-  openGraph: {
-    title: "PMV Maritime | Global Marine Surveys, Technical Consultancy & Training",
-    description: "PMV Maritime operates at the intersection of technical precision and visionary management, delivering world-class marine surveys, technical vessel consultancy, audits, and professional maritime training.",
-    url: "https://www.pmvmaritime.com",
-    siteName: "PMV Maritime",
-    locale: "en_US",
-    type: "website",
-  },
-};
-
 export default function RootLayout({ children }) {
+  const [showMaintenance, setShowMaintenance] = useState(MAINTENANCE_MODE);
+
+  useEffect(() => {
+    if (!MAINTENANCE_MODE) {
+      setShowMaintenance(false);
+      return;
+    }
+
+    const checkBypass = () => {
+      const bypassExpiry = localStorage.getItem("maintenance_bypass_expiry");
+      if (bypassExpiry) {
+        const expiryTime = parseInt(bypassExpiry, 10);
+        if (Date.now() < expiryTime) {
+          setShowMaintenance(false);
+          return;
+        } else {
+          localStorage.removeItem("maintenance_bypass_expiry");
+        }
+      }
+      setShowMaintenance(true);
+    };
+
+    checkBypass();
+    // Periodically verify if bypass has expired
+    const interval = setInterval(checkBypass, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <html
       lang="en"
       className={`${nunitoSans.variable} ${oswald.variable} h-full antialiased`}
     >
       <body className="flex flex-col relative">
-        {MAINTENANCE_MODE ? (
+        {showMaintenance ? (
           <Maintenance />
         ) : (
           <>

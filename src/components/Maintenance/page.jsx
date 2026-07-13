@@ -1,11 +1,45 @@
-import React from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { LuMail, LuPhone, LuAnchor } from "react-icons/lu";
+import { LuMail, LuPhone, LuAnchor, LuLock } from "react-icons/lu";
 
 import logo from "../../../public/assets/images/logo-light.png";
 import bannerAnchor from "../../../public/assets/images/banner-anchor.png";
 
 export default function Maintenance() {
+  const [showModal, setShowModal] = useState(false);
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Check for Ctrl + Shift + L
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "l") {
+        e.preventDefault();
+        setShowModal(true);
+        setError("");
+        setPassword("");
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  const handlePasswordSubmit = (e) => {
+    e.preventDefault();
+    if (password === "maritime@pmv20") {
+      // Bypass maintenance mode for 20 minutes
+      const expiry = Date.now() + 20 * 60 * 1000;
+      localStorage.setItem("maintenance_bypass_expiry", expiry.toString());
+      setShowModal(false);
+      // Reload page to reflect state changes and render normal website
+      window.location.reload();
+    } else {
+      setError("Incorrect password. Please try again.");
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-[9999] bg-gradient-to-br from-sky-950 via-sky-900 to-sky-950 flex items-center justify-center overflow-hidden">
 
@@ -92,6 +126,49 @@ export default function Maintenance() {
           &copy; {new Date().getFullYear()} PMV Maritime Solutions. All rights reserved.
         </p>
       </div>
+
+      {/* Password Prompt Modal */}
+      {showModal && (
+        <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/75 backdrop-blur-sm p-4">
+          <div className="w-full max-w-md bg-sky-950 border border-sky-850 rounded shadow-2xl p-6 relative">
+            <button 
+              onClick={() => setShowModal(false)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-white text-xl font-bold cursor-pointer"
+            >
+              &times;
+            </button>
+            <div className="flex flex-col items-center text-center">
+              <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mb-4">
+                <LuLock className="text-2xl" />
+              </div>
+              <h3 className="font-oswald text-xl font-bold text-white mb-2">Administrator Access</h3>
+              <p className="text-slate-400 text-xs mb-6">Enter the administrator password to temporarily bypass maintenance mode for 20 minutes.</p>
+              
+              <form onSubmit={handlePasswordSubmit} className="w-full">
+                <input 
+                  type="password"
+                  placeholder="Enter administrator password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full bg-sky-900 border border-sky-800 rounded px-4 py-2.5 text-white text-sm focus:outline-none focus:border-primary mb-3"
+                  autoFocus
+                />
+                {error && (
+                  <p className="text-primary text-xs font-semibold text-left mb-3">
+                    {error}
+                  </p>
+                )}
+                <button 
+                  type="submit"
+                  className="w-full bg-primary hover:bg-primary-hover text-white text-sm font-semibold py-2.5 rounded transition-colors duration-200 cursor-pointer"
+                >
+                  Verify Password
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
