@@ -29,7 +29,7 @@ const popularServices = [
     title: "Marine Consultancy",
     description: "Strategic advisory for fleet optimization, safety compliance, and operational efficiency across international waters.",
     icon: MdOutlineAnchor,
-    path: "/services/maritime-consultancy",
+    path: "/services/marine-consultancy",
     category: "Maritime Consultancy"
   },
   {

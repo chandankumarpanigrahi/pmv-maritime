@@ -5,7 +5,7 @@ import Header from "@/components/Header/page";
 import Footer from "@/components/Footer/page";
 import Maintenance from "@/components/Maintenance/page";
 
-export default function ClientLayout({ children, maintenanceMode }) {
+export default function ClientLayout({ children, maintenanceMode, showLoader }) {
   const [showMaintenance, setShowMaintenance] = useState(() => {
     // If maintenance mode is off, show the website
     if (!maintenanceMode) return false;
@@ -23,6 +23,15 @@ export default function ClientLayout({ children, maintenanceMode }) {
     return true;
   });
   const [timeLeft, setTimeLeft] = useState("");
+  const [loading, setLoading] = useState(showLoader);
+
+  useEffect(() => {
+    if (!showLoader) return;
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 200); // Small delay to let the page load smoothly
+    return () => clearTimeout(timer);
+  }, [showLoader]);
 
   useEffect(() => {
     if (!maintenanceMode) return;
@@ -62,6 +71,11 @@ export default function ClientLayout({ children, maintenanceMode }) {
 
   return (
     <>
+      {loading && (
+        <div className="fixed inset-0 z-[999999] flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <img src="/loader.gif" alt="Loading..." className="w-24 h-24 object-contain" />
+        </div>
+      )}
       {showMaintenance ? (
         <Maintenance />
       ) : (

@@ -7,7 +7,14 @@ import ClientLayout from "../components/ClientLayout";
 // Set to `true` to show maintenance page
 // Set to `false` to show normal website
 // ============================
-export const MAINTENANCE_MODE = true;
+export const MAINTENANCE_MODE = false;
+
+// ============================
+// ⏳ LOADER TOGGLE
+// Set to `true` to show loader on page load
+// Set to `false` to disable loader
+// ============================
+export const SHOW_LOADER = false;
 
 const nunitoSans = Nunito_Sans({
   variable: "--font-nunito-sans",
@@ -57,7 +64,7 @@ export default function RootLayout({ children }) {
       className={`${nunitoSans.variable} ${oswald.variable} h-full antialiased`}
     >
       <body className="flex flex-col relative">
-        <ClientLayout maintenanceMode={MAINTENANCE_MODE}>
+        <ClientLayout maintenanceMode={MAINTENANCE_MODE} showLoader={SHOW_LOADER}>
           {children}
         </ClientLayout>
       </body>

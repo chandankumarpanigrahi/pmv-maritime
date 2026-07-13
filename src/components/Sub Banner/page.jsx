@@ -15,7 +15,7 @@ export default function SubBanner({ Heading, breadcrumbItems, ...breadcrumbProps
         <div className={`${styles.bachgroundAnchor} absolute inset-0 opacity-6`}></div>
         <div className="flex flex-col h-full justify-between">
           <div className="flex flex-col relative z-5 h-auto p-10 my-auto justify-center">
-            <h2 className="text-5xl font-semibold text-white font-oswald">{Heading}</h2>
+            <h2 className="text-4xl md:text-5xl font-semibold text-white font-oswald">{Heading}</h2>
           </div>
           <div className="bg-white w-full h-11 border border-gray-200 relative z-2"></div>
           <Breadcrumb items={breadcrumbItems} {...breadcrumbProps} />
