@@ -31,12 +31,10 @@ export default function ContactUs() {
     setIsSubmitting(true); // <-- Set to true here
 
     try {
-      const res = await fetch("https://sheetdb.io/api/v1/egfxnt2fm0g2p", {
+      const res = await fetch("/api/submissions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization:
-            "Bearer gkgkp4d82a2rjttkgh3ya61ws9jgrut5kobdzmos",
         },
         body: JSON.stringify({
           data: [formData],
