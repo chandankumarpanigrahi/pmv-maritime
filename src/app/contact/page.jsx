@@ -1,7 +1,7 @@
 "use client";
 
 import styles from "./style.module.css";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import SubBanner from "@/components/Sub Banner/page";
 import Link from "next/link";
 import Image from "next/image";
@@ -37,96 +37,96 @@ import cityImage4 from "../../../public/assets/city/city-photo-4.png";
 import cityImage5 from "../../../public/assets/city/city-photo-5.png";
 import cityImage6 from "../../../public/assets/city/city-photo-6.png";
 
+const offices = [
+  {
+    city: "Dubai (HQ)",
+    country: "UAE",
+    address: "IFZA Properties, Dubai Silicon Oasis, UAE",
+    phone: "+971 50 534 2726",
+    email: "info@pmvmaritime.com",
+    image: cityImage4,
+    isHQ: true,
+  },
+  {
+    city: "Lagos",
+    country: "AFRICA (NIGERIA)",
+    address: "Plot 1649, Olosa Street, Victoria Island, Lagos",
+    phone: "+234 1 461 4100",
+    email: "africa@pmvmaritime.com",
+    image: cityImage3,
+  },
+  {
+    city: "Bhubaneswar",
+    country: "INDIA",
+    address: "The Maritime Hub, Sai Vihar, Bhubaneswar, Odisha 751007",
+    phone: "+91 674 254 3000",
+    email: "india@pmvmaritime.com",
+    image: cityImage2,
+  },
+  {
+    city: "London",
+    country: "UNITED KINGDOM",
+    address: "30 St Mary Axe, London EC3A 8BF",
+    phone: "+44 20 722 7000",
+    email: "uk@pmvmaritime.com",
+    image: cityImage1,
+  },
+  {
+    city: "Rotterdam",
+    country: "NETHERLANDS",
+    address: "Wilhelminakade 123, 3072 AP Rotterdam",
+    phone: "+31 10 441 5678",
+    email: "netherlands@pmvmaritime.com",
+    image: cityImage5,
+  },
+  {
+    city: "Toronto",
+    country: "CANADA",
+    address: "100 King Street West, Toronto, ON M5X 1B1",
+    phone: "+1 416 862 7000",
+    email: "canada@pmvmaritime.com",
+    image: cityImage0,
+  },
+  {
+    city: "Malvern",
+    country: "AUSTRALIA",
+    address: "Level 15, 60 Margaret St, Malvern, NSW 2000",
+    phone: "+61 2 9056 4070",
+    email: "australia@pmvmaritime.com",
+    image: cityImage6,
+  },
+];
+
+const steps = [
+  {
+    title: "Submit Inquiry",
+    description: "Send us your requirements via our online form, email, or direct line. Our global intake team responds within 24 hours.",
+    icon: <LuMail className="text-2xl" />,
+  },
+  {
+    title: "Technical Assessment",
+    description: "Our maritime consultants analyze your request, evaluate operational feasibility, and schedule a scoping call.",
+    icon: <LuMessageSquare className="text-2xl" />,
+  },
+  {
+    title: "Custom Proposal",
+    description: "We draft a detailed strategy, commercial quote, and resource allocation plan tailored to your specific goals.",
+    icon: <LuFileText className="text-2xl" />,
+  },
+  {
+    title: "Project Execution",
+    description: "Upon approval, our regional team is deployed, ensuring safety, compliance, and flawless operational delivery.",
+    icon: <LuShip className="text-2xl" />,
+  },
+];
+
 export default function Contact() {
   const carouselRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
   const [visibleIndices, setVisibleIndices] = useState([0, 1, 2, 3]);
 
-  const offices = [
-    {
-      city: "Dubai (HQ)",
-      country: "UAE",
-      address: "IFZA Properties, Dubai Silicon Oasis, UAE",
-      phone: "+971 50 534 2726",
-      email: "info@pmvmaritime.com",
-      image: cityImage4,
-      isHQ: true,
-    },
-    {
-      city: "Lagos",
-      country: "AFRICA (NIGERIA)",
-      address: "Plot 1649, Olosa Street, Victoria Island, Lagos",
-      phone: "+234 1 461 4100",
-      email: "africa@pmvmaritime.com",
-      image: cityImage3,
-    },
-    {
-      city: "Bhubaneswar",
-      country: "INDIA",
-      address: "The Maritime Hub, Sai Vihar, Bhubaneswar, Odisha 751007",
-      phone: "+91 674 254 3000",
-      email: "india@pmvmaritime.com",
-      image: cityImage2,
-    },
-    {
-      city: "London",
-      country: "UNITED KINGDOM",
-      address: "30 St Mary Axe, London EC3A 8BF",
-      phone: "+44 20 722 7000",
-      email: "uk@pmvmaritime.com",
-      image: cityImage1,
-    },
-    {
-      city: "Rotterdam",
-      country: "NETHERLANDS",
-      address: "Wilhelminakade 123, 3072 AP Rotterdam",
-      phone: "+31 10 441 5678",
-      email: "netherlands@pmvmaritime.com",
-      image: cityImage5,
-    },
-    {
-      city: "Toronto",
-      country: "CANADA",
-      address: "100 King Street West, Toronto, ON M5X 1B1",
-      phone: "+1 416 862 7000",
-      email: "canada@pmvmaritime.com",
-      image: cityImage0,
-    },
-    {
-      city: "Malvern",
-      country: "AUSTRALIA",
-      address: "Level 15, 60 Margaret St, Malvern, NSW 2000",
-      phone: "+61 2 9056 4070",
-      email: "australia@pmvmaritime.com",
-      image: cityImage6,
-    },
-  ];
-
-  const steps = [
-    {
-      title: "Submit Inquiry",
-      description: "Send us your requirements via our online form, email, or direct line. Our global intake team responds within 24 hours.",
-      icon: <LuMail className="text-2xl" />,
-    },
-    {
-      title: "Technical Assessment",
-      description: "Our maritime consultants analyze your request, evaluate operational feasibility, and schedule a scoping call.",
-      icon: <LuMessageSquare className="text-2xl" />,
-    },
-    {
-      title: "Custom Proposal",
-      description: "We draft a detailed strategy, commercial quote, and resource allocation plan tailored to your specific goals.",
-      icon: <LuFileText className="text-2xl" />,
-    },
-    {
-      title: "Project Execution",
-      description: "Upon approval, our regional team is deployed, ensuring safety, compliance, and flawless operational delivery.",
-      icon: <LuShip className="text-2xl" />,
-    },
-  ];
-
-  const handleScroll = () => {
+  const handleScroll = useCallback(() => {
     if (carouselRef.current) {
       const { scrollLeft, clientWidth, scrollWidth } = carouselRef.current;
 
@@ -146,7 +146,7 @@ export default function Contact() {
         setVisibleIndices(indices);
       }
     }
-  };
+  }, []);
 
   useEffect(() => {
     const carouselEl = carouselRef.current;
@@ -161,7 +161,7 @@ export default function Contact() {
       }
       window.removeEventListener("resize", handleScroll);
     };
-  }, []);
+  }, [handleScroll]);
 
   const highlights = [
     {

@@ -61,11 +61,6 @@ export default function AdminDashboard() {
     fetchData();
   }, [refreshTrigger]);
 
-  // Reset page when filters change
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [search, selectedQuery]);
-
   // Add sheet order indexing (#1, #2...) based on raw API order and sort newest on top
   const sortedData = data
     .map((row, idx) => ({ ...row, originalIndex: idx + 1 }))
@@ -89,11 +84,6 @@ export default function AdminDashboard() {
   const startIndex = (currentPage - 1) * pageSize;
   const paginatedData = filteredData.slice(startIndex, startIndex + pageSize);
 
-  // Calculate statistics (on raw sheet data)
-  const totalSubmissions = data.length;
-  const totalGeneral = data.filter((row) => row.query === "general").length;
-  const totalTechnical = data.filter((row) => row.query === "consultancy").length;
-  const totalTraining = data.filter((row) => row.query === "training").length;
 
   // Export to CSV helper
   const exportToCSV = () => {
@@ -162,7 +152,10 @@ export default function AdminDashboard() {
                 type="text"
                 placeholder="Search by name, email, query..."
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setCurrentPage(1);
+                }}
                 className="w-full bg-slate-50 border border-gray-200 focus:border-secondary focus:ring-1 focus:ring-secondary outline-none pl-10 pr-4 py-2.5 text-sm transition-all text-gray-900 placeholder-gray-400 font-medium rounded-sm"
               />
               <LuSearch className="absolute left-3.5 top-3.5 text-gray-400 text-sm" />
@@ -172,7 +165,10 @@ export default function AdminDashboard() {
             <div className="relative w-full md:w-56">
               <select
                 value={selectedQuery}
-                onChange={(e) => setSelectedQuery(e.target.value)}
+                onChange={(e) => {
+                  setSelectedQuery(e.target.value);
+                  setCurrentPage(1);
+                }}
                 className="w-full bg-slate-50 border border-gray-200 focus:border-secondary focus:ring-1 focus:ring-secondary outline-none px-4 py-2.5 pr-10 text-sm transition-all text-gray-900 font-medium appearance-none cursor-pointer rounded-sm"
               >
                 <option value="">All Query Types</option>
