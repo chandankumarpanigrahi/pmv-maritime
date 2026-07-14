@@ -7,7 +7,7 @@ import ClientLayout from "../components/ClientLayout";
 // Set to `true` to show maintenance page
 // Set to `false` to show normal website
 // ============================
-export const MAINTENANCE_MODE = false;
+export const MAINTENANCE_MODE = true;
 
 // ============================
 // ⏳ LOADER TOGGLE
