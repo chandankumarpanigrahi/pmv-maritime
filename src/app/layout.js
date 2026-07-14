@@ -14,7 +14,7 @@ export const MAINTENANCE_MODE = true;
 // Set to `true` to show loader on page load
 // Set to `false` to disable loader
 // ============================
-export const SHOW_LOADER = false;
+export const SHOW_LOADER = true;
 
 const nunitoSans = Nunito_Sans({
   variable: "--font-nunito-sans",

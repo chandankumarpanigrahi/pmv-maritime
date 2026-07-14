@@ -28,16 +28,40 @@ export default function ContactUs() {
       return;
     }
 
-    setIsSubmitting(true);
-    setStatus({ type: "", message: "" });
+    setIsSubmitting(true); // <-- Set to true here
 
-    // Mock form submission
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setStatus({ type: "success", message: "Thank you! Your message has been sent successfully." });
-      setFormData({ fullName: "", email: "", query: "", message: "" });
-    }, 1500);
+    try {
+      const res = await fetch("https://sheetdb.io/api/v1/egfxnt2fm0g2p", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization:
+            "Bearer gkgkp4d82a2rjttkgh3ya61ws9jgrut5kobdzmos",
+        },
+        body: JSON.stringify({
+          data: [formData],
+        }),
+      });
+
+      if (res.ok) {
+        setStatus({ type: "success", message: "Thank you! Your message has been sent successfully." });
+        setFormData({ fullName: "", email: "", query: "", message: "" }); // reset form
+
+        // Hide success message after 3 seconds
+        setTimeout(() => {
+          setStatus({ type: "", message: "" });
+        }, 3000);
+      } else {
+        const errorData = await res.json();
+        setStatus({ type: "error", message: "Error: " + (errorData?.error || res.statusText) });
+      }
+    } catch (error) {
+      setStatus({ type: "error", message: "Error: " + error.message });
+    } finally {
+      setIsSubmitting(false); // <-- Set back to false here
+    }
   };
+
 
   return (
     <div className="container max-w-7xl mx-auto">
@@ -175,6 +199,7 @@ export default function ContactUs() {
                   <option value="fleet">Fleet Management</option>
                   <option value="crew">Crew Management</option>
                   <option value="digital">Digital Solutions</option>
+                  <option value="others">Others</option>
                 </select>
                 <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-gray-400">
                   <svg className="w-4 h-4 fill-none stroke-current" viewBox="0 0 24 24">
@@ -213,7 +238,7 @@ export default function ContactUs() {
               disabled={isSubmitting}
               className="w-full bg-primary hover:bg-primary-hover text-white font-bold py-3.5 px-6 flex items-center justify-center gap-2 transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer disabled:bg-primary/70 disabled:pointer-events-none shadow-xs"
             >
-              <span>{isSubmitting ? "Sending..." : "Send Message"}</span>
+              <span>{isSubmitting ? "Submitting..." : "Send Message"}</span>
               {!isSubmitting && <FaArrowRight className="text-sm" />}
             </button>
 

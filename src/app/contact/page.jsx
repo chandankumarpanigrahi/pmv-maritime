@@ -198,7 +198,7 @@ export default function Contact() {
 
   return (
     <>
-      <SubBanner Heading="Contact Us" breadcrumbItems={[{ label: "About Us", href: "/about" }]} />
+      <SubBanner Heading="Contact Us" breadcrumbItems={[{ label: "Contact Us", href: "/contact" }]} />
 
       {/* Highlights Section */}
       <div className="flex flex-col lg:flex-row container max-w-7xl mx-auto items-stretch relative border-t-0 border border-gray-200">
@@ -225,7 +225,7 @@ export default function Contact() {
 
       {/* Global Presence Section */}
       <div className="container overflow-hidden lg:overflow-visible max-w-7xl mx-auto border-t-0 border border-gray-200 bg-white">
-        <section className="p-6 md:p-10 lg:p-12">
+        <section className="px-6 md:p-10 lg:p-12">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-stretch">
 
             {/* Left Content Column */}
