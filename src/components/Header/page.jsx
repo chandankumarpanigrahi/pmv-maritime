@@ -154,13 +154,13 @@ export default function Header({ transparent = false }) {
           : "-translate-y-full opacity-0 pointer-events-none"
           } ${scrolled ? "top-[111px]" : "top-[112px] md:top-[138px]"}`}
       >
-        <div className="container max-w-7xl mx-auto px-6 pt-10 pb-6 grid grid-cols-3 gap-8 border-b shadow-2xl border-white/15 backdrop-blur-xl bg-slate-950/90">
+        <div className="container max-w-7xl mx-auto grid grid-cols-3 border-b shadow-2xl border-white/15 backdrop-blur-xl bg-slate-950/90">
           {/* Column 1: Services Directory */}
-          <div className="flex flex-col gap-4">
-            <h3 className="font-oswald text-rose-500 text-lg uppercase tracking-wider font-semibold border-b border-white/10 pb-2">
+          <div className="flex flex-col border-r border-white/10">
+            <h3 className="font-oswald bg-[#ffffff09] px-6 py-4 text-rose-500 text-lg uppercase tracking-wider font-semibold border-b border-white/10">
               Maritime Services
             </h3>
-            <div className="flex flex-col gap-3">
+            <div className="px-4 py-4 flex flex-col gap-3">
               <Link href="/services#surveys" onClick={() => setMenuOpen(false)} className="group flex items-start gap-3 p-2 hover:bg-white/5 rounded transition-all">
                 <LuAnchor className="text-rose-500 text-xl mt-0.5 group-hover:scale-110 transition-transform" />
                 <div>
@@ -193,38 +193,57 @@ export default function Header({ transparent = false }) {
           </div>
 
           {/* Column 2: Quick Links */}
-          <div className="flex flex-col gap-4">
-            <h3 className="font-oswald text-rose-500 text-lg uppercase tracking-wider font-semibold border-b border-white/10 pb-2">
+          <div className="flex flex-col border-r border-white/10">
+            <h3 className="font-oswald bg-[#ffffff09] px-6 py-4 text-rose-500 text-lg uppercase tracking-wider font-semibold border-b border-white/10">
               Quick Links
             </h3>
-            <div className="flex flex-col gap-1 text-sm font-semibold text-slate-300">
-              <Link href="/" onClick={() => setMenuOpen(false)} className="p-2 hover:text-white hover:pl-3 transition-all duration-300">
-                Home
-              </Link>
-              <Link href="/about" onClick={() => setMenuOpen(false)} className="p-2 hover:text-white hover:pl-3 transition-all duration-300">
-                About Us
-              </Link>
-              <Link href="/services" onClick={() => setMenuOpen(false)} className="p-2 hover:text-white hover:pl-3 transition-all duration-300">
-                Our Services
-              </Link>
-              <Link href="/projects" onClick={() => setMenuOpen(false)} className="p-2 hover:text-white hover:pl-3 transition-all duration-300">
-                Our Projects
-              </Link>
-              <Link href="/contact" onClick={() => setMenuOpen(false)} className="p-2 hover:text-white hover:pl-3 transition-all duration-300">
-                Contact Us
-              </Link>
+            <div className="flex">
+              <div className="w-1/2 px-4 py-4 flex flex-col gap-1 text-sm font-semibold text-slate-300">
+                <Link href="/" onClick={() => setMenuOpen(false)} className="p-2 hover:text-white hover:pl-3 transition-all duration-300">
+                  Home
+                </Link>
+                <Link href="/about" onClick={() => setMenuOpen(false)} className="p-2 hover:text-white hover:pl-3 transition-all duration-300">
+                  About Us
+                </Link>
+                <Link href="/services" onClick={() => setMenuOpen(false)} className="p-2 hover:text-white hover:pl-3 transition-all duration-300">
+                  Our Services
+                </Link>
+                <Link href="/projects" onClick={() => setMenuOpen(false)} className="p-2 hover:text-white hover:pl-3 transition-all duration-300">
+                  Our Projects
+                </Link>
+                <Link href="/contact" onClick={() => setMenuOpen(false)} className="p-2 hover:text-white hover:pl-3 transition-all duration-300">
+                  Contact Us
+                </Link>
+              </div>
+              <div className="w-1/2 px-4 py-4 flex flex-col gap-1 text-sm font-semibold text-slate-300">
+                <Link href="/" onClick={() => setMenuOpen(false)} className="p-2 hover:text-white hover:pl-3 transition-all duration-300">
+                  Career
+                </Link>
+                <Link href="/about" onClick={() => setMenuOpen(false)} className="p-2 hover:text-white hover:pl-3 transition-all duration-300">
+                  Gallery
+                </Link>
+                <Link href="/services" onClick={() => setMenuOpen(false)} className="p-2 hover:text-white hover:pl-3 transition-all duration-300">
+                  Tenders
+                </Link>
+                <Link href="/projects" onClick={() => setMenuOpen(false)} className="p-2 hover:text-white hover:pl-3 transition-all duration-300">
+                  News
+                </Link>
+                <Link href="/contact" onClick={() => setMenuOpen(false)} className="p-2 hover:text-white hover:pl-3 transition-all duration-300">
+                  Fleet
+                </Link>
+              </div>
             </div>
           </div>
 
           {/* Column 3: Contact Desk */}
-          <div className="flex flex-col gap-4">
-            <h3 className="font-oswald text-rose-500 text-lg uppercase tracking-wider font-semibold border-b border-white/10 pb-2">
+          <div className="flex flex-col">
+            <h3 className="font-oswald bg-[#ffffff09] px-6 py-4 text-rose-500 text-lg uppercase tracking-wider font-semibold border-b border-white/10">
               Contact Desk
             </h3>
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <p className="px-4 py-4 text-xs text-slate-400 leading-relaxed">
               Reach out directly to our 24/7 technical assistance center for urgent maritime support or survey bookings.
             </p>
-            <div className="flex flex-col gap-3 font-semibold text-sm mt-2">
+            <div className="px-4 py-4 flex flex-col gap-3 font-semibold text-sm mt-2">
               <a href="tel:+971505342726" className="flex items-center gap-3 text-slate-300 hover:text-white">
                 <LuPhone className="text-rose-500 text-lg" />
                 <span>+97 15053 42726</span>
@@ -234,7 +253,7 @@ export default function Header({ transparent = false }) {
                 <span>info@pmvmaritime.com</span>
               </a>
             </div>
-            <div className="mt-4 pt-4 border-t border-white/10 flex gap-4">
+            <div className="px-4 py-4 border-t border-white/10 flex gap-4">
               <Link href="/contact" onClick={() => setMenuOpen(false)} className="w-full text-center px-4 py-2 bg-rose-700 hover:bg-rose-800 text-white font-bold text-xs uppercase tracking-wider rounded transition-all">
                 Request Quick Callback
               </Link>
@@ -242,7 +261,7 @@ export default function Header({ transparent = false }) {
           </div>
 
           {/* Bottom Action Bar */}
-          <div className="col-span-3 mt-6 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm">
+          <div className="col-span-3 bg-[#ffffff09] px-4 py-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm">
             <span className="text-slate-400 text-xs text-center sm:text-left">
               Need custom technical specifications or specialized consultations? Speak directly with our marine coordinators.
             </span>

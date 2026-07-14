@@ -23,6 +23,8 @@
   --color-primary-hover: var(--crimson-red-hover);
   --color-secondary: var(--cerulean-blue);
   --color-secondary-dark: var(--cerulean-blue-dark);
+
+  --animate-spin-slow: spin 12s linear infinite;
 }
 
 body {
