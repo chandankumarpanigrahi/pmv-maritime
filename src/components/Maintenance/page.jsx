@@ -15,8 +15,8 @@ export default function Maintenance() {
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      // Check for Ctrl + Shift + L
-      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "l") {
+      // Check for Ctrl + Alt + K
+      if (e.ctrlKey && e.altKey && e.key.toLowerCase() === "k") {
         e.preventDefault();
         setShowModal(true);
         setError("");

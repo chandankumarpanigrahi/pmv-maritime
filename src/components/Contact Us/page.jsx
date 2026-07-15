@@ -6,7 +6,7 @@ import Link from "next/link";
 import { LuPhone, LuMail, LuMapPin, LuUsers, LuShieldCheck } from "react-icons/lu";
 import { FaArrowRight } from "react-icons/fa";
 
-export default function ContactUs() {
+export default function ContactUs(props) {
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -122,7 +122,7 @@ export default function ContactUs() {
           {/* Bottom Help Card */}
           <Link
             href="/contact"
-            className="mt-12 p-4 md:p-5 bg-blue-50 border border-blue-100 hover:border-blue-200 transition-all duration-300 flex items-center justify-between group"
+            className={`mt-12 p-4 md:p-5 bg-blue-50 border border-blue-100 hover:border-blue-200 transition-all duration-300 flex items-center justify-between group ${props.className || ""}`}
           >
             <div className="flex items-center gap-4">
               <div className="w-10 h-10 rounded-full bg-white text-primary flex items-center justify-center border border-blue-50 shadow-xs flex-shrink-0">

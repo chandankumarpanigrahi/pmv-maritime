@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 
 // Icons
 import { LuMenu, LuX, LuAnchor, LuCompass, LuShieldAlert, LuBookOpen, LuPhone, LuMail } from "react-icons/lu";
+import { FiHome, FiInfo, FiCpu, FiLayers, FiPhone, FiBriefcase, FiImage, FiFileText, FiRss } from "react-icons/fi";
 
 // Images
 import logoLight from "../../../public/assets/images/logo-light.png"
@@ -199,37 +200,37 @@ export default function Header({ transparent = false }) {
             </h3>
             <div className="flex">
               <div className="w-1/2 px-4 py-4 flex flex-col gap-1 text-sm font-semibold text-slate-300">
-                <Link href="/" onClick={() => setMenuOpen(false)} className="p-2 hover:text-white hover:pl-3 transition-all duration-300">
-                  Home
+                <Link href="/" onClick={() => setMenuOpen(false)} className="flex flex-row gap-3 items-center px-2 py-1.5 hover:text-white hover:pl-3 transition-all duration-300">
+                  <FiHome className="text-rose-500" /> <span className="pt-1">Home</span>
                 </Link>
-                <Link href="/about" onClick={() => setMenuOpen(false)} className="p-2 hover:text-white hover:pl-3 transition-all duration-300">
-                  About Us
+                <Link href="/about" onClick={() => setMenuOpen(false)} className="flex flex-row gap-3 items-center px-2 py-1.5 hover:text-white hover:pl-3 transition-all duration-300">
+                  <FiInfo className="text-rose-500" /> <span className="pt-1">About Us</span>
                 </Link>
-                <Link href="/services" onClick={() => setMenuOpen(false)} className="p-2 hover:text-white hover:pl-3 transition-all duration-300">
-                  Our Services
+                <Link href="/services" onClick={() => setMenuOpen(false)} className="flex flex-row gap-3 items-center px-2 py-1.5 hover:text-white hover:pl-3 transition-all duration-300">
+                  <FiCpu className="text-rose-500" /> <span className="pt-1">Our Services</span>
                 </Link>
-                <Link href="/projects" onClick={() => setMenuOpen(false)} className="p-2 hover:text-white hover:pl-3 transition-all duration-300">
-                  Our Projects
+                <Link href="/projects" onClick={() => setMenuOpen(false)} className="flex flex-row gap-3 items-center px-2 py-1.5 hover:text-white hover:pl-3 transition-all duration-300">
+                  <FiLayers className="text-rose-500" /> <span className="pt-1">Our Projects</span>
                 </Link>
-                <Link href="/contact" onClick={() => setMenuOpen(false)} className="p-2 hover:text-white hover:pl-3 transition-all duration-300">
-                  Contact Us
+                <Link href="/contact" onClick={() => setMenuOpen(false)} className="flex flex-row gap-3 items-center px-2 py-1.5 hover:text-white hover:pl-3 transition-all duration-300">
+                  <FiPhone className="text-rose-500" /> <span className="pt-1">Contact Us</span>
                 </Link>
               </div>
               <div className="w-1/2 px-4 py-4 flex flex-col gap-1 text-sm font-semibold text-slate-300">
-                <Link href="/" onClick={() => setMenuOpen(false)} className="p-2 hover:text-white hover:pl-3 transition-all duration-300">
-                  Career
+                <Link href="/" onClick={() => setMenuOpen(false)} className="flex flex-row gap-3 items-center px-2 py-1.5 hover:text-white hover:pl-3 transition-all duration-300">
+                  <FiBriefcase className="text-rose-500" /> <span className="pt-1">Career</span>
                 </Link>
-                <Link href="/about" onClick={() => setMenuOpen(false)} className="p-2 hover:text-white hover:pl-3 transition-all duration-300">
-                  Gallery
+                <Link href="/about" onClick={() => setMenuOpen(false)} className="flex flex-row gap-3 items-center px-2 py-1.5 hover:text-white hover:pl-3 transition-all duration-300">
+                  <FiImage className="text-rose-500" /> <span className="pt-1">Gallery</span>
                 </Link>
-                <Link href="/services" onClick={() => setMenuOpen(false)} className="p-2 hover:text-white hover:pl-3 transition-all duration-300">
-                  Tenders
+                <Link href="/services" onClick={() => setMenuOpen(false)} className="flex flex-row gap-3 items-center px-2 py-1.5 hover:text-white hover:pl-3 transition-all duration-300">
+                  <FiFileText className="text-rose-500" /> <span className="pt-1">Tenders</span>
                 </Link>
-                <Link href="/projects" onClick={() => setMenuOpen(false)} className="p-2 hover:text-white hover:pl-3 transition-all duration-300">
-                  News
+                <Link href="/projects" onClick={() => setMenuOpen(false)} className="flex flex-row gap-3 items-center px-2 py-1.5 hover:text-white hover:pl-3 transition-all duration-300">
+                  <FiRss className="text-rose-500" /> <span className="pt-1">News</span>
                 </Link>
-                <Link href="/contact" onClick={() => setMenuOpen(false)} className="p-2 hover:text-white hover:pl-3 transition-all duration-300">
-                  Fleet
+                <Link href="/contact" onClick={() => setMenuOpen(false)} className="flex flex-row gap-3 items-center px-2 py-1.5 hover:text-white hover:pl-3 transition-all duration-300">
+                  <LuAnchor className="text-rose-500" /> <span className="pt-1">Fleet</span>
                 </Link>
               </div>
             </div>

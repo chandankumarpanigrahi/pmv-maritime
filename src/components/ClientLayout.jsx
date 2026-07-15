@@ -81,7 +81,7 @@ export default function ClientLayout({ children, maintenanceMode, showLoader }) 
       ) : (
         <>
           {hasBypass && (
-            <div className="fixed top-10 right-4 z-99999 flex items-center gap-3 bg-slate-900/90 hover:bg-slate-900 border border-slate-700/80 backdrop-blur-md px-3 py-1.5 rounded-full shadow-lg transition-all duration-300">
+            <div className="fixed top-4 right-4 z-99999 flex items-center gap-3 bg-slate-900/90 hover:bg-slate-900 border border-slate-700/80 backdrop-blur-md px-3 py-1.5 rounded-full shadow-lg transition-all duration-300">
               <div className="flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                 <span className="text-xs font-mono font-bold text-emerald-400">{timeLeft}</span>

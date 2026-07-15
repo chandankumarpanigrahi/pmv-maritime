@@ -557,7 +557,7 @@ export default function Contact() {
       </div>
 
       {/* Contact Form Section */}
-      <ContactUs />
+      <ContactUs className="hidden" />
     </>
   );
 }
