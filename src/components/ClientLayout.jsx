@@ -27,7 +27,7 @@ export default function ClientLayout({ children, maintenanceMode, showLoader }) 
   const [loading, setLoading] = useState(showLoader);
   const pathname = usePathname();
   const prevPathname = useRef(pathname);
- 
+
   useEffect(() => {
     if (!showLoader) return;
     const handleLoad = () => {
@@ -100,7 +100,7 @@ export default function ClientLayout({ children, maintenanceMode, showLoader }) 
     <>
       {loading && (
         <div className="fixed inset-0 z-[999999] flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <img src="/loader.gif" alt="Loading..." className="w-30 h-30 object-contain bg-white/40 p-2 rounded-full" />
+          <img src="/loader.gif" alt="Loading..." className="w-30 h-30 object-contain bg-white/60 p-2 rounded-full" />
         </div>
       )}
       {showMaintenance ? (

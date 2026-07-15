@@ -243,13 +243,14 @@ export default function AdminDashboard() {
   const exportToCSV = () => {
     if (filteredData.length === 0) return;
 
-    const headers = ["Submission #", "Full Name", "Email", "Query Type", "Message"];
+    const headers = ["Submission #", "Full Name", "Email", "Query Type", "Message", "Submitted At"];
     const rows = filteredData.map((row) => [
       `#${row.originalIndex}`,
       row.fullName || "",
       row.email || "",
       row.query || "",
-      row.message || ""
+      row.message || "",
+      row.dateTime || ""
     ]);
 
     const csvContent =
@@ -554,7 +555,7 @@ export default function AdminDashboard() {
                           </div>
                           <div>
                             <span className="font-bold text-sm text-gray-900 block">{row.fullName || "N/A"}</span>
-                            <span className="text-[10px] text-gray-400 block font-semibold uppercase tracking-wider">Client</span>
+                            <span className="text-[10px] text-gray-400 block font-semibold uppercase tracking-wider">{row.dateTime || "N/A"}</span>
                           </div>
                         </div>
                       </td>

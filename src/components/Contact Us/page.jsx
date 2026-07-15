@@ -31,13 +31,30 @@ export default function ContactUs(props) {
     setIsSubmitting(true); // <-- Set to true here
 
     try {
+      const now = new Date();
+      const day = String(now.getDate()).padStart(2, "0");
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+      const year = now.getFullYear();
+      let hours = now.getHours();
+      const minutes = String(now.getMinutes()).padStart(2, "0");
+      const seconds = String(now.getSeconds()).padStart(2, "0");
+      const ampm = hours >= 12 ? "PM" : "AM";
+      hours = hours % 12;
+      hours = hours ? hours : 12;
+      const formattedHours = String(hours).padStart(2, "0");
+
+      const payload = {
+        ...formData,
+        dateTime: `${day}-${month}-${year}, ${formattedHours}:${minutes}:${seconds} ${ampm}`
+      };
+
       const res = await fetch("/api/submissions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          data: [formData],
+          data: [payload],
         }),
       });
 
@@ -236,8 +253,17 @@ export default function ContactUs(props) {
               disabled={isSubmitting}
               className="w-full bg-primary hover:bg-primary-hover text-white font-bold py-3.5 px-6 flex items-center justify-center gap-2 transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer disabled:bg-primary/70 disabled:pointer-events-none shadow-xs"
             >
-              <span>{isSubmitting ? "Submitting..." : "Send Message"}</span>
-              {!isSubmitting && <FaArrowRight className="text-sm" />}
+              {isSubmitting ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  <span>Submitting...</span>
+                </>
+              ) : (
+                <>
+                  <span>Send Message</span>
+                  <FaArrowRight className="text-sm" />
+                </>
+              )}
             </button>
 
             {/* Privacy Policy Disclaimer */}
