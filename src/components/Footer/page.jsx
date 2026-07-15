@@ -56,7 +56,7 @@ export default function Footer() {
             alt="Footer Background Image"
             fill
             className="object-cover object-[30%] translate-y-0 lg:translate-y-0 opacity-15 lg:opacity-100 lg:object-center overflow-visible"
-            priority
+            loading="lazy"
           />
         </div>
         <div className="flex flex-col lg:flex-row lg:justify-between relative z-5 gap-8 lg:gap-0">

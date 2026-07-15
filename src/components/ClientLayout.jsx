@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import Header from "@/components/Header/page";
 import Footer from "@/components/Footer/page";
 import Maintenance from "@/components/Maintenance/page";
@@ -24,14 +25,40 @@ export default function ClientLayout({ children, maintenanceMode, showLoader }) 
   });
   const [timeLeft, setTimeLeft] = useState("");
   const [loading, setLoading] = useState(showLoader);
+  const pathname = usePathname();
+  const prevPathname = useRef(pathname);
+ 
+  useEffect(() => {
+    if (!showLoader) return;
+    const handleLoad = () => {
+      setTimeout(() => {
+        setLoading(false);
+      }, 300);
+    };
+
+    if (document.readyState === "complete") {
+      handleLoad();
+    } else {
+      window.addEventListener("load", handleLoad);
+      const fallback = setTimeout(handleLoad, 3000);
+      return () => {
+        window.removeEventListener("load", handleLoad);
+        clearTimeout(fallback);
+      };
+    }
+  }, [showLoader]);
 
   useEffect(() => {
     if (!showLoader) return;
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 200); // Small delay to let the page load smoothly
-    return () => clearTimeout(timer);
-  }, [showLoader]);
+    if (prevPathname.current !== pathname) {
+      setLoading(true);
+      const timer = setTimeout(() => {
+        setLoading(false);
+      }, 450);
+      prevPathname.current = pathname;
+      return () => clearTimeout(timer);
+    }
+  }, [pathname, showLoader]);
 
   useEffect(() => {
     if (!maintenanceMode) return;

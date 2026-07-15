@@ -30,7 +30,7 @@ export default function Maintenance() {
 
   const handlePasswordSubmit = (e) => {
     e.preventDefault();
-    if (password === "maritime@pmv20") {
+    if (password === "itspmv@2026") {
       // Bypass maintenance mode for 20 minutes
       const expiry = Date.now() + 20 * 60 * 1000;
       localStorage.setItem("maintenance_bypass_expiry", expiry.toString());
@@ -133,7 +133,7 @@ export default function Maintenance() {
       {showModal && (
         <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/75 backdrop-blur-sm p-4">
           <div className="w-full max-w-md bg-sky-950 border border-sky-850 rounded shadow-2xl p-6 relative">
-            <button 
+            <button
               onClick={() => setShowModal(false)}
               className="absolute top-4 right-4 text-slate-400 hover:text-white text-xl font-bold cursor-pointer"
             >
@@ -145,10 +145,10 @@ export default function Maintenance() {
               </div>
               <h3 className="font-oswald text-xl font-bold text-white mb-2">Administrator Access</h3>
               <p className="text-slate-400 text-xs mb-6">Enter the administrator password to temporarily bypass maintenance mode for 20 minutes.</p>
-              
+
               <form onSubmit={handlePasswordSubmit} className="w-full">
                 <div className="relative mb-3">
-                  <input 
+                  <input
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter administrator password"
                     value={password}
@@ -169,7 +169,7 @@ export default function Maintenance() {
                     {error}
                   </p>
                 )}
-                <button 
+                <button
                   type="submit"
                   className="w-full bg-primary hover:bg-primary-hover text-white text-sm font-semibold py-2.5 rounded transition-colors duration-200 cursor-pointer"
                 >
