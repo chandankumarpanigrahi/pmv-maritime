@@ -92,7 +92,7 @@ export default function About() {
   const tabContents = {
     mission: "Our mission is to engineer maritime excellence through forward-thinking innovation, uncompromising safety, and environmental compliance. We combine senior maritime expertise and global reach to deliver safe, highly efficient, and sustainable marine operations. By prioritizing operational integrity, we protect life at sea and optimize critical ocean-bound supply chains. We continuously strive to build trusted partnerships, ensuring every vessel is managed with the highest standard of care.",
     vision: "Our vision is to be the world's most trusted partner in sustainable maritime operations, defining the future of marine logistics through digital innovation, carbon-neutral initiatives, and exceptional service quality. We aspire to connect global markets seamlessly while preserving our oceans for generations to come.",
-    goals: "Our goals are centered on achieving net-zero carbon emissions by 2040, expanding our managed fleet by 50% in the next five years, implementing next-generation IoT-based vessel tracking across all operations, and maintaining our perfect zero-accident safety record through continuous crew training."
+    goals: "Provide connected services across consultancy, training, fleet management, crew management, port operations, digitisation, shipbuilding, environmental protection, recruitment, education, and maritime projects."
   };
 
   return (

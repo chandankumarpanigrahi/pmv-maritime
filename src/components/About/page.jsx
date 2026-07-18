@@ -32,7 +32,7 @@ const serviceHighlights = [
   {
     icon: icon2,
     title: "24/7",
-    description: "Operation Support",
+    description: "Operational Support",
   },
   {
     icon: icon3,

@@ -2,6 +2,8 @@ import React from "react";
 import styles from "./style.module.css";
 import Breadcrumb from "@/design/breadcrumb/page";
 import Image from "next/image";
+import radar from "../../../public/assets/svg/radar.svg"
+import radarNob from "../../../public/assets/svg/radar-nob.svg"
 
 // Images
 import BannerImage from "../../../public/assets/images/banner-ship.png"
@@ -13,8 +15,16 @@ export default function SubBanner({ Heading, breadcrumbItems, ...breadcrumbProps
     <div className="container max-w-7xl mx-auto mt-[140px]">
       <div className="w-full h-[300px] bg-primary relative">
         <div className={`${styles.bachgroundAnchor} absolute inset-0 opacity-6`}></div>
-        <div className="flex flex-col h-full justify-between">
-          <div className="flex flex-col relative z-5 h-auto p-10 my-auto justify-center">
+        <div className={`flex flex-col h-full justify-between`}>
+          <div className="flex flex-col relative z-5 h-auto p-10 pt-4 my-auto justify-center">
+
+            {/* Radar Rotatable Design */}
+            <div className="relative h-[70px] w-[70px] flex items-center justify-center">
+              <Image src={radar} alt="Radar Icon" className={` ${styles.radarDesign} w-full h-full`} />
+              <Image src={radarNob} alt="Radar Nob Icon" className={`absolute inset-0 w-full h-full`} />
+            </div>
+
+            {/* Main Heading */}
             <h2 className="text-4xl md:text-5xl font-semibold text-white font-oswald">{Heading}</h2>
           </div>
           <div className="bg-white w-full h-11 border border-gray-200 relative z-2"></div>

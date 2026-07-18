@@ -33,7 +33,7 @@ export default function CTA() {
 
             {/* Headline */}
             <h2 className="text-4xl sm:text-5xl lg:text-6xl font-oswald font-medium leading-12 md:leading-16 tracking-tight mb-5">
-              Let&apos;s power your<br />
+              Let&apos;s accelerate your<br />
               maritime success<span className="text-primary">.</span>
             </h2>
 

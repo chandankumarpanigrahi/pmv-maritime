@@ -21,19 +21,19 @@ const statsData = [
   },
   {
     icon: <LuGlobe size={35} className="text-white opacity-60" />,
-    number: "20",
+    number: "5",
     suffix: "+",
     label: "Global Hubs",
   },
   {
     icon: <LuAward size={35} className="text-white opacity-60" />,
-    number: "600",
+    number: "30",
     suffix: "+",
     label: "Clients Served",
   },
   {
     icon: <LuCompass size={35} className="text-white opacity-60" />,
-    number: "18",
+    number: "10",
     suffix: "+",
     label: "Industry Recognition",
   },
@@ -67,7 +67,7 @@ export default function Hero() {
 
         <div className="flex flex-col items-center mb-8 md:mb-0 md:items-start max-w-4xl mt-16 md:mt-auto">
           <div className="inline-flex w-fit items-center gap-2 px-3 py-2 bg-white/8 backdrop-blur-md text-white text-xs font-semibold uppercase tracking-wider mb-2">
-            Global Operations
+            Your Maritime Partner
           </div>
 
           {/* Headline */}
