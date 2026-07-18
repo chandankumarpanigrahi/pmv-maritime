@@ -7,14 +7,14 @@ import ClientLayout from "../components/ClientLayout";
 // Set to `true` to show maintenance page
 // Set to `false` to show normal website
 // ============================
-export const MAINTENANCE_MODE = false;
+export const MAINTENANCE_MODE = true;
 
 // ============================
 // ⏳ LOADER TOGGLE
 // Set to `true` to show loader on page load
 // Set to `false` to disable loader
 // ============================
-export const SHOW_LOADER = false;
+export const SHOW_LOADER = true;
 
 const nunitoSans = Nunito_Sans({
   variable: "--font-nunito-sans",
