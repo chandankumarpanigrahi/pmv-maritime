@@ -61,7 +61,7 @@ export default function Copyright() {
                 <Image src={brain} alt="brain" className="w-4 h-4 object-contain flex-shrink-0" />
               </span>
             </span>{" "}
-            by <a href="https://shoolininnovations.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors text-secondary">Shoolin Innovations Ltd.</a>
+            by <a href="https://shoolin.co.uk" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors text-secondary">Shoolin Innovations Ltd.</a>
           </span>
         </div>
       </div>
