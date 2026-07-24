@@ -86,8 +86,8 @@ export default function ContactUs(props) {
         <div className="w-full md:w-1/2 p-6 md:p-10 lg:p-12 flex flex-col justify-between bg-white">
           <div>
             <SubHeading title="Contact Us" className="mb-4" />
-            <h2 className="font-oswald text-3xl md:text-4xl lg:text-5xl font-bold text-secondary-dark leading-tight mt-6">
-              Let&apos;s Connect and<br />Create Impact Together<span className="text-primary">.</span>
+            <h2 className="font-oswald text-3xl md:text-4xl lg:text-5xl font-bold text-secondary leading-tight mt-6">
+              Let&apos;s <span className="text-secondary-dark font-bold">Connect</span> and<br />Create <span className="text-secondary-dark font-bold">Impact Together</span><span className="text-primary">.</span>
             </h2>
             <p className="text-gray-500 text-sm md:text-base font-medium mt-4 leading-relaxed max-w-[90%]">
               From complex operations to innovative solutions, explore how PMV Maritime creates value across the globe.
@@ -128,9 +128,9 @@ export default function ContactUs(props) {
                 </div>
                 <div>
                   <span className="text-xs text-gray-500 font-semibold block uppercase tracking-wider">Visit Us</span>
-                  <span className="text-base text-gray-900 font-bold">
+                  <a className="text-base text-gray-900 font-bold hover:text-primary transition-colors" href="https://maps.app.goo.gl/sjK7qhMfaVj9Rvm66" target="_blank">
                     IFZA Properties, Dubai Silicon Oasis, UAE
-                  </span>
+                  </a>
                 </div>
               </div>
             </div>

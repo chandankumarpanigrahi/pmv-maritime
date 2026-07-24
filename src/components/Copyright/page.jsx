@@ -45,7 +45,7 @@ export default function Copyright() {
 
         {/* Copyrights */}
         <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-xs md:text-sm text-secondary font-semibold text-center">
-          <span>©2026 PMV Maritime Solutions. All Rights Reserved</span>
+          <span>©2026 <span className="text-primary font-bold">PMV Maritime Solutions</span>. All Rights Reserved</span>
           <span className="hidden sm:inline text-gray-300">|</span>
           <span className="flex items-center gap-1">
             Made with{" "}
@@ -61,7 +61,7 @@ export default function Copyright() {
                 <Image src={brain} alt="brain" className="w-4 h-4 object-contain flex-shrink-0" />
               </span>
             </span>{" "}
-            by <a href="https://shoolin.co.uk" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors text-secondary">Shoolin Innovations Ltd.</a>
+            by <a href="https://shoolin.co.uk" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors text-secondary font-bold">Shoolin Innovations Ltd.</a>
           </span>
         </div>
       </div>

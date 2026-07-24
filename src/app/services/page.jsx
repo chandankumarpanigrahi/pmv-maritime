@@ -8,14 +8,51 @@ import Image from "next/image";
 
 // Icons
 import { FaArrowRight } from "react-icons/fa";
-import { TbShip, TbTarget, TbShieldCheck, TbActivity, TbGlobe } from "react-icons/tb";
-import { PiGraduationCap } from "react-icons/pi";
-import { LuShipWheel, LuShip, LuGlobe, LuUsers, LuAward, LuMapPin, LuCalendar, LuTrendingUp } from "react-icons/lu";
-import { TbUserShield } from "react-icons/tb";
-import { TbDeviceDesktopCheck } from "react-icons/tb";
-import { MdOutlineAnchor } from "react-icons/md";
-import { PiMonitorPlay } from "react-icons/pi";
-import { TbBuildingWarehouse, TbSchool, TbLeaf, TbCrane } from "react-icons/tb";
+
+import {
+  TbShip,
+  TbTarget,
+  TbShieldCheck,
+  TbActivity,
+  TbGlobe,
+  TbUserShield,
+  TbDeviceDesktopCheck,
+  TbBuildingWarehouse,
+  TbSchool,
+  TbLeaf,
+  TbCrane,
+  TbBriefcase2,
+  TbTruckDelivery,
+  TbBuilding,
+  TbRoute,
+  TbUsers,
+  TbTool,
+  TbBuildingFactory,
+  TbClipboardCheck,
+  TbChecklist,
+  TbCpu,
+  TbChartBar,
+} from "react-icons/tb";
+
+import {
+  LuShipWheel,
+  LuShip,
+  LuGlobe,
+  LuUsers,
+  LuAward,
+  LuMapPin,
+  LuCalendar,
+  LuTrendingUp,
+} from "react-icons/lu";
+
+import {
+  PiGraduationCap,
+  PiMonitorPlay,
+} from "react-icons/pi";
+
+import {
+  MdOutlineAnchor,
+} from "react-icons/md";
 
 import bannerBg from "../../../public/assets/images/map-bg.png";
 
@@ -25,89 +62,154 @@ import image3 from "../../../public/assets/images/about-image-3.jpg";
 import SubBanner from "@/components/Sub Banner/page";
 
 const popularServices = [
+  // ===================== MARITIME CONSULTANCY =====================
   {
     title: "Marine Consultancy",
-    description: "Strategic advisory for fleet optimization, safety compliance, and operational efficiency across international waters.",
+    description: "Strategic, technical, and commercial advisory that improves performance, reduces risk, and supports confident maritime decision-making.",
     icon: MdOutlineAnchor,
     path: "/services/marine-consultancy",
     category: "Maritime Consultancy"
   },
   {
-    title: "Training & LMS",
-    description: "Next-generation Learning Management Systems tailored for certified maritime training and officer certification.",
-    icon: PiGraduationCap,
-    path: "/services/training-lms",
-    category: "Fleet Management"
+    title: "Marine Insurance",
+    description: "Advisory support for marine insurance, risk evaluation, claims guidance, and operational risk mitigation strategies.",
+    icon: TbShieldCheck,
+    path: "/services/marine-insurance",
+    category: "Maritime Consultancy"
   },
   {
+    title: "Project Advisory",
+    description: "Expert guidance for feasibility studies, investment planning, technical due diligence, and maritime project execution.",
+    icon: TbBriefcase2,
+    path: "/services/project-advisory",
+    category: "Maritime Consultancy"
+  },
+  {
+    title: "Sustainability Consulting",
+    description: "Helping maritime organizations improve environmental performance, compliance, and long-term operational sustainability.",
+    icon: TbLeaf,
+    path: "/services/sustainability-consulting",
+    category: "Maritime Consultancy"
+  },
+
+  // ===================== PORT OPERATIONS =====================
+  {
     title: "Port Operations",
-    description: "End-to-end management of terminal logistics, security, and automated vessel traffic monitoring.",
+    description: "Coordinated port services that improve vessel turnaround, cargo handling, and terminal operational efficiency.",
     icon: TbBuildingWarehouse,
     path: "/services/port-operations",
     category: "Port Operations"
   },
   {
-    title: "Marine University",
-    description: "World-class academic programs focusing on maritime law, engineering, and global logistics management.",
-    icon: TbSchool,
-    path: "/services/marine-university",
-    category: "Maritime Consultancy"
+    title: "Marine Logistics",
+    description: "Reliable logistics support for vessels, equipment, spare parts, customs, and offshore maritime operations.",
+    icon: TbTruckDelivery,
+    path: "/services/marine-logistics",
+    category: "Port Operations"
   },
   {
-    title: "Digitisation",
-    description: "Transforming legacy nautical charts and operations into agile digital ecosystems with IoT integration.",
-    icon: PiMonitorPlay,
-    path: "/services/digitisation",
-    category: "Digitisation"
+    title: "Terminal Operations",
+    description: "Efficient coordination of terminal activities, berth planning, vessel movements, and cargo operations.",
+    icon: TbBuilding,
+    path: "/services/terminal-operations",
+    category: "Port Operations"
   },
   {
-    title: "Environment Protection",
-    description: "Leading the charge in decarbonization and marine ecosystem preservation through advanced spill-prevention tech.",
-    icon: TbLeaf,
-    path: "/services/environment-protection",
+    title: "Port Coordination",
+    description: "Integrated planning and documentation that ensure smooth vessel calls and regulatory compliance.",
+    icon: TbRoute,
+    path: "/services/port-coordination",
+    category: "Port Operations"
+  },
+
+  // ===================== FLEET MANAGEMENT =====================
+  {
+    title: "Fleet Management",
+    description: "Technical vessel management focused on maintenance, compliance, reliability, and long-term asset performance.",
+    icon: LuShipWheel,
+    path: "/services/fleet-management",
     category: "Fleet Management"
   },
   {
+    title: "Crew Management",
+    description: "Complete recruitment, deployment, certification, welfare, and workforce planning for maritime professionals.",
+    icon: TbUsers,
+    path: "/services/crew-management",
+    category: "Fleet Management"
+  },
+  {
+    title: "Technical Services",
+    description: "Professional inspections, engineering support, repair supervision, and technical documentation for vessels.",
+    icon: TbTool,
+    path: "/services/technical-services",
+    category: "Fleet Management"
+  },
+  {
+    title: "Global Recruitment",
+    description: "Connecting qualified maritime professionals with shipping companies through transparent recruitment processes.",
+    icon: TbGlobe,
+    path: "/services/global-recruitment",
+    category: "Fleet Management"
+  },
+
+  // ===================== SHIPBUILDING =====================
+  {
     title: "Shipbuilding",
-    description: "From design to hull construction, we manage the technical lifecycle of bespoke commercial and patrol vessels.",
+    description: "Independent support throughout vessel construction, conversion, refurbishment, and final project delivery.",
     icon: TbCrane,
     path: "/services/shipbuilding",
     category: "Shipbuilding"
   },
   {
-    title: "Global Recruitment",
-    description: "Connecting elite seafaring talent with the world's leading shipping companies and port authorities.",
-    icon: TbGlobe,
-    path: "/services/global-recruitment",
-    category: "Fleet Management"
-  },
-  {
-    title: "Underwater Robotics",
-    description: "Innovative solutions utilizing ROV and AUV technologies for underwater exploration and maintenance tasks.",
-    icon: MdOutlineAnchor,
-    path: "/services/underwater-robotics",
+    title: "Shipyard Services",
+    description: "Construction supervision, quality inspections, equipment selection, and shipyard coordination services.",
+    icon: TbBuildingFactory,
+    path: "/services/shipyard-services",
     category: "Shipbuilding"
   },
   {
-    title: "Vessel Performance Analytics",
-    description: "Real-time data analysis to enhance fuel efficiency and optimize voyage routes for better sustainability.",
-    icon: PiGraduationCap,
-    path: "/services/vessel-performance-analytics",
+    title: "Maritime Projects",
+    description: "Structured project delivery from planning and procurement through commissioning and successful handover.",
+    icon: TbClipboardCheck,
+    path: "/services/maritime-projects",
+    category: "Shipbuilding"
+  },
+  {
+    title: "Vessel Commissioning",
+    description: "Sea-trial supervision, testing, quality assurance, and commissioning support before vessel delivery.",
+    icon: TbChecklist,
+    path: "/services/vessel-commissioning",
+    category: "Shipbuilding"
+  },
+
+  // ===================== DIGITISATION =====================
+  {
+    title: "Port Digitisation",
+    description: "Digital platforms that modernize port operations with automation, dashboards, and integrated workflows.",
+    icon: PiMonitorPlay,
+    path: "/services/port-digitisation",
     category: "Digitisation"
   },
   {
-    title: "Marine Insurance Solutions",
-    description: "Comprehensive coverage options tailored to mitigate risks associated with maritime operations and cargo transport.",
-    icon: TbBuildingWarehouse,
-    path: "/services/marine-insurance-solutions",
-    category: "Maritime Consultancy"
+    title: "Digital Maritime",
+    description: "Technology-driven systems that improve operational visibility, compliance, and maritime decision-making.",
+    icon: TbDeviceDesktopCheck,
+    path: "/services/digital-maritime",
+    category: "Digitisation"
   },
   {
-    title: "Sustainability Consulting",
-    description: "Advising maritime businesses on sustainable practices and compliance with global environmental regulations.",
-    icon: TbSchool,
-    path: "/services/sustainability-consulting",
-    category: "Maritime Consultancy"
+    title: "Workflow Automation",
+    description: "Automating maritime processes through connected systems, digital documentation, and smart integrations.",
+    icon: TbCpu,
+    path: "/services/workflow-automation",
+    category: "Digitisation"
+  },
+  {
+    title: "Data Analytics",
+    description: "Real-time dashboards, operational insights, reporting, and performance analytics for maritime businesses.",
+    icon: TbChartBar,
+    path: "/services/data-analytics",
+    category: "Digitisation"
   }
 ];
 
@@ -144,8 +246,17 @@ export default function Services() {
           <div className="flex flex-col md:flex-row py-8 px-4 md:px-8 border-b border-gray-200">
             <div className="flex flex-col w-full md:w-7/12">
               <SubHeading title="Services" className="mb-4 md:mb-6" />
-              <h1 className="font-oswald text-2xl md:text-4xl text-secondary font-bold mb-3 md:mb-6">End-to-End <span className="text-secondary-dark">Maritime Solutions</span> <span className="text-primary">.</span><br />Driven by Expertise <span className="text-primary">.</span><span className="text-secondary-dark">Delivered with Care</span><span className="text-primary">.</span></h1>
-              <p className="text-sm md:text-[15px] max-w-full md:max-w-[60%] text-gray-600 font-medium">We combine expertise, technology and global reach to deliver safe, efficient and sustainable maritime solutions.</p>
+              <h1 className="font-oswald text-2xl md:text-4xl text-secondary font-bold mb-3 md:mb-6">
+                End-to-End <span className="text-secondary-dark">Maritime Solutions</span><span className="text-primary">.</span><br />
+                Expertise You Can Trust<span className="text-primary">.</span>{" "}
+                <span className="text-secondary-dark">Delivered with Confidence</span><span className="text-primary">.</span>
+              </h1>
+
+              <p className="text-sm md:text-[15px] max-w-[90%] md:max-w-[80%] text-gray-600 font-medium">
+                PMV Maritime Solutions Limited delivers integrated maritime services
+                through technical expertise, operational excellence, and digital
+                innovation for safer, smarter, and more efficient maritime operations.
+              </p>
             </div>
             <div className="w-full md:w-5/12 hidden flex-col mt-6 md:mt-0">
             </div>

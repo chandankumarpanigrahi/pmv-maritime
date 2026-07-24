@@ -6,60 +6,36 @@ import Image from "next/image";
 
 // Icons
 import { FaArrowRight } from "react-icons/fa";
-import { MdOutlineAnchor } from "react-icons/md";
-import { PiGraduationCap, PiMonitorPlay } from "react-icons/pi";
+import { GiCargoShip } from "react-icons/gi";
+import { TbBriefcase2 } from "react-icons/tb";
 import { TbBuildingWarehouse, TbSchool, TbLeaf, TbCrane, TbGlobe } from "react-icons/tb";
 
 import bannerBg from "../../../public/assets/images/map-bg.png";
 
 const popularServices = [
   {
-    title: "Marine Consultancy",
-    description: "Strategic advisory for fleet optimization, safety compliance, and operational efficiency across international waters.",
-    icon: MdOutlineAnchor,
-    path: "/services/maritime-consultancy"
-  },
-  {
-    title: "Training & LMS",
-    description: "Next-generation Learning Management Systems tailored for certified maritime training and officer certification.",
-    icon: PiGraduationCap,
-    path: "/services/training-lms"
-  },
-  {
     title: "Port Operations",
-    description: "End-to-end management of terminal logistics, security, and automated vessel traffic monitoring.",
+    description: "Coordinated port services that improve vessel turnaround, cargo handling, terminal efficiency, and operational performance.",
     icon: TbBuildingWarehouse,
     path: "/services/port-operations"
   },
   {
-    title: "Marine University",
-    description: "World-class academic programs focusing on maritime law, engineering, and global logistics management.",
-    icon: TbSchool,
-    path: "/services/marine-university"
-  },
-  {
-    title: "Digitisation",
-    description: "Transforming legacy nautical charts and operations into agile digital ecosystems with IoT integration.",
-    icon: PiMonitorPlay,
-    path: "/services/digitisation"
-  },
-  {
-    title: "Environment Protection",
-    description: "Leading the charge in decarbonization and marine ecosystem preservation through advanced spill-prevention tech.",
-    icon: TbLeaf,
-    path: "/services/environment-protection"
-  },
-  {
     title: "Shipbuilding",
-    description: "From design to hull construction, we manage the technical lifecycle of bespoke commercial and patrol vessels.",
+    description: "Independent support for vessel construction, repair, refurbishment, quality assurance, commissioning, and successful project delivery.",
     icon: TbCrane,
     path: "/services/shipbuilding"
   },
   {
-    title: "Global Recruitment",
-    description: "Connecting elite seafaring talent with the world's leading shipping companies and port authorities.",
-    icon: TbGlobe,
-    path: "/services/global-recruitment"
+    title: "Maritime Projects",
+    description: "End-to-end project management covering planning, procurement, supervision, commissioning, and final delivery of maritime projects.",
+    icon: TbBriefcase2,
+    path: "/services/maritime-projects"
+  },
+  {
+    title: "Marine Logistics",
+    description: "Reliable logistics support for vessels, crews, equipment, spare parts, offshore operations, and maritime project execution.",
+    icon: GiCargoShip,
+    path: "/services/marine-logistics"
   }
 ];
 

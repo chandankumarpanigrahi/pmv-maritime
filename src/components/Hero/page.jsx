@@ -64,20 +64,19 @@ export default function Hero() {
       </div>
 
       <div className={`${styles.content} container max-w-7xl mx-auto px-4 sm:px-12 lg:px-0 flex flex-col justify-between`}>
-
         <div className="flex flex-col items-center mb-8 md:mb-0 md:items-start max-w-4xl mt-16 md:mt-auto">
           <div className="inline-flex w-fit items-center gap-2 px-3 py-2 bg-white/8 backdrop-blur-md text-white text-xs font-semibold uppercase tracking-wider mb-2">
             Your Maritime Partner
           </div>
 
           {/* Headline */}
-          <h1 className="text-5xl sm:text-5xl md:text-6xl lg:text-7xl font-oswald text-white font-extrabold leading-tight tracking-tight text-center md:text-left uppercase ">
+          <h1 className="text-5xl sm:text-5xl md:text-6xl lg:text-7xl font-oswald text-white font-extrabold leading-tight tracking-tight text-center md:text-left uppercase mb-3">
             Maritime Excellence
           </h1>
 
           {/* Subtitle */}
           <p className="text-[14px] text-center md:text-left sm:text-md md:text-lg text-slate-200/95 leading-relaxed mb-3 md:mb-8 max-w-xl">
-            Setting the global standard for maritime safety, logistics, and innovation. Our integrated services power the world&apos;s most critical ocean-bound operations.
+            At <span className="font-semibold">PMV Maritime Solutions Limited</span>, we deliver trusted maritime solutions through expertise, innovation, and reliable service. Our integrated capabilities strengthen vessel operations, enhance safety, and create lasting value across every maritime journey.
           </p>
 
           {/* CTA Buttons */}
@@ -86,8 +85,10 @@ export default function Hero() {
               href="/services"
               className="group flex gap-5 items-center pl-3 md:pl-5 pr-2 md:pr-4 py-1.5 md:py-2 bg-secondary hover:bg-secondary-dark text-white font-bold border border-secondary hover:border-secondary-dark tracking-wider uppercase rounded shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
             >
-              Explore Services <FaArrowRight className="group-hover:-rotate-45 transition-all duration-300 ease-in-out" />
+              Explore Services{" "}
+              <FaArrowRight className="group-hover:-rotate-45 transition-all duration-300 ease-in-out" />
             </Link>
+
             <Link
               href="/contact"
               className="flex gap-5 items-center pl-3 md:pl-5 pr-2 md:pr-4 py-1.5 md:py-2 bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 text-white font-bold tracking-wider uppercase rounded backdrop-blur-sm transition-all duration-300 transform hover:-translate-y-0.5"

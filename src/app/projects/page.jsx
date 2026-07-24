@@ -32,136 +32,235 @@ const projectCategories = [
 
 const projectsData = [
   {
-    title: "Smart Container Tracking System",
-    tag: "Smart Ports",
-    category: "Digitisation",
-    description: "Deployed IoT-enabled container monitoring across a major port cluster, delivering real-time visibility and predictive maintenance alerts.",
-    location: "Dubai",
-    year: "2024",
-    stat: "42% Visibility Gain",
-    image: image1,
-    link: "/projects/container-tracking"
-  },
-  {
-    title: "Terminal Operations Modernization",
-    tag: "Port Operations",
+    title: "Port Development Projects",
+    tag: "Port Infrastructure",
     category: "Port Operations",
-    description: "Implemented an integrated terminal management system improving operational efficiency and reducing turnaround time by 35%.",
-    location: "Singapore",
-    year: "2023",
-    stat: "35% Efficiency Gain",
-    image: image2,
-    link: "/projects/terminal-modernization"
-  },
-  {
-    title: "Cold Chain Network Optimization",
-    tag: "Cold Chain",
-    category: "Fleet Management",
-    description: "Redesigned refrigerated logistics network across 12 distribution hubs, cutting spoilage rates and reducing total cold-chain costs by 28%.",
-    location: "Rotterdam",
-    year: "2022",
-    stat: "28% Cost Reduction",
-    image: image3,
-    link: "/projects/cold-chain-optimization"
-  },
-  {
-    title: "Robotic Automation Integration",
-    tag: "Automated Warehousing",
-    category: "Digitisation",
-    description: "Implemented robotic solutions in warehousing, increasing picking speed by 50% and reducing labor costs by 30%.",
-    location: "Hamburg",
-    year: "2024",
-    stat: "50% Productivity Boost",
+    description: "Delivered comprehensive port development solutions focused on infrastructure planning, operational efficiency, and sustainable maritime growth.",
+    location: "India",
+    year: "2025",
+    stat: "Infrastructure Planning",
     image: image1,
-    link: "/projects/robotic-automation"
+    link: "/projects/port-development"
   },
   {
-    title: "Green Fleet Transition",
-    tag: "Sustainable Logistics",
-    category: "Fleet Management",
-    description: "Transitioned to a fleet of electric vehicles, cutting carbon emissions by 60% and fueling costs by 40%.",
-    location: "Los Angeles",
-    year: "2023",
-    stat: "60% Emission Reduction",
-    image: image2,
-    link: "/projects/green-fleet"
-  },
-  {
-    title: "End-to-End Supply Chain",
-    tag: "Supply Chain Visibility",
-    category: "Digitisation",
-    description: "Implemented blockchain technology for traceability in supply chains, enhancing trust and visibility among stakeholders.",
-    location: "London",
-    year: "2023",
-    stat: "100% Transparency Increase",
-    image: image3,
-    link: "/projects/blockchain-supply-chain"
-  },
-  {
-    title: "Dynamic Freight Allocation System",
-    tag: "Digital Freight Matching",
-    category: "Digitisation",
-    description: "Launched an AI-driven platform for real-time freight matching, increasing load utilization rates by 45%.",
-    location: "Toronto",
-    year: "2024",
-    stat: "45% Utilization Increase",
-    image: image1,
-    link: "/projects/freight-allocation"
-  },
-  {
-    title: "Urban Delivery Optimization",
-    tag: "Last-Mile Delivery",
+    title: "Port Operations Projects",
+    tag: "Port Management",
     category: "Port Operations",
-    description: "Implemented a smart logistics system for urban last-mile delivery, reducing delivery times by 30% and costs by 25%.",
-    location: "New York",
-    year: "2024",
-    stat: "30% Time Saving",
+    description: "Optimized port operations through strategic planning, workflow improvements, and operational support for enhanced vessel turnaround.",
+    location: "India",
+    year: "2025",
+    stat: "Operational Excellence",
     image: image2,
-    link: "/projects/urban-delivery"
+    link: "/projects/port-operations"
   },
   {
-    title: "Predictive Analytics in Shipping",
-    tag: "Data Analytics",
+    title: "Port Digitisation Projects",
+    tag: "Digital Ports",
+    category: "Port Operations",
+    description: "Implemented digital technologies to modernize port operations, automate workflows, and improve data-driven decision making.",
+    location: "India",
+    year: "2025",
+    stat: "Digital Transformation",
+    image: image3,
+    link: "/projects/port-digitisation"
+  },
+  {
+    title: "Port Waste Management Projects",
+    tag: "Environmental Services",
+    category: "Port Operations",
+    description: "Developed sustainable waste management solutions for ports, ensuring regulatory compliance and environmentally responsible operations.",
+    location: "India",
+    year: "2025",
+    stat: "Environmental Compliance",
+    image: image1,
+    link: "/projects/port-waste-management"
+  },
+  {
+    title: "Fleet & Technical Management Projects",
+    tag: "Fleet Operations",
+    category: "Fleet Management",
+    description: "Provided integrated fleet and technical management services to improve vessel performance, maintenance, and operational reliability.",
+    location: "Global",
+    year: "2025",
+    stat: "Fleet Optimization",
+    image: image2,
+    link: "/projects/fleet-technical-management"
+  },
+  {
+    title: "Crew Management Projects",
+    tag: "Crew Solutions",
+    category: "Fleet Management",
+    description: "Delivered end-to-end crew management services including recruitment, deployment, compliance, and seafarer welfare support.",
+    location: "Global",
+    year: "2025",
+    stat: "Qualified Seafarers",
+    image: image3,
+    link: "/projects/crew-management"
+  },
+  {
+    title: "Global Recruitment Projects",
+    tag: "Maritime Recruitment",
+    category: "Fleet Management",
+    description: "Supported maritime organizations with global recruitment solutions, connecting skilled professionals with industry opportunities.",
+    location: "Worldwide",
+    year: "2025",
+    stat: "Global Talent Network",
+    image: image1,
+    link: "/projects/global-recruitment"
+  },
+  {
+    title: "Marine Logistics Projects",
+    tag: "Logistics Support",
+    category: "Fleet Management",
+    description: "Executed marine logistics projects ensuring efficient cargo movement, supply chain coordination, and offshore operational support.",
+    location: "International",
+    year: "2025",
+    stat: "Logistics Efficiency",
+    image: image2,
+    link: "/projects/marine-logistics"
+  },
+  {
+    title: "Maritime Consultancy Projects",
+    tag: "Strategic Advisory",
     category: "Maritime Consultancy",
-    description: "Integrated predictive analytics to forecast demand and optimize shipping schedules, increasing on-time delivery by 40%.",
-    location: "Tokyo",
-    year: "2023",
-    stat: "40% Delivery Improvement",
+    description: "Delivered expert consultancy services covering maritime operations, compliance, business strategy, and technical advisory solutions.",
+    location: "Global",
+    year: "2025",
+    stat: "Industry Expertise",
     image: image3,
-    link: "/projects/predictive-shipping"
+    link: "/projects/maritime-consultancy"
   },
   {
-    title: "E-commerce Fulfillment Strategy",
-    tag: "E-commerce Logistics",
-    category: "Shipbuilding",
-    description: "Revamped fulfillment processes for an e-commerce giant, improving order accuracy by 35% and reducing returns by 20%.",
-    location: "Berlin",
-    year: "2023",
-    stat: "35% Accuracy Gain",
+    title: "Marine Insurance Projects",
+    tag: "Risk Protection",
+    category: "Maritime Consultancy",
+    description: "Provided marine insurance consulting and risk assessment services to protect maritime assets and support informed decision-making.",
+    location: "Global",
+    year: "2025",
+    stat: "Risk Assessment",
     image: image1,
-    link: "/projects/ecommerce-fulfillment"
+    link: "/projects/marine-insurance"
   },
   {
-    title: "Real-Time Inventory Tracking",
-    tag: "Inventory Management",
-    category: "Digitisation",
-    description: "Deployed real-time inventory systems in 50 locations, reducing stock discrepancies by 70%.",
-    location: "Paris",
-    year: "2024",
-    stat: "70% Accuracy Improvement",
+    title: "Maritime Risk Management Software Projects",
+    tag: "Risk Management",
+    category: "Maritime Consultancy",
+    description: "Designed intelligent risk management solutions that improve compliance, safety monitoring, incident reporting, and operational decision-making.",
+    location: "Global",
+    year: "2025",
+    stat: "Compliance Solutions",
     image: image2,
-    link: "/projects/inventory-tracking"
+    link: "/projects/maritime-risk-management-software"
   },
   {
-    title: "Enhanced Cargo Surveillance",
-    tag: "Cargo Security",
-    category: "Port Operations",
-    description: "Installed AI surveillance across shipping facilities, decreasing cargo theft incidents by 80%.",
-    location: "Antwerp",
-    year: "2024",
-    stat: "80% Security Enhancement",
+    title: "Maritime Case Advisory Projects",
+    tag: "Legal Advisory",
+    category: "Maritime Consultancy",
+    description: "Provided expert advisory support for maritime disputes, regulatory matters, arbitration, and complex case management services.",
+    location: "International",
+    year: "2025",
+    stat: "Expert Guidance",
     image: image3,
-    link: "/projects/cargo-surveillance"
+    link: "/projects/maritime-case-advisory"
+  },
+  {
+    title: "Shipbuilding Projects",
+    tag: "Vessel Construction",
+    category: "Shipbuilding",
+    description: "Delivered shipbuilding solutions from concept to commissioning with a focus on quality, safety, and engineering excellence.",
+    location: "India",
+    year: "2025",
+    stat: "Modern Shipyards",
+    image: image1,
+    link: "/projects/shipbuilding"
+  },
+  {
+    title: "Shipyard Projects",
+    tag: "Shipyard Management",
+    category: "Shipbuilding",
+    description: "Executed shipyard development and modernization projects to improve production efficiency, maintenance capabilities, and operational performance.",
+    location: "India",
+    year: "2025",
+    stat: "Operational Efficiency",
+    image: image2,
+    link: "/projects/shipyard"
+  },
+  {
+    title: "Maritime Infrastructure Development Projects",
+    tag: "Infrastructure",
+    category: "Shipbuilding",
+    description: "Developed maritime infrastructure projects including terminals, waterfront facilities, and marine engineering solutions.",
+    location: "Global",
+    year: "2025",
+    stat: "Infrastructure Growth",
+    image: image3,
+    link: "/projects/maritime-infrastructure"
+  },
+  {
+    title: "Inland Waterways Projects",
+    tag: "Water Transport",
+    category: "Shipbuilding",
+    description: "Supported inland waterway development through navigation planning, infrastructure enhancement, and sustainable transport solutions.",
+    location: "India",
+    year: "2025",
+    stat: "Sustainable Navigation",
+    image: image1,
+    link: "/projects/inland-waterways"
+  },
+  {
+    title: "Maritime Software Development Projects",
+    tag: "Software Solutions",
+    category: "Digitisation",
+    description: "Built custom maritime software platforms that streamline operations, automate workflows, and improve business performance.",
+    location: "Global",
+    year: "2025",
+    stat: "Digital Innovation",
+    image: image2,
+    link: "/projects/maritime-software-development"
+  },
+  {
+    title: "Artificial Intelligence Projects",
+    tag: "AI Solutions",
+    category: "Digitisation",
+    description: "Integrated AI-powered technologies to enhance maritime analytics, predictive maintenance, operational intelligence, and automation.",
+    location: "Global",
+    year: "2025",
+    stat: "AI-Powered Systems",
+    image: image3,
+    link: "/projects/artificial-intelligence"
+  },
+  {
+    title: "Maritime Simulation Projects",
+    tag: "Simulation & Training",
+    category: "Digitisation",
+    description: "Developed advanced maritime simulation environments for operational planning, crew assessment, and practical training programs.",
+    location: "Global",
+    year: "2025",
+    stat: "Simulation Excellence",
+    image: image1,
+    link: "/projects/maritime-simulation"
+  },
+  {
+    title: "Training LMS Projects",
+    tag: "E-Learning",
+    category: "Digitisation",
+    description: "Implemented Learning Management Systems for maritime institutions to deliver digital training, certification, and performance tracking.",
+    location: "Global",
+    year: "2025",
+    stat: "Smart Learning",
+    image: image2,
+    link: "/projects/training-lms"
+  },
+  {
+    title: "Digital Twin Projects",
+    tag: "Digital Twin",
+    category: "Digitisation",
+    description: "Developed digital twin solutions for maritime assets, enabling real-time monitoring, predictive analysis, and improved operational efficiency.",
+    location: "Global",
+    year: "2025",
+    stat: "Real-Time Insights",
+    image: image3,
+    link: "/projects/digital-twin"
   }
 ];
 
@@ -189,8 +288,18 @@ export default function Projects() {
           <div className="flex flex-col md:flex-row py-8 px-4 md:px-8 border-b border-gray-200">
             <div className="flex flex-col w-full md:w-7/12">
               <SubHeading title="Our Projects" className="mb-4 md:mb-6" />
-              <h1 className="font-oswald text-2xl md:text-4xl text-secondary font-bold mb-3 md:mb-6">Delivering Impact <span className="text-primary">.</span><br />Driving <span className="text-secondary-dark">Maritime Excellence</span><span className="text-primary">.</span></h1>
-              <p className="text-sm md:text-[15px] max-w-full md:max-w-[60%] text-gray-600 font-medium">From complex operations to innovative solutions, explore how PMV Maritime creates value across the globe.</p>
+              <h1 className="font-oswald text-2xl md:text-4xl text-secondary font-bold mb-3 md:mb-6">
+                Maritime Expertise<span className="text-primary">.</span>
+                <br />
+                <span className="text-secondary-dark">Transformed into Measurable Results</span>
+                <span className="text-primary">.</span>
+              </h1>
+
+              <p className="text-sm md:text-[15px] max-w-full md:max-w-[90%] text-gray-600 font-medium">
+                Explore how PMV Maritime Solutions delivers projects through technical
+                expertise, digital innovation, industry knowledge, and disciplined
+                execution across the global maritime sector.
+              </p>
             </div>
             <div className="w-full md:w-5/12 hidden flex-col mt-6 md:mt-0">
             </div>

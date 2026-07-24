@@ -38,8 +38,8 @@ export default function CTA() {
             </h2>
 
             {/* Description */}
-            <p className="text-gray-300 text-sm md:text-base lg:text-[16px] leading-normal max-w-lg mb-8">
-              From strategic advisory to seamless operations, we deliver reliable solutions that keep your business moving-safely, efficiently, and sustainably.
+            <p className="text-gray-300 text-sm md:text-base lg:text-[16px] leading-normal max-w-xl mb-8">
+              From strategic advisory to dependable operations, PMV Maritime Solutions Limited delivers integrated solutions that help your business move with greater safety, efficiency, confidence, and sustainability.
             </p>
 
             {/* CTA Buttons */}

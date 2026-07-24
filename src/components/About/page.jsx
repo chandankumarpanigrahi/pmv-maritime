@@ -41,7 +41,7 @@ const serviceHighlights = [
   },
   {
     icon: icon4,
-    title: "350+",
+    title: "200+",
     description: "Experts & Professionals",
   },
 ];
@@ -61,19 +61,32 @@ export default function About() {
       <div className="w-full md:w-5/12 flex flex-col border border-gray-200">
         <div className="flex flex-col pt-8 px-4 md:px-8 pb-4 border-b border-gray-200">
           <SubHeading title="About Us" className="mb-4 md:mb-8" />
-          <h1 className="font-oswald text-3xl md:text-4xl text-sky-700 font-bold mb-5 md:mb-8">Beyond the <br /><span className="text-sky-900"> Maritime Services</span> <br /> and Operations<span className="text-primary">.</span></h1>
-          <p className="text-sm md:text-[16px] text-gray-600 font-medium"><span className="text-gray-800 font-bold">PMV Maritime</span> operates at the intersection of technical precision and visionary management. We don&apos;t just move cargo; we curate the flow of global commerce with a commitment to sustainability and digital-first operations.</p>
+
+          <h1 className="font-oswald text-3xl md:text-4xl text-sky-700 font-bold mb-5 md:mb-8">
+            Beyond the<br />
+            <span className="text-sky-900">Maritime Services<span className="text-primary">.</span></span> <br />
+            Advancing Maritime Possibilities<span className="text-primary">.</span>
+          </h1>
+
+          <p className="text-sm md:text-[16px] text-gray-600 font-medium">
+            <span className="text-gray-800 font-bold">PMV Maritime Solutions</span>{" "}delivers integrated solutions across vessel management, crewing, marine services, consultancy, shipbuilding, technical management, and maritime projects. We support shipowners and operators with practical expertise and tailored solutions that strengthen operational excellence.
+          </p>
         </div>
+
         <div className="flex flex-col gap-5 py-4 px-4 md:px-8">
           <div className="flex flex-row gap-4">
             <LuShipWheel className="text-primary" size={50} />
-            <p className="text-sm md:text-[15px] w-full md:w-[90%] text-gray-900">We combine expertise, technology and global reach to deliver safe, efficient and sustainable maritime solutions.</p>
+            <p className="text-sm md:text-[15px] w-full md:w-[90%] text-gray-900">
+              Built on experience, driven by innovation, and trusted at sea, we deliver safe, efficient, compliant, and sustainable maritime solutions.
+            </p>
           </div>
+
           <Link
             href="/services"
             className="group w-fit text-[14px] flex gap-5 items-center pl-3 md:pl-4 pr-2 md:pr-3 py-1.5 md:py-2 bg-primary hover:bg-primary-hover text-white font-bold tracking-wider uppercase shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
           >
-            Explore Services <FaArrowRight className="group-hover:-rotate-45 transition-all duration-300 ease-in-out" />
+            Explore Services{" "}
+            <FaArrowRight className="group-hover:-rotate-45 transition-all duration-300 ease-in-out" />
           </Link>
         </div>
       </div>

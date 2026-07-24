@@ -25,81 +25,90 @@ const tabs = [
     path: "/services/consultancy",
     content: {
       title: "Maritime Consultancy",
-      subtitle: "Strategic guidance. Smarter decisions. Stronger results.",
-      description: "Our consultants bring deep industry knowledge and real-world experience to solve challenges, drive performance and create sustainable impact.",
+      subtitle: "Strategic guidance. Better decisions. Stronger outcomes.",
+      description:
+        "Our consultants combine technical expertise, commercial insight, and operational experience to reduce risk, improve performance, and support confident maritime decision-making.",
       benefits: [
-        { icon: TbTarget, title: "Data-driven", desc: "insights" },
-        { icon: TbShieldCheck, title: "Risk management", desc: "& compliance" },
-        { icon: TbActivity, title: "Operational", desc: "excellence" },
-        { icon: TbGlobe, title: "Global perspective,", desc: "local expertise" }
+        { icon: TbTarget, title: "Business", desc: "strategy" },
+        { icon: TbShieldCheck, title: "Risk &", desc: "compliance" },
+        { icon: TbActivity, title: "Technical", desc: "audits" },
+        { icon: TbGlobe, title: "Project", desc: "advisory" }
       ],
       images: [image1, image2, image3, image1]
     }
   },
+
   {
     title: "Maritime Training",
     icon: PiGraduationCap,
     path: "/services/training",
     content: {
       title: "Maritime Training",
-      subtitle: "Empowering crew. Raising standards. Ensuring safety.",
-      description: "Comprehensive training courses tailored to modern maritime operations, equipping your workforce with skills that meet international compliance and safety standards.",
+      subtitle: "Building competence. Improving safety. Driving excellence.",
+      description:
+        "Industry-focused training programmes designed for seafarers, technical teams, managers, and maritime institutions to strengthen skills and regulatory readiness.",
       benefits: [
-        { icon: TbTarget, title: "Certified", desc: "programs" },
-        { icon: TbShieldCheck, title: "Safety-first", desc: "standards" },
-        { icon: TbActivity, title: "Simulated", desc: "environments" },
-        { icon: TbGlobe, title: "Career growth", desc: "& global placement" }
+        { icon: TbTarget, title: "STCW", desc: "training" },
+        { icon: TbShieldCheck, title: "Safety", desc: "courses" },
+        { icon: TbActivity, title: "Simulator", desc: "learning" },
+        { icon: TbGlobe, title: "Leadership", desc: "development" }
       ],
       images: [image2, image3, image1]
     }
   },
+
   {
     title: "Fleet Management",
     icon: LuShipWheel,
     path: "/services/fleet-management",
     content: {
       title: "Fleet Management",
-      subtitle: "Optimized voyages. Minimal downtime. Maximum reliability.",
-      description: "Full technical and operational management of your fleet, utilizing state-of-the-art diagnostic software to ensure high vessel performance and efficiency.",
+      subtitle: "Reliable vessels. Greater efficiency. Better performance.",
+      description:
+        "Structured fleet management services focused on vessel reliability, maintenance, compliance, operational efficiency, and long-term asset performance.",
       benefits: [
-        { icon: TbTarget, title: "Cost & fuel", desc: "optimization" },
-        { icon: TbShieldCheck, title: "Class & flag", desc: "compliance" },
-        { icon: TbActivity, title: "Predictive", desc: "maintenance" },
-        { icon: TbGlobe, title: "24/7 global", desc: "monitoring" }
+        { icon: TbTarget, title: "Technical", desc: "management" },
+        { icon: TbShieldCheck, title: "Class &", desc: "compliance" },
+        { icon: TbActivity, title: "Planned", desc: "maintenance" },
+        { icon: TbGlobe, title: "Performance", desc: "monitoring" }
       ],
       images: [image3, image1, image2]
     }
   },
+
   {
     title: "Crew Management",
     icon: TbUserShield,
     path: "/services/crew-management",
     content: {
       title: "Crew Management",
-      subtitle: "Right people. Right place. Right attitude.",
-      description: "End-to-end crewing solutions, from recruitment and training to travel logistics and payroll, keeping your vessels running smoothly with top-tier maritime talent.",
+      subtitle: "Qualified people. Trusted support. Seamless deployment.",
+      description:
+        "End-to-end crew management services covering recruitment, certification, welfare, deployment, compliance, and long-term workforce planning.",
       benefits: [
-        { icon: TbTarget, title: "Highly verified", desc: "credentials" },
-        { icon: TbShieldCheck, title: "Crew welfare", desc: "& protection" },
-        { icon: TbActivity, title: "Seamless", desc: "logistics" },
-        { icon: TbGlobe, title: "Multi-national", desc: "talent pool" }
+        { icon: TbTarget, title: "Crew", desc: "recruitment" },
+        { icon: TbShieldCheck, title: "Document", desc: "verification" },
+        { icon: TbActivity, title: "Travel &", desc: "deployment" },
+        { icon: TbGlobe, title: "Crew", desc: "welfare" }
       ],
       images: [image1, image2, image3]
     }
   },
+
   {
     title: "Digital Solutions",
     icon: TbDeviceDesktopCheck,
     path: "/services/digital-solutions",
     content: {
-      title: "Digital Solutions",
-      subtitle: "Smarter data. Faster decisions. Connected operations.",
-      description: "Innovative software and IoT tools designed to aggregate live vessel telemetry and provide predictive analysis for modern shipowners and operators.",
+      title: "Digital Maritime Solutions",
+      subtitle: "Connected systems. Smarter decisions. Greater efficiency.",
+      description:
+        "Digital platforms and intelligent solutions that improve operational visibility, automate workflows, strengthen compliance, and support better decision-making.",
       benefits: [
-        { icon: TbTarget, title: "IoT telemetry", desc: "& sensor data" },
-        { icon: TbShieldCheck, title: "Cybersecurity", desc: "& data protection" },
-        { icon: TbActivity, title: "Real-time", desc: "analytics" },
-        { icon: TbGlobe, title: "Cloud integration", desc: "anywhere" }
+        { icon: TbTarget, title: "Workflow", desc: "automation" },
+        { icon: TbShieldCheck, title: "Digital", desc: "compliance" },
+        { icon: TbActivity, title: "Real-time", desc: "dashboards" },
+        { icon: TbGlobe, title: "Data", desc: "analytics" }
       ],
       images: [image2, image3, image1]
     }
@@ -136,15 +145,27 @@ export default function Services() {
         <div className="flex flex-col md:flex-row py-8 px-4 md:px-8">
           <div className="flex flex-col w-full md:w-7/12">
             <SubHeading title="Services" className="mb-4 md:mb-8" />
-            <h1 className="font-oswald text-2xl md:text-4xl text-secondary font-bold mb-3 md:mb-6">End-to-End <span className="text-secondary-dark">Maritime Solutions</span><span className="text-primary">.</span><br />Driven by Expertise<span className="text-primary">.</span> <span className="text-secondary-dark">Delivered with Care</span><span className="text-primary">.</span></h1>
-            <p className="text-sm md:text-[15px] max-w-[90%] md:max-w-[60%] text-gray-600 font-medium">We combine expertise, technology and global reach to deliver safe, efficient and sustainable maritime solutions.</p>
+
+            <h1 className="font-oswald text-2xl md:text-4xl text-secondary font-bold mb-3 md:mb-6">
+              End-to-End <span className="text-secondary-dark">Maritime Solutions</span><span className="text-primary">.</span><br />
+              Expertise You Can Trust<span className="text-primary">.</span>{" "}
+              <span className="text-secondary-dark">Delivered with Confidence</span><span className="text-primary">.</span>
+            </h1>
+
+            <p className="text-sm md:text-[15px] max-w-[90%] md:max-w-[60%] text-gray-600 font-medium">
+              PMV Maritime Solutions Limited delivers integrated maritime services
+              through technical expertise, operational excellence, and digital
+              innovation for safer, smarter, and more efficient maritime operations.
+            </p>
           </div>
+
           <div className="w-full md:w-5/12 flex flex-col mt-6 md:mt-0 justify-end items-start md:items-end">
             <Link
               href="/services"
               className="group w-fit text-[14px] flex gap-5 items-center mb-3 pl-3 md:pl-4 pr-2 md:pr-3 py-1.5 md:py-2 bg-primary hover:bg-primary-hover text-white font-bold tracking-wider uppercase shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
             >
-              View All Services <FaArrowRight className="group-hover:-rotate-45 transition-all duration-300 ease-in-out" />
+              View All Services{" "}
+              <FaArrowRight className="group-hover:-rotate-45 transition-all duration-300 ease-in-out" />
             </Link>
           </div>
         </div>

@@ -90,9 +90,14 @@ export default function About() {
   }, []);
 
   const tabContents = {
-    mission: "Our mission is to engineer maritime excellence through forward-thinking innovation, uncompromising safety, and environmental compliance. We combine senior maritime expertise and global reach to deliver safe, highly efficient, and sustainable marine operations. By prioritizing operational integrity, we protect life at sea and optimize critical ocean-bound supply chains. We continuously strive to build trusted partnerships, ensuring every vessel is managed with the highest standard of care.",
-    vision: "Our vision is to be the world's most trusted partner in sustainable maritime operations, defining the future of marine logistics through digital innovation, carbon-neutral initiatives, and exceptional service quality. We aspire to connect global markets seamlessly while preserving our oceans for generations to come.",
-    goals: "Provide connected services across consultancy, training, fleet management, crew management, port operations, digitisation, shipbuilding, environmental protection, recruitment, education, and maritime projects."
+    mission:
+      "Our mission is to deliver integrated maritime solutions that improve safety, operational efficiency, compliance, and sustainability across the global maritime industry. By combining maritime expertise, digital innovation, and strong industry partnerships, we provide practical, reliable, and future-ready solutions for shipowners, ports, maritime institutions, and industry stakeholders.",
+
+    vision:
+      "Our vision is to become a globally trusted maritime solutions partner, connecting expertise, technology, people, and infrastructure to build safer, smarter, and more sustainable maritime operations. We strive to create long-term value through innovation, workforce development, and responsible project execution.",
+
+    goals:
+      "Deliver integrated maritime solutions across consultancy, training, fleet management, crew management, port operations, digitisation, shipbuilding, environmental protection, recruitment, education, and maritime projects while driving innovation, operational excellence, sustainability, and long-term industry growth."
   };
 
   return (
@@ -147,7 +152,7 @@ export default function About() {
             <SubHeading title="Our Direction" className="mb-2 md:mb-3" />
 
             {/* Headline */}
-            <h2 className="font-oswald text-3xl sm:text-4xl md:text-[42px] text-secondary font-bold mb-8 leading-tight">
+            <h2 className="font-oswald text-3xl sm:text-3xl md:text-[42px] text-secondary font-bold mb-8 leading-tight">
               What Drives Us <span className="text-secondary-dark">Forward</span>
             </h2>
 
@@ -181,7 +186,7 @@ export default function About() {
         </div>
       </div>
       <Projects />
-      <div className="container max-w-7xl mx-auto border border-t-0 border-gray-200 bg-white relative">
+      <div className="container hidden max-w-7xl mx-auto border border-t-0 border-gray-200 bg-white relative">
         <div className="flex flex-col md:flex-row w-full gap-3 md:gap-0 py-8 px-4 md:px-8">
           <div className="flex flex-col w-full">
             <SubHeading title="Our Team" className="mb-4 md:mb-6" />

@@ -21,68 +21,202 @@ import image2 from "../../../public/assets/images/about-image-2.jpg";
 import image3 from "../../../public/assets/images/about-image-3.jpg";
 
 const projectCategories = [
-  "Port Operations",
-  "Fleet Management",
-  "Maritime Consultancy",
-  "Shipbuilding",
-  "Digitisation"
+  "Port Projects",
+  "Fleet Projects",
+  "Consultancy Projects",
+  "Shipbuilding Projects",
+  "Digital Projects"
 ];
 
 const projectsData = [
+  // ========================= PORT PROJECTS =========================
   {
-    title: "Smart Container Tracking System",
-    tag: "Smart Ports",
-    category: "Digitisation",
-    description: "Deployed IoT-enabled container monitoring across a major port cluster, delivering real-time visibility and predictive maintenance alerts.",
-    location: "Dubai",
-    year: "2024",
-    stat: "42% Visibility Gain",
+    title: "Port Development Projects",
+    tag: "Port Development",
+    category: "Port Projects",
+    description:
+      "Supporting port master planning, terminal development, logistics optimisation, and infrastructure improvements for modern maritime operations.",
+    location: "Global",
+    year: "Ongoing",
+    stat: "Capacity Improvement",
     image: image1,
-    link: "/projects/container-tracking"
+    link: "/projects/port-development"
   },
   {
-    title: "Terminal Operations Modernization",
+    title: "Port Operations Projects",
     tag: "Port Operations",
-    category: "Port Operations",
-    description: "Implemented an integrated terminal management system improving operational efficiency and reducing turnaround time by 35%.",
-    location: "Singapore",
-    year: "2023",
-    stat: "35% Efficiency Gain",
+    category: "Port Projects",
+    description:
+      "Improving port-call coordination, cargo handling, marine logistics, vessel turnaround, and operational efficiency across ports.",
+    location: "Worldwide",
+    year: "Ongoing",
+    stat: "Reduced Delays",
     image: image2,
-    link: "/projects/terminal-modernization"
+    link: "/projects/port-operations"
   },
   {
-    title: "Automated Crane & Yard Management",
-    tag: "Port Automation",
-    category: "Port Operations",
-    description: "Integrated automated stacking crane systems with real-time yard coordination software, increasing cargo throughput by 40% and optimizing slot utilization.",
-    location: "Hamburg",
-    year: "2024",
-    stat: "40% Throughput Boost",
+    title: "Port Digitisation Projects",
+    tag: "Port Digitisation",
+    category: "Port Projects",
+    description:
+      "Implementing connected digital systems, workflow automation, dashboards, and operational visibility for smarter port management.",
+    location: "International",
+    year: "Ongoing",
+    stat: "Digital Transformation",
+    image: image3,
+    link: "/projects/port-digitisation"
+  },
+
+  // ========================= FLEET PROJECTS =========================
+  {
+    title: "Fleet Management Projects",
+    tag: "Fleet Management",
+    category: "Fleet Projects",
+    description:
+      "Enhancing vessel reliability through maintenance planning, compliance management, inspections, and technical performance monitoring.",
+    location: "Global",
+    year: "Ongoing",
+    stat: "Reduced Downtime",
     image: image1,
-    link: "/projects/crane-yard-automation"
+    link: "/projects/fleet-management"
   },
   {
-    title: "Smart Berth Allocation System",
-    tag: "Berth Optimization",
-    category: "Port Operations",
-    description: "Deployed AI-driven berth scheduling system to dynamically coordinate vessel arrivals, reducing waiting times at anchorage by 50%.",
-    location: "Rotterdam",
-    year: "2023",
-    stat: "50% Less Waiting Time",
-    image: image3,
-    link: "/projects/berth-allocation-optimization"
+    title: "Crew Management Projects",
+    tag: "Crew Management",
+    category: "Fleet Projects",
+    description:
+      "Managing recruitment, deployment, certification, welfare, and workforce planning for compliant maritime operations worldwide.",
+    location: "Worldwide",
+    year: "Ongoing",
+    stat: "Qualified Workforce",
+    image: image2,
+    link: "/projects/crew-management"
   },
   {
-    title: "Cold Chain Network Optimization",
-    tag: "Cold Chain",
-    category: "Fleet Management",
-    description: "Redesigned refrigerated logistics network across 12 distribution hubs, cutting spoilage rates and reducing total cold-chain costs by 28%.",
-    location: "Rotterdam",
-    year: "2022",
-    stat: "28% Cost Reduction",
+    title: "Marine Logistics Projects",
+    tag: "Marine Logistics",
+    category: "Fleet Projects",
+    description:
+      "Delivering logistics support for vessels, equipment, offshore operations, spare parts, and maritime infrastructure projects.",
+    location: "International",
+    year: "Ongoing",
+    stat: "Reliable Delivery",
     image: image3,
-    link: "/projects/cold-chain-optimization"
+    link: "/projects/marine-logistics"
+  },
+
+  // ========================= CONSULTANCY PROJECTS =========================
+  {
+    title: "Maritime Consultancy Projects",
+    tag: "Consultancy",
+    category: "Consultancy Projects",
+    description:
+      "Providing strategic, technical, operational, and commercial advisory services for maritime organisations and stakeholders.",
+    location: "Global",
+    year: "Ongoing",
+    stat: "Better Decisions",
+    image: image1,
+    link: "/projects/maritime-consultancy"
+  },
+  {
+    title: "Risk Management Projects",
+    tag: "Risk Management",
+    category: "Consultancy Projects",
+    description:
+      "Developing digital risk management solutions for monitoring, compliance, incident reporting, and operational safety.",
+    location: "Worldwide",
+    year: "Ongoing",
+    stat: "Reduced Risk",
+    image: image2,
+    link: "/projects/risk-management"
+  },
+  {
+    title: "Case Advisory Projects",
+    tag: "Case Advisory",
+    category: "Consultancy Projects",
+    description:
+      "Supporting maritime investigations, claims, disputes, technical reviews, and regulatory compliance through expert advisory.",
+    location: "International",
+    year: "Ongoing",
+    stat: "Expert Guidance",
+    image: image3,
+    link: "/projects/case-advisory"
+  },
+
+  // ========================= SHIPBUILDING PROJECTS =========================
+  {
+    title: "Shipbuilding Projects",
+    tag: "Shipbuilding",
+    category: "Shipbuilding Projects",
+    description:
+      "Supporting vessel construction, conversion, refurbishment, quality assurance, commissioning, and final project delivery.",
+    location: "Global",
+    year: "Ongoing",
+    stat: "Quality Assurance",
+    image: image1,
+    link: "/projects/shipbuilding"
+  },
+  {
+    title: "Infrastructure Projects",
+    tag: "Infrastructure",
+    category: "Shipbuilding Projects",
+    description:
+      "Managing maritime infrastructure projects from feasibility and planning through construction and successful handover.",
+    location: "Worldwide",
+    year: "Ongoing",
+    stat: "Project Success",
+    image: image2,
+    link: "/projects/infrastructure"
+  },
+  {
+    title: "Inland Waterway Projects",
+    tag: "Waterways",
+    category: "Shipbuilding Projects",
+    description:
+      "Improving inland transport, navigation safety, connectivity, and operational readiness through strategic waterway development.",
+    location: "Regional",
+    year: "Ongoing",
+    stat: "Safer Navigation",
+    image: image3,
+    link: "/projects/inland-waterways"
+  },
+
+  // ========================= DIGITAL PROJECTS =========================
+  {
+    title: "Maritime Software Projects",
+    tag: "Software Development",
+    category: "Digital Projects",
+    description:
+      "Designing, testing, reviewing, and deploying maritime software solutions that improve reliability and operational performance.",
+    location: "Global",
+    year: "Ongoing",
+    stat: "Reliable Systems",
+    image: image1,
+    link: "/projects/software-development"
+  },
+  {
+    title: "Artificial Intelligence Projects",
+    tag: "Artificial Intelligence",
+    category: "Digital Projects",
+    description:
+      "Applying AI-powered analytics, predictive maintenance, intelligent planning, and automation across maritime operations.",
+    location: "International",
+    year: "Ongoing",
+    stat: "Smarter Decisions",
+    image: image2,
+    link: "/projects/artificial-intelligence"
+  },
+  {
+    title: "Training LMS Projects",
+    tag: "Digital Learning",
+    category: "Digital Projects",
+    description:
+      "Developing Learning Management Systems for maritime training, certification, competency tracking, and professional development.",
+    location: "Worldwide",
+    year: "Ongoing",
+    stat: "Digital Learning",
+    image: image3,
+    link: "/projects/training-lms"
   }
 ];
 
@@ -99,52 +233,74 @@ export default function Projects() {
         <div className="flex flex-col md:flex-row py-8 px-4 md:px-8">
           <div className="flex flex-col w-full md:w-7/12">
             <SubHeading title="Our Projects" className="mb-4 md:mb-6" />
-            <h1 className="font-oswald text-2xl md:text-4xl text-secondary font-bold mb-3 md:mb-6">Delivering Impact<span className="text-primary">.</span><br />Driving <span className="text-secondary-dark">Maritime Excellence</span><span className="text-primary">.</span></h1>
-            <p className="text-sm md:text-[15px] max-w-full md:max-w-[60%] text-gray-600 font-medium">From complex operations to innovative solutions, explore how PMV Maritime creates value across the globe.</p>
+
+            <h1 className="font-oswald text-2xl md:text-4xl text-secondary font-bold mb-3 md:mb-6">
+              Maritime Expertise<span className="text-primary">.</span>
+              <br />
+              <span className="text-secondary-dark">Transformed into Measurable Results</span>
+              <span className="text-primary">.</span>
+            </h1>
+
+            <p className="text-sm md:text-[15px] max-w-full md:max-w-[70%] text-gray-600 font-medium">
+              Explore how PMV Maritime Solutions delivers projects through technical
+              expertise, digital innovation, industry knowledge, and disciplined
+              execution across the global maritime sector.
+            </p>
           </div>
+
           <div className="w-full md:w-5/12 flex flex-col mt-6 md:mt-0">
             <div className="grid grid-cols-2 md:grid-cols-4 w-full mb-8 md:mb-6 mt-2">
-              {/* Projects Completed */}
+              {/* Projects Delivered */}
               <div className="flex flex-col items-center text-center px-2 py-4 md:py-0 border-r border-b md:border-b-0 border-gray-200/80">
                 <LuShip className="w-7 h-7 text-secondary mb-3" />
-                <span className="text-2xl md:text-3xl font-extrabold text-primary leading-none">120+</span>
+                <span className="text-2xl md:text-3xl font-extrabold text-primary leading-none">
+                  120+
+                </span>
                 <span className="text-[11px] md:text-xs text-gray-500 font-medium mt-1 leading-tight">
-                  Projects Completed
+                  Projects Delivered
                 </span>
               </div>
 
-              {/* Countries Served */}
+              {/* Maritime Sectors */}
               <div className="flex flex-col items-center text-center px-2 py-4 md:py-0 border-b md:border-b-0 md:border-l-0 md:border-r border-gray-200/80">
                 <LuGlobe className="w-7 h-7 text-secondary mb-3" />
-                <span className="text-2xl md:text-3xl font-extrabold text-primary leading-none">25+</span>
+                <span className="text-2xl md:text-3xl font-extrabold text-primary leading-none">
+                  25+
+                </span>
                 <span className="text-[11px] md:text-xs text-gray-500 font-medium mt-1 leading-tight">
-                  Countries Served
+                  Maritime Sectors
                 </span>
               </div>
 
-              {/* Client Satisfied */}
+              {/* Service Areas */}
               <div className="flex flex-col items-center text-center px-2 py-4 md:py-0 border-r border-gray-200/80">
                 <LuUsers className="w-7 h-7 text-secondary mb-3" />
-                <span className="text-2xl md:text-3xl font-extrabold text-primary leading-none">99%</span>
+                <span className="text-2xl md:text-3xl font-extrabold text-primary leading-none">
+                  20+
+                </span>
                 <span className="text-[11px] md:text-xs text-gray-500 font-medium mt-1 leading-tight">
-                  Client Satisfied
+                  Project Categories
                 </span>
               </div>
 
-              {/* Industry Awards */}
+              {/* Delivery Framework */}
               <div className="flex flex-col items-center text-center px-2 py-4 md:py-0">
                 <LuAward className="w-7 h-7 text-secondary mb-3" />
-                <span className="text-2xl md:text-3xl font-extrabold text-primary leading-none">15+</span>
+                <span className="text-2xl md:text-3xl font-extrabold text-primary leading-none">
+                  100%
+                </span>
                 <span className="text-[11px] md:text-xs text-gray-500 font-medium mt-1 leading-tight">
-                  Industry Awards
+                  Delivery Focus
                 </span>
               </div>
             </div>
+
             <Link
               href="/projects"
               className="mt-auto mr-auto md:mr-0 ml-0 md:ml-auto group w-fit text-md flex gap-5 items-center mb-3 pl-3 md:pl-4 pr-2 md:pr-3 py-1.5 md:py-2 bg-white border-secondary text-secondary border hover:border-secondary-hover hover:text-secondary-hover font-bold transition-all duration-300"
             >
-              View All Projects <FaArrowRight className="group-hover:-rotate-45 transition-all duration-300 ease-in-out" />
+              View All Projects{" "}
+              <FaArrowRight className="group-hover:-rotate-45 transition-all duration-300 ease-in-out" />
             </Link>
           </div>
         </div>
@@ -218,7 +374,7 @@ export default function Projects() {
 
                   <div>
                     {/* Stats divider line */}
-                    <div className="flex items-center justify-between py-3.5 border-t border-gray-100 mt-5 text-gray-700">
+                    <div className="hidden items-center justify-between py-3.5 border-t border-gray-100 mt-5 text-gray-700">
                       {/* Location */}
                       <div className="flex items-center gap-1.5">
                         <LuMapPin className="text-secondary text-base flex-shrink-0" />
