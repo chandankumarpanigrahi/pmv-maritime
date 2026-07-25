@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styles from "./style.module.css";
 import Image from "next/image";
 import Link from "next/link";
@@ -19,6 +19,37 @@ export default function Header({ transparent = false }) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
+  const menuRef = useRef(null);
+  const buttonRef = useRef(null);
+
+  // Close mega menu when clicking outside or pressing Escape
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const handleClickOutside = (event) => {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(event.target) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target)
+      ) {
+        setMenuOpen(false);
+      }
+    };
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [menuOpen]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -113,6 +144,7 @@ export default function Header({ transparent = false }) {
                 Contact Us
               </Link>
               <button
+                ref={buttonRef}
                 onClick={() => setMenuOpen(!menuOpen)}
                 className={`p-2 cursor-pointer transition-all duration-300 text-white ${isTransparentMode
                   ? "bg-white/10 hover:bg-white/20"
@@ -150,6 +182,7 @@ export default function Header({ transparent = false }) {
 
       {/* Top-down Animated Mega Menu Overlay (Desktop only) */}
       <div
+        ref={menuRef}
         className={`hidden md:block fixed left-0 w-full text-white transition-all duration-500 ease-in-out transform md:z-100000 ${menuOpen
           ? "translate-y-0 opacity-100 pointer-events-auto"
           : "-translate-y-full opacity-0 pointer-events-none"
