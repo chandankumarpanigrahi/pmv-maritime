@@ -367,7 +367,7 @@ export default function Projects() {
 
                     <div>
                       {/* Stats divider line */}
-                      <div className="flex items-center justify-between py-3.5 border-t border-gray-100 mt-5 text-gray-700">
+                      <div className="hidden items-center justify-between py-3.5 border-t border-gray-100 mt-5 text-gray-700">
                         {/* Location */}
                         <div className="flex items-center gap-1.5">
                           <LuMapPin className="text-secondary text-base flex-shrink-0" />
