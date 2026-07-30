@@ -2,8 +2,8 @@ import { Nunito_Sans, Oswald } from "next/font/google";
 import "./globals.css";
 import ClientLayout from "../components/ClientLayout";
 0
-export const MAINTENANCE_MODE = false;
-export const SHOW_LOADER = false;
+export const MAINTENANCE_MODE = true;
+export const SHOW_LOADER = true;
 
 const nunitoSans = Nunito_Sans({
   variable: "--font-nunito-sans",
