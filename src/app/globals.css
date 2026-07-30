@@ -38,3 +38,30 @@ body {
 .max-w-7xl {
   max-width: 1380px !important;
 }
+
+/* Two-way Drawer Animations (Slower silky slide in & out to right) */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.animate-drawer-in {
+  animation: slideInRight 0.42s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-drawer-out {
+  animation: slideOutRight 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}

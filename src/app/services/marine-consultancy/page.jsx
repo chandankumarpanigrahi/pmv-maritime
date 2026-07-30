@@ -12,6 +12,7 @@ import bannerBg from "../../../../public/assets/images/map-bg.png";
 import { IoMdCall } from "react-icons/io";
 import { PiDownloadSimpleBold } from "react-icons/pi";
 import { LuCompass, LuShip, LuShield, LuAnchor, LuCpu, LuLeaf } from "react-icons/lu";
+import ContactUs from "@/components/Contact Us/page";
 
 export default function Projects() {
   const services = [
@@ -29,21 +30,6 @@ export default function Projects() {
       title: "Risk & Compliance",
       description: "Ensuring adherence to international regulations, safety standards, and industry best practices.",
       icon: LuShield
-    },
-    {
-      title: "Fleet & Asset Optimization",
-      description: "Maximizing vessel performance, managing lifecycle costs, and improving asset value.",
-      icon: LuAnchor
-    },
-    {
-      title: "Digital Transformation",
-      description: "Leveraging technology and data analytics to drive smarter, safer, and more agile operations.",
-      icon: LuCpu
-    },
-    {
-      title: "Sustainability Consulting",
-      description: "Supporting decarbonization, environmental compliance, and sustainable maritime practices.",
-      icon: LuLeaf
     }
   ];
 
@@ -112,6 +98,21 @@ export default function Projects() {
           </div>
         </div>
       </div>
+      <div className="flex flex-col md:flex-row container max-w-7xl mx-auto items-stretch relative overflow-hidden">
+        <Image
+          src={bannerBg}
+          alt="Banner Background"
+          className="object-cover opacity-40 pointer-events-none z-0 absolute right-0 -top-1/2"
+        />
+        <div className="w-full flex flex-col border border-y-0 border-gray-200">
+          <div className="flex flex-col md:flex-row py-6 px-4 md:px-8">
+            <div className="flex flex-row w-full items-center justify-between">
+              <SubHeading title="About The Service" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <ContactUs />
     </>
   );
 }

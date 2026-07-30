@@ -12,8 +12,8 @@ import DarkTriangle from "../../../public/assets/images/banner-triangle-dark.png
 
 export default function SubBanner({ Heading, breadcrumbItems, ...breadcrumbProps }) {
   return (
-    <div className="container max-w-7xl mx-auto mt-[140px]">
-      <div className="w-full h-[300px] bg-primary relative">
+    <div className="container max-w-7xl mx-auto mt-[100px]">
+      <div className="w-full h-[230px] md:h-[300px] bg-primary relative">
         <div className={`${styles.bachgroundAnchor} absolute inset-0 opacity-6`}></div>
         <div className={`flex flex-col h-full justify-between`}>
           <div className="flex flex-col relative z-5 h-auto p-10 pt-4 my-auto justify-center">

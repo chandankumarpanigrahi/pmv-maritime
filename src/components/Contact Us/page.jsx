@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 import SubHeading from "@/design/sub-heading/page";
 import Link from "next/link";
 import { LuPhone, LuMail, LuMapPin, LuUsers, LuShieldCheck } from "react-icons/lu";
@@ -13,7 +14,6 @@ export default function ContactUs(props) {
     query: "",
     message: ""
   });
-  const [status, setStatus] = useState({ type: "", message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
@@ -24,56 +24,32 @@ export default function ContactUs(props) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.fullName || !formData.email || !formData.query || !formData.message) {
-      setStatus({ type: "error", message: "Please fill in all fields." });
+      toast.error("Please fill in all fields.");
       return;
     }
 
-    setIsSubmitting(true); // <-- Set to true here
+    setIsSubmitting(true);
 
     try {
-      const now = new Date();
-      const day = String(now.getDate()).padStart(2, "0");
-      const month = String(now.getMonth() + 1).padStart(2, "0");
-      const year = now.getFullYear();
-      let hours = now.getHours();
-      const minutes = String(now.getMinutes()).padStart(2, "0");
-      const seconds = String(now.getSeconds()).padStart(2, "0");
-      const ampm = hours >= 12 ? "PM" : "AM";
-      hours = hours % 12;
-      hours = hours ? hours : 12;
-      const formattedHours = String(hours).padStart(2, "0");
-
-      const payload = {
-        ...formData,
-        dateTime: `${day}-${month}-${year}, ${formattedHours}:${minutes}:${seconds} ${ampm}`
-      };
-
       const res = await fetch("/api/submissions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          data: [payload],
-        }),
+        body: JSON.stringify(formData),
       });
 
       if (res.ok) {
-        setStatus({ type: "success", message: "Thank you! Your message has been sent successfully." });
+        toast.success("Thank you! Your message has been sent successfully.");
         setFormData({ fullName: "", email: "", query: "", message: "" }); // reset form
-
-        // Hide success message after 3 seconds
-        setTimeout(() => {
-          setStatus({ type: "", message: "" });
-        }, 3000);
       } else {
         const errorData = await res.json();
-        setStatus({ type: "error", message: "Error: " + (errorData?.error || res.statusText) });
+        toast.error("Error: " + (errorData?.error || res.statusText));
       }
     } catch (error) {
-      setStatus({ type: "error", message: "Error: " + error.message });
+      toast.error("Error: " + error.message);
     } finally {
-      setIsSubmitting(false); // <-- Set back to false here
+      setIsSubmitting(false);
     }
   };
 
@@ -240,12 +216,7 @@ export default function ContactUs(props) {
               />
             </div>
 
-            {/* Status Message */}
-            {status.message && (
-              <div className={`p-3 text-xs font-semibold ${status.type === "success" ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"}`}>
-                {status.message}
-              </div>
-            )}
+
 
             {/* Submit Button */}
             <button

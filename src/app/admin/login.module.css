@@ -1,0 +1,175 @@
+/* ============================================================
+   ADMIN LOGIN MODULE
+   ============================================================ */
+
+.loginWrapper {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    background: radial-gradient(circle at 20% 20%, #005978 0%, #0f172a 45%, #020617 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Ambient glow accents */
+.ambientGlow1 {
+    position: absolute;
+    top: -10%;
+    left: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(0, 123, 167, 0.25) 0%, rgba(0,0,0,0) 70%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.ambientGlow2 {
+    position: absolute;
+    bottom: -10%;
+    right: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(173, 29, 65, 0.2) 0%, rgba(0,0,0,0) 70%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Anchor Background Pattern overlay */
+.patternOverlay {
+    position: absolute;
+    inset: 0;
+    background-image: url(../../../public/assets/images/bg-anchor.png);
+    background-size: 160px;
+    background-repeat: repeat;
+    opacity: 0.04;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.adminbg {
+    background-image: url(../../../public/assets/images/bg-anchor.png);
+    background-size: 140px;
+    background-repeat: repeat;
+}
+
+/* Main Card */
+.loginCard {
+    width: 100%;
+    max-width: 1020px;
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+    position: relative;
+    z-index: 10;
+}
+
+@media (min-width: 768px) {
+    .loginCard {
+        flex-direction: row;
+    }
+}
+
+/* Left Image Column */
+.sliderCol {
+    display: none;
+    position: relative;
+    overflow: hidden;
+    min-height: 480px;
+}
+
+@media (min-width: 768px) {
+    .sliderCol {
+        display: block;
+        width: 50%;
+    }
+}
+
+.sliderOverlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(2, 6, 23, 0.2) 0%, rgba(0, 89, 120, 0.35) 100%);
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* Right Form Column */
+.formCol {
+    width: 100%;
+    padding: 2.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #ffffff;
+    border-top: 1px solid #e5e7eb;
+}
+
+@media (min-width: 768px) {
+    .formCol {
+        width: 50%;
+        padding: 3.5rem 3rem;
+        border-top: none;
+        border-left: 1px solid #e5e7eb;
+    }
+}
+
+/* Form Controls */
+.inputField {
+    width: 100%;
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    color: #0f172a;
+    padding: 0.85rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.inputField::placeholder {
+    color: #94a3b8;
+}
+
+.inputField:focus {
+    border-color: #007BA7;
+    box-shadow: 0 0 0 2px rgba(0, 123, 167, 0.2);
+    background-color: #ffffff;
+}
+
+.inputField:disabled {
+    background-color: #f8fafc;
+    color: #94a3b8;
+    cursor: not-allowed;
+}
+
+/* Submit Button */
+.submitBtn {
+    width: 100%;
+    padding: 0.9rem 1.5rem;
+    background-color: #AD1D41;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 14px 0 rgba(173, 29, 65, 0.25);
+}
+
+.submitBtn:hover:not(:disabled) {
+    background-color: #921232;
+    box-shadow: 0 6px 20px 0 rgba(173, 29, 65, 0.4);
+}
+
+.submitBtn:disabled {
+    background-color: #f1f5f9;
+    color: #94a3b8;
+    cursor: not-allowed;
+    box-shadow: none;
+}

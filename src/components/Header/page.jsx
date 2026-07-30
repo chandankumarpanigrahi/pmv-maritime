@@ -72,7 +72,7 @@ export default function Header({ transparent = false }) {
   return (
     <div className="fixed top-0 w-full z-50">
       {/* Hide CtaHeader when scrolled to keep sticky menu compact */}
-      <div className={`transition-all duration-300 relative md:z-100009 origin-top ${scrolled ? "h-0 overflow-hidden opacity-0 scale-y-0" : "h-auto opacity-100"}`}>
+      <div className={`hidden transition-all duration-300 relative md:z-100009 origin-top ${scrolled ? "h-0 overflow-hidden opacity-0 scale-y-0" : "h-auto opacity-100"}`}>
         <CtaHeader />
       </div>
 
@@ -88,7 +88,7 @@ export default function Header({ transparent = false }) {
             <Image
               src={isTransparentMode ? logoLight : logoDark}
               alt="logo"
-              className="w-[70px] transition-all duration-300"
+              className="w-[40px] md:w-[70px] transition-all duration-300"
             />
           </Link>
 

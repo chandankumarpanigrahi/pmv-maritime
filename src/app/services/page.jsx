@@ -243,7 +243,7 @@ export default function Services() {
           className="object-cover opacity-50 pointer-events-none z-0 absolute right-0"
         />
         <div className="w-full flex flex-col border border-t-0 border-gray-200 bg-[#f7f5f8]">
-          <div className="flex flex-col md:flex-row py-8 px-4 md:px-8 border-b border-gray-200">
+          <div className="flex-col md:flex-row py-8 px-4 md:px-8 border-b border-gray-200">
             <div className="flex flex-col w-full md:w-7/12">
               <SubHeading title="Services" className="mb-4 md:mb-6" />
               <h1 className="font-oswald text-2xl md:text-4xl text-secondary font-bold mb-3 md:mb-6">

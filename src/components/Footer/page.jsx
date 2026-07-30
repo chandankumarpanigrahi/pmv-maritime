@@ -123,27 +123,32 @@ export default function Footer() {
                 <div className="w-8 h-[2.5px] bg-primary mt-1 mb-4"></div>
                 <ul className="flex flex-col gap-2">
                   <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                    <Link href="/" className="text-sm font-semibold text-secondary w-full block group-hover:text-primary-hover transition-colors duration-200">
+                    <Link href="/" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
                       Home
                     </Link>
                   </li>
                   <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                    <Link href="/about" className="text-sm font-semibold text-secondary w-full block group-hover:text-primary-hover transition-colors duration-200">
+                    <Link href="/about" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
                       About Us
                     </Link>
                   </li>
                   <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                    <Link href="/services" className="text-sm font-semibold text-secondary w-full block group-hover:text-primary-hover transition-colors duration-200">
+                    <Link href="/services" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
                       Our Services
                     </Link>
                   </li>
                   <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                    <Link href="/projects" className="text-sm font-semibold text-secondary w-full block group-hover:text-primary-hover transition-colors duration-200">
+                    <Link href="/projects" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
                       Our Projects
                     </Link>
                   </li>
                   <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                    <Link href="/careers" className="text-sm font-semibold text-secondary w-full block group-hover:text-primary-hover transition-colors duration-200">
+                    <Link href="/faqs" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
+                      FAQs
+                    </Link>
+                  </li>
+                  <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
+                    <Link href="/careers" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
                       Careers
                     </Link>
                   </li>
@@ -158,32 +163,32 @@ export default function Footer() {
                 <div className="w-8 h-[2.5px] bg-primary mt-1 mb-4"></div>
                 <ul className="flex flex-col gap-2">
                   <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                    <Link href="/services/consultancy" className="text-sm font-semibold text-secondary w-full block group-hover:text-primary-hover transition-colors duration-200">
+                    <Link href="/services/consultancy" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
                       Maritime Consultancy
                     </Link>
                   </li>
                   <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                    <Link href="/services/training" className="text-sm font-semibold text-secondary w-full block group-hover:text-primary-hover transition-colors duration-200">
+                    <Link href="/services/training" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
                       Maritime Training
                     </Link>
                   </li>
                   <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                    <Link href="/services/fleet" className="text-sm font-semibold text-secondary w-full block group-hover:text-primary-hover transition-colors duration-200">
+                    <Link href="/services/fleet" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
                       Fleet Management
                     </Link>
                   </li>
                   <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                    <Link href="/services/crew" className="text-sm font-semibold text-secondary w-full block group-hover:text-primary-hover transition-colors duration-200">
+                    <Link href="/services/crew" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
                       Crew Management
                     </Link>
                   </li>
                   <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                    <Link href="/services/port-operations" className="text-sm font-semibold text-secondary w-full block group-hover:text-primary-hover transition-colors duration-200">
+                    <Link href="/services/port-operations" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
                       Port Operations
                     </Link>
                   </li>
                   <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                    <Link href="/services/shipbuilding" className="text-sm font-semibold text-secondary w-full block group-hover:text-primary-hover transition-colors duration-200">
+                    <Link href="/services/shipbuilding" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
                       Shipbuilding
                     </Link>
                   </li>
@@ -198,27 +203,27 @@ export default function Footer() {
                 <div className="w-8 h-[2.5px] bg-primary mt-1 mb-4"></div>
                 <ul className="flex flex-col gap-2">
                   <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                    <Link href="/contact" className="text-sm font-semibold text-secondary w-full block group-hover:text-primary-hover transition-colors duration-200">
+                    <Link href="/contact" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
                       Contact Us
                     </Link>
                   </li>
                   <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                    <Link href="/faqs" className="text-sm font-semibold text-secondary w-full block group-hover:text-primary-hover transition-colors duration-200">
+                    <Link href="/faqs" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
                       FAQs
                     </Link>
                   </li>
                   <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                    <Link href="/privacy" className="text-sm font-semibold text-secondary w-full block group-hover:text-primary-hover transition-colors duration-200">
+                    <Link href="/privacy" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
                       Privacy Policy
                     </Link>
                   </li>
                   <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                    <Link href="/terms" className="text-sm font-semibold text-secondary w-full block group-hover:text-primary-hover transition-colors duration-200">
+                    <Link href="/terms" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
                       Terms & Conditions
                     </Link>
                   </li>
                   <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                    <Link href="/copyright" className="text-sm font-semibold text-secondary w-full block group-hover:text-primary-hover transition-colors duration-200">
+                    <Link href="/copyright" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
                       Copy Rights
                     </Link>
                   </li>
