@@ -20,9 +20,15 @@ import footerBg from "../../../public/assets/images/footer-bg.png";
 
 export default function Footer() {
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (totalHeight > 0) {
+        const currentProgress = (window.scrollY / totalHeight) * 100;
+        setScrollProgress(Math.min(100, Math.max(0, currentProgress)));
+      }
       if (window.scrollY > 300) {
         setShowScrollTop(true);
       } else {
@@ -30,7 +36,8 @@ export default function Footer() {
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
@@ -258,14 +265,41 @@ export default function Footer() {
 
         </div>
 
-        {/* Back to Top Arrow */}
+        {/* Circular Progress Back to Top Button */}
         <button
           onClick={scrollToTop}
-          className={`fixed right-4 bottom-8 md:right-8 md:bottom-8 z-50 text-primary hover:text-primary-hover hover:-translate-y-1 transition-all duration-500 cursor-pointer flex items-center justify-center p-2 rounded-full hover:bg-primary/5 bg-white shadow-lg border border-gray-100/80 ${showScrollTop ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-10 scale-75 pointer-events-none"
+          className={`fixed right-4 bottom-8 md:right-8 md:bottom-8 z-50 transition-all duration-300 cursor-pointer flex items-center justify-center p-0 rounded-full bg-white shadow-xl hover:shadow-2xl hover:scale-105 group ${showScrollTop ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-10 scale-75 pointer-events-none"
             }`}
           aria-label="Back to Top"
         >
-          <ImArrowUp size={28} />
+          <div className="relative w-12 h-12 md:w-14 md:h-14 flex items-center justify-center">
+            <svg className="w-full h-full -rotate-90 text-primary p-0.5" viewBox="0 0 48 48">
+              {/* Background Track Circle */}
+              <circle
+                cx="24"
+                cy="24"
+                r="20"
+                className="text-gray-200 stroke-current"
+                strokeWidth="3"
+                fill="none"
+              />
+              {/* Foreground Scroll Progress Circle */}
+              <circle
+                cx="24"
+                cy="24"
+                r="20"
+                className="text-primary stroke-current transition-all duration-150 ease-out"
+                strokeWidth="3.5"
+                strokeDasharray="125.66"
+                strokeDashoffset={125.66 - (scrollProgress / 100) * 125.66}
+                strokeLinecap="round"
+                fill="none"
+              />
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center text-primary group-hover:text-primary-hover group-hover:-translate-y-0.5 transition-transform duration-200">
+              <ImArrowUp className="w-4 h-4 md:w-5 md:h-5" />
+            </div>
+          </div>
         </button>
       </div>
       <Copyright />
