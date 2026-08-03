@@ -103,7 +103,7 @@ export default function ClientLayout({ children, maintenanceMode, showLoader }) 
   return (
     <>
       <Toaster position="top-right" containerStyle={{ zIndex: 9999999 }} />
-      {!isAdmin && <SmoothScroll />}
+      {/* {!isAdmin && <SmoothScroll />} */}
       {loading && (
         <div className="fixed inset-0 z-[999999] flex items-center justify-center bg-black/60 backdrop-blur-sm">
           <img src="/loader.gif" alt="Loading..." className="w-30 h-30 object-contain bg-white/60 p-2 rounded-full" />

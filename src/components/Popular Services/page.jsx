@@ -1,45 +1,45 @@
+"use client";
+
 import styles from "./style.module.css";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import SubHeading from "@/design/sub-heading/page";
 import Link from "next/link";
 import Image from "next/image";
 
-// Icons
 import { FaArrowRight } from "react-icons/fa";
-import { GiCargoShip } from "react-icons/gi";
-import { TbBriefcase2 } from "react-icons/tb";
-import { TbBuildingWarehouse, TbSchool, TbLeaf, TbCrane, TbGlobe } from "react-icons/tb";
+import { MdOutlineAnchor } from "react-icons/md";
+import { PRESET_ICONS } from "@/lib/maritimeIcons";
 
 import bannerBg from "../../../public/assets/images/map-bg.png";
 
-const popularServices = [
-  {
-    title: "Port Operations",
-    description: "Coordinated port services that improve vessel turnaround, cargo handling, terminal efficiency, and operational performance.",
-    icon: TbBuildingWarehouse,
-    path: "/services/port-operations"
-  },
-  {
-    title: "Shipbuilding",
-    description: "Independent support for vessel construction, repair, refurbishment, quality assurance, commissioning, and successful project delivery.",
-    icon: TbCrane,
-    path: "/services/shipbuilding"
-  },
-  {
-    title: "Maritime Projects",
-    description: "End-to-end project management covering planning, procurement, supervision, commissioning, and final delivery of maritime projects.",
-    icon: TbBriefcase2,
-    path: "/services/maritime-projects"
-  },
-  {
-    title: "Marine Logistics",
-    description: "Reliable logistics support for vessels, crews, equipment, spare parts, offshore operations, and maritime project execution.",
-    icon: GiCargoShip,
-    path: "/services/marine-logistics"
-  }
-];
+function getIconComponent(iconId) {
+  const match = PRESET_ICONS.find((i) => i.id === iconId);
+  return match?.Icon || MdOutlineAnchor;
+}
 
 export default function PopularServices() {
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchServices() {
+      try {
+        const res = await fetch("/api/services", { cache: "no-store" });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          // Items 6–9 (indices 5–8, after the 5 Services Section tabs)
+          setServices(data.slice(5, 9));
+        }
+      } catch (err) {
+        console.error("Failed to load Popular Services:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchServices();
+  }, []);
+
   return (
     <div>
       <div className="flex flex-col md:flex-row container max-w-7xl mx-auto items-stretch relative overflow-hidden">
@@ -65,38 +65,43 @@ export default function PopularServices() {
 
       {/* Services Cards Grid */}
       <div className="container max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 border-l border-t border-gray-200 bg-white">
-        {popularServices.map((service, index) => {
-          const IconComponent = service.icon;
-          return (
-            <div
-              key={index}
-              className="flex flex-col border-r border-b border-gray-200 p-4 md:p-6 min-h-none md:min-h-[290px] bg-white hover:bg-primary group/card transition-all duration-300"
-            >
-              {/* Icon Container with background color transition on hover */}
-              <div className="bg-primary/5 h-10 w-10 md:h-14 md:w-14 flex justify-center items-center mb-2 md:mb-6 group-hover/card:bg-blue-50 transition-all duration-300">
-                <IconComponent className="text-2xl md:text-3xl text-primary group-hover/card:text-secondary-dark transition-all duration-300" />
+        {loading
+          ? Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="flex flex-col border-r border-b border-gray-200 p-4 md:p-6 min-h-[250px] animate-pulse bg-white">
+                <div className="w-12 h-12 bg-gray-200 mb-5 rounded" />
+                <div className="h-5 bg-gray-200 rounded w-3/4 mb-3" />
+                <div className="h-3 bg-gray-100 rounded w-full mb-2" />
+                <div className="h-3 bg-gray-100 rounded w-4/5" />
               </div>
+            ))
+          : services.map((service, index) => {
+              const IconComponent = getIconComponent(service.icon);
+              return (
+                <div
+                  key={service._id || index}
+                  className="flex flex-col border-r border-b border-gray-200 p-4 md:p-6 min-h-none md:min-h-[290px] bg-white hover:bg-primary group/card transition-all duration-300"
+                >
+                  <div className="bg-primary/5 h-10 w-10 md:h-14 md:w-14 flex justify-center items-center mb-2 md:mb-6 group-hover/card:bg-blue-50 transition-all duration-300">
+                    <IconComponent className="text-2xl md:text-3xl text-primary group-hover/card:text-secondary-dark transition-all duration-300" />
+                  </div>
 
-              {/* Title */}
-              <h2 className="text-[18px] md:text-xl font-bold text-gray-900 group-hover/card:text-white mb-1 md:mb-2">
-                {service.title}
-              </h2>
+                  <h2 className="text-[18px] md:text-xl font-bold text-gray-900 group-hover/card:text-white mb-1 md:mb-2">
+                    {service.name}
+                  </h2>
 
-              {/* Description */}
-              <p className="text-gray-500 text-[12px] md:text-[14px] leading-normal md:leading-relaxed group-hover/card:text-white/80 mb-3 md:mb-6 flex-grow">
-                {service.description}
-              </p>
+                  <p className="text-gray-500 text-[12px] md:text-[14px] leading-normal md:leading-relaxed group-hover/card:text-white/80 mb-3 md:mb-6 flex-grow">
+                    {service.shortDesc}
+                  </p>
 
-              {/* Learn More Link */}
-              <Link
-                href={service.path}
-                className="mt-auto text-secondary group-hover/card:text-white text-[12px] font-bold uppercase tracking-wider transition-all duration-300 ease-in-out inline-flex items-center gap-2 group/link"
-              >
-                Learn More <FaArrowRight className="group-hover/link:translate-x-1 transition-transform duration-300 ease-in-out" />
-              </Link>
-            </div>
-          );
-        })}
+                  <Link
+                    href={`/services/${service.slug}`}
+                    className="mt-auto text-secondary group-hover/card:text-white text-[12px] font-bold uppercase tracking-wider transition-all duration-300 ease-in-out inline-flex items-center gap-2 group/link"
+                  >
+                    Learn More <FaArrowRight className="group-hover/link:translate-x-1 transition-transform duration-300 ease-in-out" />
+                  </Link>
+                </div>
+              );
+            })}
       </div>
     </div>
   );

@@ -211,7 +211,7 @@ export default function DataTable({
           )}
         </div>
 
-        {/* Action Controls: Rearrange, Refresh, CSV Export, Page Size */}
+        {/* Action Controls: Show Entries -> Rearrange -> Refresh -> CSV Export */}
         <div className="flex flex-wrap items-center gap-2.5 w-full 2xl:w-auto justify-center sm:justify-end">
           {/* Rows selector */}
           {!isReorderMode && (
@@ -271,16 +271,18 @@ export default function DataTable({
               </>
             )}
 
+            {/* Refresh Button */}
             {onRefresh && !isReorderMode && (
               <button
                 onClick={onRefresh}
-                className="p-2 bg-white border border-gray-200 text-gray-600 hover:text-primary hover:border-primary transition-all shadow-xs cursor-pointer flex items-center justify-center"
+                className="h-[34px] w-[34px] bg-white border border-gray-200 text-gray-600 hover:text-primary hover:border-primary transition-all shadow-xs cursor-pointer flex items-center justify-center"
                 title="Refresh Data"
               >
                 <LuRotateCw className={`text-base ${loading ? "animate-spin" : ""}`} />
               </button>
             )}
 
+            {/* Export CSV Button */}
             {!isReorderMode && (
               <button
                 onClick={handleExportCSV}

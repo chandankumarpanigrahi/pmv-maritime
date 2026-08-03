@@ -17,6 +17,17 @@ import {
   LuInbox,
 } from "react-icons/lu";
 
+// Helper to format ISO date "YYYY-MM-DD" into "DD-MM-YYYY"
+const formatDateDDMMYYYY = (dateStr) => {
+  if (!dateStr) return "";
+  const parts = dateStr.split("T")[0].split("-");
+  if (parts.length === 3 && parts[0].length === 4) {
+    const [year, month, day] = parts;
+    return `${day.padStart(2, "0")}-${month.padStart(2, "0")}-${year}`;
+  }
+  return dateStr;
+};
+
 export default function AdminCareersPage() {
   const [careers, setCareers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -349,7 +360,7 @@ export default function AdminCareersPage() {
       className: "w-[130px]",
       cell: (row) => (
         <span className="text-xs font-bold text-gray-500 uppercase whitespace-nowrap">
-          {row.deadline ? row.deadline : "Open"}
+          {row.deadline ? formatDateDDMMYYYY(row.deadline) : "Open"}
         </span>
       ),
     },
@@ -694,7 +705,7 @@ export default function AdminCareersPage() {
                     </label>
                     <p className="text-sm font-semibold text-primary flex items-center gap-1.5">
                       <LuCalendar className="text-xs" />
-                      {career.deadline ? career.deadline : "Open"}
+                      {career.deadline ? formatDateDDMMYYYY(career.deadline) : "Open"}
                     </p>
                   </div>
                 </div>

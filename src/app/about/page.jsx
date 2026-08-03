@@ -37,9 +37,6 @@ const teamMembers = [
       linkedin: "https://linkedin.com/in/vikpatra",
       x: "https://x.com/vikpatra",
       facebook: "https://facebook.com/vikpatra",
-      instagram: "https://instagram.com/vikpatra",
-      whatsapp: "https://whatsapp.com/vikpatra",
-      website: "https://pmvmaritime.com"
     }
   },
   {
@@ -186,7 +183,7 @@ export default function About() {
         </div>
       </div>
       <Projects />
-      <div className="container hidden max-w-7xl mx-auto border border-t-0 border-gray-200 bg-white relative">
+      <div className="container max-w-7xl mx-auto border border-t-0 border-gray-200 bg-white relative">
         <div className="flex flex-col md:flex-row w-full gap-3 md:gap-0 py-8 px-4 md:px-8">
           <div className="flex flex-col w-full">
             <SubHeading title="Our Team" className="mb-4 md:mb-6" />
@@ -194,8 +191,8 @@ export default function About() {
             <p className="text-sm md:text-[15px] max-w-full md:max-w-[60%] text-gray-600 font-medium">Our leadership team combines maritime expertise with digital innovation to drive excellence across every operation.</p>
           </div>
           <Link
-            href="/projects"
-            className="mt-auto whitespace-nowrap mr-auto md:mr-0 ml-0 md:ml-auto group w-fit text-md flex gap-5 items-center mb-3 pl-3 md:pl-4 pr-2 md:pr-3 py-1.5 md:py-2 bg-white border-secondary text-secondary border hover:border-secondary-hover hover:text-secondary-hover font-bold transition-all duration-300"
+            href="#"
+            className="hidden mt-auto whitespace-nowrap mr-auto md:mr-0 ml-0 md:ml-auto group w-fit text-md gap-5 items-center mb-3 pl-3 md:pl-4 pr-2 md:pr-3 py-1.5 md:py-2 bg-white border-secondary text-secondary border hover:border-secondary-hover hover:text-secondary-hover font-bold transition-all duration-300"
           >
             All Members <FaArrowRight className="group-hover:-rotate-45 transition-all duration-300 ease-in-out" />
           </Link>

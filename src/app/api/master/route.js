@@ -96,8 +96,14 @@ export async function PUT(request) {
     const client = await clientPromise;
     const db = client.db("pmv_maritime");
 
+    // Fetch existing record to check if name changed
+    const existingRecord = await db
+      .collection("masters")
+      .findOne({ _id: new ObjectId(id) });
+
+    const newName = name.trim();
     const updateData = {
-      name: name.trim(),
+      name: newName,
       status: status ? status.trim() : "Active",
       updatedAt: new Date().toISOString(),
     };
@@ -105,6 +111,20 @@ export async function PUT(request) {
     const result = await db
       .collection("masters")
       .updateOne({ _id: new ObjectId(id) }, { $set: updateData });
+
+    // Cascade update category name to services if module is "services" and name changed
+    if (
+      existingRecord &&
+      existingRecord.module === "services" &&
+      existingRecord.name !== newName
+    ) {
+      await db
+        .collection("services")
+        .updateMany(
+          { category: existingRecord.name },
+          { $set: { category: newName } }
+        );
+    }
 
     return NextResponse.json({
       success: true,

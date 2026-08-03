@@ -474,12 +474,22 @@ export default function Careers() {
 
       {/* Job Details Modal */}
       {selectedJob && (() => {
+        const formatDateDDMMYYYY = (dateStr) => {
+          if (!dateStr) return "";
+          const parts = dateStr.split("T")[0].split("-");
+          if (parts.length === 3 && parts[0].length === 4) {
+            const [year, month, day] = parts;
+            return `${day.padStart(2, "0")}-${month.padStart(2, "0")}-${year}`;
+          }
+          return dateStr;
+        };
+
         const details = {
           position: selectedJob.position,
           location: selectedJob.location,
           department: selectedJob.department,
           type: selectedJob.type || "Full Time",
-          deadline: selectedJob.deadline || "",
+          deadline: formatDateDDMMYYYY(selectedJob.deadline),
           overview:
             selectedJob.overview ||
             `PMV Maritime is inviting qualified candidates to apply for the position of ${selectedJob.position} in our ${selectedJob.department} department (${selectedJob.location}). Join a global team dedicated to excellence, crew safety, and maritime innovation.`,
