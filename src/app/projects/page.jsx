@@ -27,11 +27,11 @@ const projectCategories = [
 
 const projectsData = [
   {
-    title: "Port Development Projects",
+    title: "Maritime Consultancy Projects",
     category: "Port Operations",
     description: "Delivered comprehensive port development solutions focused on infrastructure planning, operational efficiency, and sustainable maritime growth.",
     image: image1,
-    link: "/projects/port-development"
+    link: "/projects/maritime-consultancy"
   },
   {
     title: "Port Operations Projects",

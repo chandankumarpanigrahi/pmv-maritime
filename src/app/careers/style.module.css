@@ -1,0 +1,12 @@
+.jobInfoPattern {
+  background-image: url("/assets/images/bg-anchor.png");
+  background-repeat: repeat;
+  background-size: 82px 82px;
+}
+
+/* 
+.tableScroll {
+  overflow-y: auto;
+  scrollbar-color: var(--cerulean-blue-dark) #eef7fb;
+  scrollbar-width: 14px;
+} */

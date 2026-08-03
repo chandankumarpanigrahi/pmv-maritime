@@ -1,21 +1,515 @@
 "use client";
 
-import { LuDatabase } from "react-icons/lu";
+import React, { useState, useEffect, useCallback } from "react";
+import toast from "react-hot-toast";
+import {
+  LuFolderOpen,
+  LuShip,
+  LuMail,
+  LuBriefcaseBusiness,
+  LuPencil,
+  LuTrash2,
+  LuShieldAlert,
+  LuX,
+  LuSearch,
+  LuPlus,
+  LuCheck,
+  LuRotateCw,
+} from "react-icons/lu";
 
 export default function MasterPage() {
+  const [activeTab, setActiveTab] = useState("projects");
+  const [masterData, setMasterData] = useState({
+    projects: [],
+    services: [],
+    contact: [],
+    careers: [],
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [search, setSearch] = useState("");
+
+  // Form State: Name & Status
+  const [name, setName] = useState("");
+  const [status, setStatus] = useState("Active");
+  const [editingId, setEditingId] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Delete Modal State
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deletingItem, setDeletingItem] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // ─── Fetch Master Records from MongoDB ──────────────────────
+  const fetchMasterRecords = useCallback(async () => {
+    setLoading(true);
+    setError("");
+
+    try {
+      const res = await fetch("/api/master", { cache: "no-store" });
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData?.error || `Error ${res.status}: Failed to fetch master records`);
+      }
+      const data = await res.json();
+
+      const grouped = {
+        projects: [],
+        services: [],
+        contact: [],
+        careers: [],
+      };
+
+      if (Array.isArray(data)) {
+        data.forEach((item) => {
+          const mod = item.module || "projects";
+          if (grouped[mod]) {
+            grouped[mod].push(item);
+          }
+        });
+      }
+
+      setMasterData(grouped);
+    } catch (err) {
+      setError(err.message || "Failed to load master records from database.");
+      toast.error(err.message || "Failed to load master records.");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchMasterRecords();
+  }, [fetchMasterRecords]);
+
+  // Reset Form
+  const resetForm = () => {
+    setName("");
+    setStatus("Active");
+    setEditingId(null);
+  };
+
+  // Switch Tab Handler
+  const handleTabChange = (tabKey) => {
+    setActiveTab(tabKey);
+    setSearch("");
+    resetForm();
+  };
+
+  // Form Submit (Add / Edit)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!name.trim()) {
+      toast.error("Name field is required.");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      if (editingId) {
+        // Update item in MongoDB
+        const res = await fetch("/api/master", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: editingId,
+            name: name.trim(),
+            status,
+          }),
+        });
+
+        if (!res.ok) {
+          const errData = await res.json();
+          throw new Error(errData?.error || "Failed to update record.");
+        }
+
+        setMasterData((prev) => ({
+          ...prev,
+          [activeTab]: prev[activeTab].map((item) =>
+            (item._id || item.id) === editingId
+              ? { ...item, name: name.trim(), status }
+              : item
+          ),
+        }));
+        toast.success("Master record updated successfully.");
+      } else {
+        // Add new item to MongoDB
+        const res = await fetch("/api/master", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            module: activeTab,
+            name: name.trim(),
+            status,
+          }),
+        });
+
+        if (!res.ok) {
+          const errData = await res.json();
+          throw new Error(errData?.error || "Failed to create record.");
+        }
+
+        const result = await res.json();
+        if (result.data) {
+          setMasterData((prev) => ({
+            ...prev,
+            [activeTab]: [result.data, ...prev[activeTab]],
+          }));
+        } else {
+          fetchMasterRecords();
+        }
+        toast.success("New Master record added successfully.");
+      }
+
+      resetForm();
+    } catch (err) {
+      toast.error(err.message || "Something went wrong.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Edit Item Handler
+  const handleEdit = (item) => {
+    setName(item.name || "");
+    setStatus(item.status || "Active");
+    setEditingId(item._id || item.id);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  // Delete Handlers
+  const openDeleteModal = (item) => {
+    setDeletingItem(item);
+    setDeleteModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!deletingItem) return;
+
+    setIsDeleting(true);
+    const targetId = deletingItem._id || deletingItem.id;
+
+    try {
+      const res = await fetch("/api/master", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: targetId }),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData?.error || "Failed to delete record.");
+      }
+
+      setMasterData((prev) => ({
+        ...prev,
+        [activeTab]: prev[activeTab].filter(
+          (i) => (i._id || i.id) !== targetId
+        ),
+      }));
+
+      if (editingId === targetId) {
+        resetForm();
+      }
+      toast.success("Master record deleted successfully.");
+    } catch (err) {
+      toast.error(err.message || "Failed to delete record.");
+    } finally {
+      setIsDeleting(false);
+      setDeleteModalOpen(false);
+      setDeletingItem(null);
+    }
+  };
+
+  // Filter List by Search Query
+  const items = masterData[activeTab] || [];
+  const filteredItems = items.filter((item) =>
+    (item.name || "").toLowerCase().includes(search.toLowerCase())
+  );
+
+  const tabConfig = [
+    { key: "projects", label: "Projects Master", icon: LuFolderOpen },
+    { key: "services", label: "Services Master", icon: LuShip },
+    { key: "contact", label: "Contact Form Master", icon: LuMail },
+    { key: "careers", label: "Careers Master", icon: LuBriefcaseBusiness },
+  ];
+
   return (
-    <div className="p-3 md:p-5">
-      <div className="bg-white border border-gray-200 p-12 md:p-20 flex flex-col items-center justify-center text-center min-h-[400px]">
-        <div className="w-14 h-14 bg-slate-100 border border-gray-200 flex items-center justify-center mb-4">
-          <LuDatabase className="text-2xl text-gray-300" />
+    <div className="p-3 md:p-5 space-y-5">
+      {/* ═══════════════════════════════════════════════════
+          TAB NAVIGATION BAR
+         ═══════════════════════════════════════════════════ */}
+      <div className="bg-white border border-gray-200 p-3 shadow-xs">
+        <div className="flex flex-wrap items-center gap-2">
+          {tabConfig.map((tab) => {
+            const TabIcon = tab.icon;
+            const isActive = activeTab === tab.key;
+            return (
+              <button
+                key={tab.key}
+                onClick={() => handleTabChange(tab.key)}
+                className={`flex items-center gap-2 px-4 py-2.5 font-bold text-xs md:text-sm uppercase tracking-wider transition-all cursor-pointer ${
+                  isActive
+                    ? "border border-primary bg-primary text-white shadow-xs"
+                    : "border border-gray-200 bg-slate-50 text-secondary-dark hover:bg-slate-100"
+                }`}
+              >
+                <TabIcon className="text-base" />
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
         </div>
-        <h2 className="font-oswald text-xl md:text-2xl font-bold text-gray-300 uppercase tracking-wider">
-          Master Settings
-        </h2>
-        <p className="text-sm text-gray-400 mt-2 max-w-md">
-          This section is under development. Content will be available soon.
-        </p>
       </div>
+
+      {/* ═══════════════════════════════════════════════════
+          MAIN CONTENT GRID (Form Left + Table Right)
+         ═══════════════════════════════════════════════════ */}
+      <div className="flex flex-col xl:flex-row gap-5">
+        {/* ─── LEFT PANEL: Add / Edit Form (Only Name & Status) ─── */}
+        <div className="w-full xl:w-[360px] xl:min-w-[360px] flex-shrink-0">
+          <div className="bg-white border border-gray-200 shadow-xs">
+            <div className="px-5 py-4 border-b border-gray-200 bg-slate-50 flex items-center justify-between">
+              <h2 className="font-oswald text-lg font-bold text-secondary uppercase tracking-wide">
+                {editingId ? "Edit Record" : "Add Record"}
+                <span className="text-primary">.</span>
+              </h2>
+              {editingId && (
+                <button
+                  onClick={resetForm}
+                  className="p-1.5 text-gray-400 hover:text-primary transition-colors cursor-pointer"
+                  title="Cancel Edit"
+                >
+                  <LuX className="text-lg" />
+                </button>
+              )}
+            </div>
+
+            <form onSubmit={handleSubmit} className="p-5 space-y-4">
+              {/* Name Field */}
+              <div>
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-1.5">
+                  Name <span className="text-primary">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Enter name..."
+                  className="w-full bg-slate-50 border border-gray-200 focus:border-secondary focus:ring-1 focus:ring-secondary outline-none px-4 py-2.5 text-sm text-gray-900 font-medium placeholder-gray-400"
+                  required
+                />
+              </div>
+
+              {/* Status Selector */}
+              <div>
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-1.5">
+                  Status
+                </label>
+                <select
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
+                  className="w-full bg-slate-50 border border-gray-200 focus:border-secondary outline-none px-4 py-2.5 text-sm text-gray-900 font-medium cursor-pointer"
+                >
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
+              </div>
+
+              {/* Submit / Clear Buttons */}
+              <div className="flex items-center gap-3 pt-2">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="flex-1 px-4 py-2.5 bg-primary hover:bg-primary-hover text-white font-bold text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                  <LuPlus className="text-sm" />
+                  <span>
+                    {isSubmitting
+                      ? editingId
+                        ? "Updating..."
+                        : "Adding..."
+                      : editingId
+                        ? "Update Record"
+                        : "Add Record"}
+                  </span>
+                </button>
+                {name && (
+                  <button
+                    type="button"
+                    onClick={resetForm}
+                    disabled={isSubmitting}
+                    className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-gray-600 font-bold text-xs uppercase tracking-wider transition-all cursor-pointer disabled:opacity-50"
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
+            </form>
+          </div>
+        </div>
+
+        {/* ─── RIGHT PANEL: Plain Data Table (Only #, Name, Status, Actions) ─── */}
+        <div className="flex-1 min-w-0">
+          <div className="bg-white border border-gray-200 shadow-xs">
+            {/* Table Header Controls */}
+            <div className="p-4 border-b border-gray-200 bg-slate-50 flex flex-col sm:flex-row items-center justify-between gap-3">
+              <div className="relative w-full sm:w-72">
+                <input
+                  type="text"
+                  placeholder="Search by name..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="w-full bg-white border border-gray-200 focus:border-secondary outline-none pl-9 pr-4 py-2 text-xs transition-all text-gray-900 placeholder-gray-400 font-medium"
+                />
+                <LuSearch className="absolute left-3 top-2.5 text-gray-400 text-sm" />
+              </div>
+
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={fetchMasterRecords}
+                  className="p-2 bg-white border border-gray-200 text-gray-600 hover:text-primary hover:border-primary transition-all shadow-xs cursor-pointer flex items-center justify-center"
+                  title="Refresh Data"
+                >
+                  <LuRotateCw className={`text-sm ${loading ? "animate-spin" : ""}`} />
+                </button>
+                <div className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                  Total Records: <span className="text-primary font-bold">{filteredItems.length}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Table */}
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-slate-100/70 border-b border-gray-200 text-xs font-bold text-secondary-dark uppercase tracking-wider">
+                    <th className="py-3 px-4 w-12 text-center">#</th>
+                    <th className="py-3 px-4">Name</th>
+                    <th className="py-3 px-4 w-32">Status</th>
+                    <th className="py-3 px-4 w-28 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100 text-xs md:text-sm">
+                  {loading ? (
+                    <tr>
+                      <td colSpan={4} className="py-12 text-center text-gray-400 font-medium">
+                        Loading master records...
+                      </td>
+                    </tr>
+                  ) : error ? (
+                    <tr>
+                      <td colSpan={4} className="py-12 text-center text-red-500 font-medium">
+                        {error}
+                      </td>
+                    </tr>
+                  ) : filteredItems.length === 0 ? (
+                    <tr>
+                      <td colSpan={4} className="py-12 text-center text-gray-400 font-medium">
+                        No master records found.
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredItems.map((item, idx) => (
+                      <tr key={item._id || item.id} className="hover:bg-slate-50/80 transition-colors">
+                        <td className="py-3.5 px-4 text-center font-bold text-gray-400 text-xs">
+                          {idx + 1}
+                        </td>
+                        <td className="py-3.5 px-4 font-bold text-gray-900">
+                          {item.name}
+                        </td>
+                        <td className="py-3.5 px-4">
+                          <span
+                            className={`inline-flex items-center gap-1 px-2.5 py-0.5 text-[11px] font-bold uppercase rounded-xs ${
+                              item.status === "Active"
+                                ? "bg-emerald-100 text-emerald-800"
+                                : "bg-gray-100 text-gray-600"
+                            }`}
+                          >
+                            <LuCheck className="text-xs" />
+                            {item.status || "Active"}
+                          </span>
+                        </td>
+                        <td className="py-3.5 px-4 text-right">
+                          <div className="flex items-center justify-end gap-2">
+                            <button
+                              onClick={() => handleEdit(item)}
+                              className="p-1.5 bg-slate-100 hover:bg-secondary hover:text-white text-secondary-dark border border-secondary transition-colors cursor-pointer"
+                              title="Edit Record"
+                            >
+                              <LuPencil className="text-sm" />
+                            </button>
+                            <button
+                              onClick={() => openDeleteModal(item)}
+                              className="p-1.5 bg-slate-100 hover:bg-primary hover:text-white text-primary border border-primary transition-colors cursor-pointer"
+                              title="Delete Record"
+                            >
+                              <LuTrash2 className="text-sm" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ═══════════════════════════════════════════════════
+          DELETE CONFIRMATION MODAL
+         ═══════════════════════════════════════════════════ */}
+      {deleteModalOpen && deletingItem && (
+        <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+          <div className="w-full max-w-md bg-white border border-gray-200 shadow-2xl p-6 md:p-8 relative">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 bg-red-50 border border-red-100 text-primary flex items-center justify-center flex-shrink-0">
+                <LuShieldAlert className="text-2xl" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-oswald text-xl font-bold text-secondary uppercase tracking-wide">
+                  Delete Master Record<span className="text-primary">?</span>
+                </h3>
+                <p className="text-sm text-gray-600 font-medium mt-1 leading-relaxed">
+                  Are you sure you want to delete this master record?
+                </p>
+                <div className="mt-3 p-3 bg-slate-50 border border-gray-200">
+                  <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">
+                    Item Name
+                  </p>
+                  <p className="text-sm font-semibold text-gray-900">
+                    {deletingItem.name}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-8 flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
+              <button
+                onClick={() => {
+                  setDeleteModalOpen(false);
+                  setDeletingItem(null);
+                }}
+                disabled={isDeleting}
+                className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-gray-700 font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                disabled={isDeleting}
+                className="px-5 py-2.5 bg-primary hover:bg-primary-hover text-white font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer flex items-center gap-2 disabled:opacity-50"
+              >
+                <LuTrash2 className="text-sm" />
+                <span>{isDeleting ? "Deleting..." : "Yes, Delete"}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -4,29 +4,17 @@ import { ObjectId } from "mongodb";
 
 export const dynamic = "force-dynamic";
 
+// GET: Fetch all FAQs from MongoDB (sorted by order, then createdAt)
 export async function GET() {
   try {
     const client = await clientPromise;
     const db = client.db("pmv_maritime");
 
-    let faqs = await db
+    const faqs = await db
       .collection("faqs")
       .find({})
       .sort({ order: 1, createdAt: -1 })
       .toArray();
-
-    // If collection is empty, seed 1 initial default FAQ
-    if (faqs.length === 0) {
-      const initialFaq = {
-        question: "What maritime services does PMV offer?",
-        answer:
-          "PMV Maritime Solutions provides comprehensive maritime consultancy services including fleet management, crew management, technical consultancy, maritime training, and digital transformation solutions for the maritime industry.",
-        order: 1,
-        createdAt: new Date().toISOString(),
-      };
-      const result = await db.collection("faqs").insertOne(initialFaq);
-      faqs = [{ ...initialFaq, _id: result.insertedId }];
-    }
 
     const formattedData = faqs.map((item, idx) => ({
       ...item,
@@ -43,6 +31,7 @@ export async function GET() {
   }
 }
 
+// POST: Add new FAQ
 export async function POST(request) {
   try {
     const body = await request.json();
@@ -94,6 +83,7 @@ export async function POST(request) {
   }
 }
 
+// PUT: Update FAQ
 export async function PUT(request) {
   try {
     const body = await request.json();
@@ -135,7 +125,7 @@ export async function PUT(request) {
   }
 }
 
-// Bulk update order / sequence
+// PATCH: Bulk update sequence / order
 export async function PATCH(request) {
   try {
     const body = await request.json();
@@ -174,6 +164,7 @@ export async function PATCH(request) {
   }
 }
 
+// DELETE: Delete FAQ
 export async function DELETE(request) {
   try {
     const body = await request.json();

@@ -166,11 +166,11 @@ export default function DataTable({
   return (
     <div className="w-full space-y-4">
       {/* Top Filter & Action Bar */}
-      <div className="bg-white border border-gray-200 p-4 shadow-xs flex flex-col lg:flex-row gap-4 justify-between items-center">
+      <div className="bg-white border border-gray-200 p-4 shadow-xs flex flex-col 2xl:flex-row gap-3 2xl:gap-4 justify-between items-stretch 2xl:items-center">
         {/* Search & Filter Controls */}
-        <div className="flex flex-col sm:flex-row gap-3 items-center w-full lg:w-auto">
+        <div className="flex flex-col sm:flex-row gap-2.5 items-center w-full 2xl:w-auto">
           {/* Search Bar */}
-          <div className="relative w-full sm:w-72">
+          <div className="relative w-full sm:w-60">
             <input
               type="text"
               placeholder={searchPlaceholder}
@@ -187,7 +187,7 @@ export default function DataTable({
 
           {/* Filter Dropdown */}
           {filterOptions.length > 0 && (
-            <div className="relative w-full sm:w-52">
+            <div className="relative w-full sm:w-48">
               <select
                 value={selectedFilter}
                 disabled={isReorderMode}
@@ -198,11 +198,13 @@ export default function DataTable({
                 className="w-full bg-slate-50 border border-gray-200 focus:border-secondary focus:ring-1 focus:ring-secondary outline-none px-3 py-2 pr-8 text-xs transition-all text-gray-900 font-medium appearance-none cursor-pointer disabled:opacity-50"
               >
                 <option value="">All Categories</option>
-                {filterOptions.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
+                {filterOptions
+                  .filter((opt) => opt.value !== "")
+                  .map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
               </select>
               <LuFilter className="absolute right-3 top-2.5 text-gray-400 text-xs pointer-events-none" />
             </div>
@@ -210,7 +212,7 @@ export default function DataTable({
         </div>
 
         {/* Action Controls: Rearrange, Refresh, CSV Export, Page Size */}
-        <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto justify-center sm:justify-end">
+        <div className="flex flex-wrap items-center gap-2.5 w-full 2xl:w-auto justify-center sm:justify-end">
           {/* Rows selector */}
           {!isReorderMode && (
             <div className="flex items-center gap-2 text-xs text-gray-500 font-bold">
@@ -285,7 +287,7 @@ export default function DataTable({
                 disabled={filteredData.length === 0}
                 className="h-[34px] px-3 py-1.5 bg-primary hover:bg-primary-hover text-white font-bold text-xs uppercase tracking-wider transition-all shadow-xs cursor-pointer disabled:bg-slate-200 disabled:text-slate-400 disabled:pointer-events-none flex items-center gap-1.5"
               >
-                <LuDownload className="text-sm" /> <span>Export CSV</span>
+                <LuDownload className="text-sm" /> <span className="whitespace-nowrap">Export CSV</span>
               </button>
             )}
           </div>

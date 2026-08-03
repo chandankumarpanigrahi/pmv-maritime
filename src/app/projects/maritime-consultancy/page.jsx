@@ -149,7 +149,7 @@ const serviceStandards = [
   },
 ];
 
-export default function MarineConsultancy() {
+export default function ContainerTracking() {
   const [activeStepIdx, setActiveStepIdx] = useState(0);
 
   useEffect(() => {
@@ -172,10 +172,10 @@ export default function MarineConsultancy() {
   return (
     <>
       <SubBanner
-        Heading="Marine Consultancy"
+        Heading="Our Projects"
         breadcrumbItems={[
-          { label: "Our Services", href: "/services" },
-          { label: "Marine Consultancy", href: "/services/marine-consultancy" }
+          { label: "Our Projects", href: "/projects" },
+          { label: "Maritime Consultancy Projects", href: "/projects/maritime-consultancy" }
         ]}
       />
 
@@ -188,7 +188,7 @@ export default function MarineConsultancy() {
         <div className="w-full flex flex-col border border-t-0 border-gray-200 bg-[#f7f5f8]">
           <div className="flex flex-col md:flex-row py-8 px-4 md:px-8 border-b border-gray-200">
             <div className="flex flex-col w-full md:w-7/12">
-              <h1 className="font-oswald text-4xl md:text-5xl text-secondary font-bold mb-2 md:mb-3">Maritime Consultancy</h1>
+              <h1 className="font-oswald text-4xl md:text-5xl text-secondary font-bold mb-2 md:mb-3">Maritime Consultancy Projects</h1>
               <p className="text-sm md:text-[15px] max-w-full md:max-w-[90%] text-gray-600 font-medium">Strategic, technical, and commercial advice designed to help clients make informed decisions, reduce risk, and improve performance.</p>
             </div>
             <div className="relative z-5 w-full md:w-5/12 flex flex-col justify-end items-end mt-6 md:mt-0">
@@ -202,7 +202,7 @@ export default function MarineConsultancy() {
                 </a>
                 <button
                   type="button"
-                  onClick={() => handleDownload("/docs/services.pdf", "PMV Maritime Services.pdf")}
+                  onClick={() => handleDownload("/docs/projects.pdf", "PMV Maritime Projects.pdf")}
                   className="group w-full md:w-fit justify-center text-[16px] md:text-[14px] flex gap-3 items-center pl-3 md:pl-4 pr-2 md:pr-3 py-1.5 md:py-2 bg-white hover:bg-primary-hover text-primary hover:text-white font-bold tracking-wider shadow-lg cursor-pointer"
                 >
                   <PiDownloadSimpleBold />
@@ -244,7 +244,7 @@ export default function MarineConsultancy() {
         <div className="w-full flex flex-col border border-t-0 border-gray-200">
           <div className="flex flex-col md:flex-row py-6 px-4 md:px-8">
             <div className="flex flex-row w-full items-center justify-between">
-              <SubHeading title="About The Service" />
+              <SubHeading title="About The Project" />
             </div>
           </div>
         </div>
@@ -288,10 +288,10 @@ export default function MarineConsultancy() {
               <LuHandshake className="mb-4 h-11 w-11 md:h-12 md:w-12 text-secondary-dark" />
               <div className="flex flex-col gap-2">
                 <h3 className="font-oswald text-xl md:text-2xl font-bold text-secondary-dark">
-                  Our Promise
+                  Value Delivered
                 </h3>
                 <p className="text-sm md:text-[15px] leading-relaxed text-gray-700">
-                  Clear recommendations, practical action plans, and implementation support from strategy through delivery.
+                  Clear strategic direction, reduced operational risk, stronger decision-making, improved compliance, and practical implementation plans.
                 </p>
               </div>
             </div>
@@ -377,6 +377,9 @@ export default function MarineConsultancy() {
             })}
           </div>
         </div>
+      </section>
+      <section className="container max-w-7xl mx-auto bg-white border border-t-0 border-gray-200 py-3 md:py-5 px-4 md:px-8">
+        <p className="text=xl md:text-3xl font-oswald font-bold text-gray-800 uppercase flex flex-col md:flex-row justify-center gap-2 md:gap-8"><span className="text-secondary">Delivered with Expertise. </span><span className="text-primary">Managed with Discipline. </span><span className="text-secondary-dark">Built for Lasting Maritime Impact.</span></p>
       </section>
 
       <ContactUs />

@@ -14,6 +14,7 @@ import {
   LuLock,
   LuEye,
   LuEyeOff,
+  LuBriefcaseBusiness,
   LuLayoutDashboard,
   LuShip,
   LuFolderOpen,
@@ -63,6 +64,7 @@ const NAV_ITEMS = [
     children: [
       { key: "services", label: "Services", href: "/admin/services", icon: LuShip },
       { key: "projects", label: "Projects", href: "/admin/projects", icon: LuFolderOpen },
+      { key: "careers", label: "Careers", href: "/admin/careers", icon: LuBriefcaseBusiness },
       { key: "faqs", label: "FAQs", href: "/admin/faqs", icon: LuMessageCircleQuestion },
     ],
   },
