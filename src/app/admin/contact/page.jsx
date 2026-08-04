@@ -237,31 +237,31 @@ export default function ContactSubmissionsPage() {
         </div>
 
         {/* Tab Buttons: Active vs Archive */}
-        <div className="flex items-center bg-slate-100 p-1 border border-gray-200 w-full sm:w-auto">
+        <div className="flex items-center gap-[1.5px] bg-slate-100 p-1 border border-gray-200 w-full sm:w-auto max-w-full overflow-x-auto">
           <button
             onClick={() => setActiveTab("active")}
-            className={`flex-1 sm:flex-none px-4 py-1.5 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-2 ${activeTab === "active"
+            className={`flex-1 sm:flex-none px-2.5 sm:px-4 py-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-tight sm:tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1.5 sm:gap-2 whitespace-nowrap ${activeTab === "active"
               ? "bg-white text-primary shadow-xs border border-gray-200"
               : "text-gray-600 hover:text-gray-900"
               }`}
           >
-            <LuInbox className="text-sm" />
+            <LuInbox className="text-sm shrink-0" />
             <span>Active</span>
-            <span className="px-1.5 py-0.2 text-[10px] font-mono bg-primary/10 text-primary">
+            <span className="px-1.5 py-0.2 text-[10px] font-mono bg-primary/10 text-primary shrink-0">
               {activeSubmissions.length}
             </span>
           </button>
 
           <button
             onClick={() => setActiveTab("archive")}
-            className={`flex-1 sm:flex-none px-4 py-1.5 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-2 ${activeTab === "archive"
+            className={`flex-1 sm:flex-none px-2.5 sm:px-4 py-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-tight sm:tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1.5 sm:gap-2 whitespace-nowrap ${activeTab === "archive"
               ? "bg-white text-amber-700 shadow-xs border border-gray-200"
               : "text-gray-600 hover:text-gray-900"
               }`}
           >
-            <LuArchive className="text-sm" />
+            <LuArchive className="text-sm shrink-0" />
             <span>Archive</span>
-            <span className="px-1.5 py-0.2 text-[10px] font-mono bg-amber-100 text-amber-800">
+            <span className="px-1.5 py-0.2 text-[10px] font-mono bg-amber-100 text-amber-800 shrink-0">
               {archivedSubmissions.length}
             </span>
           </button>
@@ -350,7 +350,7 @@ export default function ContactSubmissionsPage() {
 
       {/* Delete Confirmation Modal */}
       {deleteTarget && (
-        <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+        <div className="fixed inset-0 z-99999 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
           <div className="w-full max-w-md bg-white border border-gray-200 shadow-2xl p-6 relative">
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 bg-red-50 border border-red-100 text-primary flex items-center justify-center flex-shrink-0">

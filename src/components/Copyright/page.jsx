@@ -20,6 +20,10 @@ export default function Copyright() {
     return () => clearInterval(interval);
   }, []);
 
+  const handleAdminRedirect = () => {
+    window.open("/admin", "_blank");
+  };
+
   return (
     <div className="container relative max-w-7xl border border-gray-200 mx-auto px-4 md:px-8 flex flex-col md:flex-row items-center justify-between gap-6 py-2">
       <div className="absolute inset-0 z-1 overflow-hidden">
@@ -34,7 +38,12 @@ export default function Copyright() {
       {/* Ship & Slogan */}
       <div className="w-full relative z-5 flex flex-col md:flex-row justify-between items-center gap-4 py-2 md:py-0">
         <div className="flex items-center gap-3">
-          <Image src={cruiseGif} alt="Cruise Ship" className="w-10 h-10 object-contain flex-shrink-0" />
+          <Image
+            src={cruiseGif}
+            alt="Cruise Ship"
+            className="w-10 h-10 object-contain flex-shrink-0 cursor-pointer"
+            onClick={handleAdminRedirect}
+          />
           <div className="flex flex-col leading-tight">
             <span className="text-[14px] font-extrabold text-secondary-dark">Work together</span>
             <span className="text-[12px] font-semibold text-gray-500">

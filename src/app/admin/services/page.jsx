@@ -98,10 +98,36 @@ export default function AdminServicesPage() {
     }
   };
 
-  // ── Reorder (client-side only) ───────────────────────────────────────────
-  const handleSaveOrder = (newOrderedServices) => {
-    setServices(newOrderedServices);
-    toast.success("Services sequence updated successfully!");
+  // ── Reorder (persisted to MongoDB) ───────────────────────────────────────
+  const handleSaveOrder = async (newOrderedServices) => {
+    try {
+      const orderedIds = newOrderedServices.map((s) => s._id || s.id);
+      const res = await fetch("/api/services", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderedIds }),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData?.error || "Failed to save sequence.");
+      }
+
+      setServices((prev) => {
+        const orderMap = new Map(orderedIds.map((id, index) => [id, index + 1]));
+        return prev
+          .map((s) => ({
+            ...s,
+            order: orderMap.has(s._id) ? orderMap.get(s._id) : s.order,
+          }))
+          .sort((a, b) => (a.order || 0) - (b.order || 0));
+      });
+
+      toast.success("Services sequence updated successfully!");
+    } catch (err) {
+      toast.error(err.message || "Failed to save sequence.");
+      throw err;
+    }
   };
 
   // ── Split data ────────────────────────────────────────────────────────────
@@ -233,7 +259,7 @@ export default function AdminServicesPage() {
   return (
     <div className="p-3 md:p-5 space-y-4">
       {/* Combined Action Bar */}
-      <div className="bg-white border border-gray-200 p-2.5 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div className="bg-white border border-gray-200 p-2.5 md:px-5 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3">
         {/* Add New Service Button */}
         <Link
           href="/admin/services/create"
@@ -244,31 +270,31 @@ export default function AdminServicesPage() {
         </Link>
 
         {/* Tabs */}
-        <div className="flex items-center gap-[1.5px] bg-slate-100 p-1 border border-gray-200 w-full sm:w-auto">
+        <div className="flex items-center gap-[1.5px] bg-slate-100 p-1 border border-gray-200 w-full sm:w-auto max-w-full overflow-x-auto">
           <button
             onClick={() => setActiveTab("active")}
-            className={`flex-1 sm:flex-none px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-2 ${activeTab === "active"
-                ? "bg-white text-primary shadow-xs border border-gray-200"
-                : "text-gray-600 hover:text-gray-900"
+            className={`flex-1 sm:flex-none px-2.5 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold uppercase tracking-tight sm:tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1.5 sm:gap-2 whitespace-nowrap ${activeTab === "active"
+              ? "bg-white text-primary shadow-xs border border-gray-200"
+              : "text-gray-600 hover:text-gray-900"
               }`}
           >
-            <LuShip className="text-sm" />
+            <LuShip className="text-sm shrink-0" />
             <span>Published</span>
-            <span className="px-1.5 py-0.2 text-[10px] font-mono bg-primary/10 text-primary">
+            <span className="px-1.5 py-0.2 text-[10px] font-mono bg-primary/10 text-primary shrink-0">
               {publishedServices.length}
             </span>
           </button>
 
           <button
             onClick={() => setActiveTab("archive")}
-            className={`flex-1 sm:flex-none px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-2 ${activeTab === "archive"
-                ? "bg-white text-amber-700 shadow-xs border border-gray-200"
-                : "text-gray-600 hover:text-gray-900"
+            className={`flex-1 sm:flex-none px-2.5 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold uppercase tracking-tight sm:tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1.5 sm:gap-2 whitespace-nowrap ${activeTab === "archive"
+              ? "bg-white text-amber-700 shadow-xs border border-gray-200"
+              : "text-gray-600 hover:text-gray-900"
               }`}
           >
-            <LuArchive className="text-sm" />
+            <LuArchive className="text-sm shrink-0" />
             <span>Archived</span>
-            <span className="px-1.5 py-0.2 text-[10px] font-mono bg-amber-100 text-amber-800">
+            <span className="px-1.5 py-0.2 text-[10px] font-mono bg-amber-100 text-amber-800 shrink-0">
               {archivedServices.length}
             </span>
           </button>
@@ -282,6 +308,7 @@ export default function AdminServicesPage() {
         onRefresh={fetchServices}
         columns={columns}
         reorderable={activeTab === "active"}
+        onSaveOrder={handleSaveOrder}
         onReorder={handleSaveOrder}
         title={activeTab === "active" ? "Published Services" : "Archived Services"}
         detailTitle="Service Details Preview"

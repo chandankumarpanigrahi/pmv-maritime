@@ -134,18 +134,37 @@ export async function PUT(request) {
   }
 }
 
-// ─── PATCH (archive / restore) ───────────────────────────────────────────────
+// ─── PATCH (archive / restore or bulk reorder) ───────────────────────────────
 export async function PATCH(request) {
   try {
     const body = await request.json();
-    const { id, archived } = body;
+    const { id, archived, orderedIds } = body;
+
+    const client = await clientPromise;
+    const db = client.db("pmv_maritime");
+
+    // Bulk sequence reorder
+    if (Array.isArray(orderedIds)) {
+      const bulkOps = orderedIds.map((docId, index) => ({
+        updateOne: {
+          filter: { _id: new ObjectId(docId) },
+          update: { $set: { order: index + 1, updatedAt: new Date().toISOString() } },
+        },
+      }));
+
+      if (bulkOps.length > 0) {
+        await db.collection("services").bulkWrite(bulkOps);
+      }
+
+      return NextResponse.json({
+        success: true,
+        message: "Services sequence updated successfully.",
+      });
+    }
 
     if (!id) {
       return NextResponse.json({ error: "ID is required." }, { status: 400 });
     }
-
-    const client = await clientPromise;
-    const db = client.db("pmv_maritime");
 
     await db.collection("services").updateOne(
       { _id: new ObjectId(id) },

@@ -616,31 +616,31 @@ export default function AdminCareersPage() {
         <div className="flex-1 min-w-0 space-y-3">
           {/* Published vs Archived Sub-Header Tabs */}
           <div className="flex items-center bg-white border border-gray-200 p-2 shadow-xs justify-between">
-            <div className="flex ms-auto items-center gap-1.5 bg-slate-100 p-1 border border-gray-200">
+            <div className="flex ms-auto items-center gap-1 bg-slate-100 p-1 border border-gray-200 w-full sm:w-auto max-w-full overflow-x-auto">
               <button
                 onClick={() => setActiveTab("active")}
-                className={`px-4 py-1.5 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-2 ${activeTab === "active"
+                className={`flex-1 sm:flex-none px-2.5 sm:px-4 py-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-tight sm:tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1.5 sm:gap-2 whitespace-nowrap ${activeTab === "active"
                   ? "bg-white text-primary shadow-xs border border-gray-200"
                   : "text-gray-600 hover:text-gray-900"
                   }`}
               >
-                <LuBriefcase className="text-sm" />
+                <LuBriefcase className="text-sm shrink-0" />
                 <span>Published</span>
-                <span className="px-1.5 py-0.2 text-[10px] font-mono bg-primary/10 text-primary">
+                <span className="px-1.5 py-0.2 text-[10px] font-mono bg-primary/10 text-primary shrink-0">
                   {publishedCareers.length}
                 </span>
               </button>
 
               <button
                 onClick={() => setActiveTab("archive")}
-                className={`px-4 py-1.5 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-2 ${activeTab === "archive"
+                className={`flex-1 sm:flex-none px-2.5 sm:px-4 py-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-tight sm:tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1.5 sm:gap-2 whitespace-nowrap ${activeTab === "archive"
                   ? "bg-white text-amber-700 shadow-xs border border-gray-200"
                   : "text-gray-600 hover:text-gray-900"
                   }`}
               >
-                <LuArchive className="text-sm" />
+                <LuArchive className="text-sm shrink-0" />
                 <span>Archived</span>
-                <span className="px-1.5 py-0.2 text-[10px] font-mono bg-amber-100 text-amber-800">
+                <span className="px-1.5 py-0.2 text-[10px] font-mono bg-amber-100 text-amber-800 shrink-0">
                   {archivedCareers.length}
                 </span>
               </button>

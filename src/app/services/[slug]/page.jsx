@@ -162,7 +162,7 @@ export default function ServiceDetailPage() {
         <div className="w-full flex flex-col border border-t-0 border-gray-200 bg-[#f7f5f8]">
           <div className="flex flex-col md:flex-row py-8 px-4 md:px-8 border-b border-gray-200">
             <div className="flex flex-col w-full md:w-7/12">
-              <h1 className="font-oswald text-4xl md:text-5xl text-secondary font-bold mb-2 md:mb-3">
+              <h1 className="font-oswald text-4xl md:text-5xl text-secondary-dark font-bold mb-2 md:mb-3">
                 {service.name}
               </h1>
               <p className="text-sm md:text-[15px] max-w-full md:max-w-[90%] text-gray-600 font-medium">
@@ -301,11 +301,10 @@ export default function ServiceDetailPage() {
                 <article
                   key={step.title}
                   onClick={() => setActiveStepIdx(idx)}
-                  className={`relative flex flex-row md:flex-col items-center overflow-hidden border-b sm:border-b-0 lg:border-b-0 lg:border-r border-gray-200 last:border-r-0 pt-0 md:pt-6 cursor-pointer transition-all duration-300 ${
-                    isActive ? "bg-primary text-white" : "bg-white text-secondary-dark"
-                  }`}
+                  className={`relative flex flex-row md:flex-col items-center overflow-hidden border-b sm:border-b-0 lg:border-b-0 lg:border-r border-gray-200 last:border-r-0 pt-0 md:pt-6 cursor-pointer transition-all duration-300 ${isActive ? "bg-primary text-white" : "bg-white text-secondary-dark"
+                    }`}
                 >
-                  <div className="w-full pointer-events-none overflow-hidden">
+                  <div className="w-0 md:w-full pointer-events-none overflow-hidden">
                     <Image
                       src={stepArrow}
                       alt="Arrow"

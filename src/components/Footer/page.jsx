@@ -21,6 +21,23 @@ import footerBg from "../../../public/assets/images/footer-bg.png";
 export default function Footer() {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [popularServices, setPopularServices] = useState([]);
+
+  useEffect(() => {
+    async function fetchPopularServices() {
+      try {
+        const res = await fetch("/api/services", { cache: "no-store" });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          setPopularServices(data.slice(0, 6));
+        }
+      } catch (err) {
+        console.error("Failed to load popular services in footer:", err);
+      }
+    }
+    fetchPopularServices();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -169,36 +186,51 @@ export default function Footer() {
                 </h4>
                 <div className="w-8 h-[2.5px] bg-primary mt-1 mb-4"></div>
                 <ul className="flex flex-col gap-2">
-                  <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                    <Link href="/services/consultancy" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
-                      Maritime Consultancy
-                    </Link>
-                  </li>
-                  <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                    <Link href="/services/training" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
-                      Maritime Training
-                    </Link>
-                  </li>
-                  <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                    <Link href="/services/fleet" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
-                      Fleet Management
-                    </Link>
-                  </li>
-                  <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                    <Link href="/services/crew" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
-                      Crew Management
-                    </Link>
-                  </li>
-                  <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                    <Link href="/services/port-operations" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
-                      Port Operations
-                    </Link>
-                  </li>
-                  <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                    <Link href="/services/shipbuilding" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
-                      Shipbuilding
-                    </Link>
-                  </li>
+                  {popularServices.length > 0 ? (
+                    popularServices.map((service) => (
+                      <li key={service._id || service.slug} className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
+                        <Link
+                          href={`/services/${service.slug}`}
+                          className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200 line-clamp-1"
+                        >
+                          {service.name}
+                        </Link>
+                      </li>
+                    ))
+                  ) : (
+                    <>
+                      <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
+                        <Link href="/services/consultancy" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
+                          Maritime Consultancy
+                        </Link>
+                      </li>
+                      <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
+                        <Link href="/services/training" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
+                          Maritime Training
+                        </Link>
+                      </li>
+                      <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
+                        <Link href="/services/fleet" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
+                          Fleet Management
+                        </Link>
+                      </li>
+                      <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
+                        <Link href="/services/crew" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
+                          Crew Management
+                        </Link>
+                      </li>
+                      <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
+                        <Link href="/services/port-operations" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
+                          Port Operations
+                        </Link>
+                      </li>
+                      <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
+                        <Link href="/services/shipbuilding" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
+                          Shipbuilding
+                        </Link>
+                      </li>
+                    </>
+                  )}
                 </ul>
               </div>
 

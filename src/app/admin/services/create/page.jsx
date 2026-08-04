@@ -262,7 +262,7 @@ export default function CreateServicePage() {
   return (
     <div className="p-3 md:p-6 space-y-6 w-full">
       {/* Top Header Bar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white border border-gray-200 p-4 md:p-5 shadow-xs">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white border border-gray-200 p-2.5 md:px-5 shadow-xs">
         <div className="flex items-center gap-3">
           <Link
             href="/admin/services"

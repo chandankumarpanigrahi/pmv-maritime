@@ -13,9 +13,9 @@ export default function Breadcrumb({
   return (
     <nav
       aria-label="Breadcrumb"
-      className={`absolute left-0 bottom-0 z-6 w-full h-fit px-4 py-3 items-center flex text-sm select-none ${className}`}
+      className={`absolute left-0 bottom-0 z-6 w-full h-fit px-4 py-3 overflow-x-scroll md:overflow-x-hidden items-center flex text-sm select-none ${className}`}
     >
-      <ol className="flex items-center gap-2 flex-wrap">
+      <ol className="flex items-center gap-2">
         {showHome && (
           <li className="flex items-center gap-2">
             <Link
@@ -38,7 +38,7 @@ export default function Breadcrumb({
             <li key={key} className="flex items-center gap-2">
               {isLast || !item.href ? (
                 <span
-                  className="text-primary font-medium cursor-default"
+                  className="text-primary whitespace-nowrap font-medium cursor-default"
                   aria-current="page"
                 >
                   {item.label}
@@ -46,7 +46,7 @@ export default function Breadcrumb({
               ) : (
                 <Link
                   href={item.href}
-                  className="text-gray-600 hover:text-primary transition-colors font-normal"
+                  className="text-gray-600 hover:text-primary whitespace-nowrap transition-colors font-normal"
                   id={`breadcrumb-link-${item.label.toLowerCase().replace(/\s+/g, "-")}`}
                 >
                   {item.label}

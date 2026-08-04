@@ -6,7 +6,8 @@ import SubHeading from "@/design/sub-heading/page";
 
 // Images
 import bannerBg from "../../../../public/assets/images/map-bg.png";
-import colorLogo from "../../../../public/assets/images/banner-anchor-color.png"
+import colorLogo from "../../../../public/assets/images/banner-anchor-color.png";
+import projectAboutPort from "../../../../public/assets/images/project-about-port.png";
 
 // SVG
 import stepArrow from "../../../../public/assets/svg/step.svg"
@@ -188,7 +189,7 @@ export default function ContainerTracking() {
         <div className="w-full flex flex-col border border-t-0 border-gray-200 bg-[#f7f5f8]">
           <div className="flex flex-col md:flex-row py-8 px-4 md:px-8 border-b border-gray-200">
             <div className="flex flex-col w-full md:w-7/12">
-              <h1 className="font-oswald text-4xl md:text-5xl text-secondary font-bold mb-2 md:mb-3">Maritime Consultancy Projects</h1>
+              <h1 className="font-oswald text-4xl md:text-5xl text-secondary-dark font-bold mb-2 md:mb-3">Maritime Consultancy Projects</h1>
               <p className="text-sm md:text-[15px] max-w-full md:max-w-[90%] text-gray-600 font-medium">Strategic, technical, and commercial advice designed to help clients make informed decisions, reduce risk, and improve performance.</p>
             </div>
             <div className="relative z-5 w-full md:w-5/12 flex flex-col justify-end items-end mt-6 md:mt-0">
@@ -235,67 +236,65 @@ export default function ContainerTracking() {
         </div>
       </section>
 
-      <div className="flex flex-col md:flex-row container max-w-7xl mx-auto items-stretch relative overflow-hidden">
-        <Image
-          src={bannerBg}
-          alt="Banner Background"
-          className="object-cover opacity-40 pointer-events-none z-0 absolute right-0 -top-1/2"
-        />
-        <div className="w-full flex flex-col border border-t-0 border-gray-200">
-          <div className="flex flex-col md:flex-row py-6 px-4 md:px-8">
-            <div className="flex flex-row w-full items-center justify-between">
-              <SubHeading title="About The Project" />
-            </div>
-          </div>
-        </div>
-      </div>
-
+      {/* About The Project & Value Delivered Section */}
       <section className="container max-w-7xl mx-auto">
-        <div className="flex flex-col lg:flex-row items-stretch border border-t-0 border-gray-200 bg-white overflow-hidden">
-          <div className="flex flex-1 min-w-0 flex-col">
-            <div className="flex flex-col sm:flex-row gap-4 md:gap-6 p-5 md:p-6">
-              <div className="shrink-0 w-12 h-12 md:w-14 md:h-14 bg-[#ffedf1] flex items-center justify-center">
-                <MdOutlineAnchor className="h-6 w-6 md:h-7 md:w-7 text-primary" />
-              </div>
-              <p className="max-w-[799px] text-base md:text-[17px] leading-relaxed md:leading-[26px] text-gray-800 font-medium">
-                PMV Maritime Consultancy provides end-to-end advisory services for shipping companies, ports, logistics operators, offshore industries, investors, and maritime organizations. We combine industry expertise, technical excellence, and global best practices to improve operational efficiency, regulatory compliance, sustainability, and long-term business growth.
+        <div className="bg-white border border-t-0 border-gray-200 overflow-hidden">
+          {/* Upper Grid: Image + About Content + Value Delivered Box */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch">
+            {/* Left Image */}
+            <div className="lg:col-span-4 relative min-h-[260px] lg:min-h-full overflow-hidden">
+              <Image
+                src={projectAboutPort}
+                alt="About The Project"
+                fill
+                sizes="(max-width: 1024px) 100vw, 33vw"
+                className="object-cover object-center w-full h-full"
+                priority
+              />
+            </div>
+
+            {/* Middle About Text */}
+            <div className="lg:col-span-5 p-5 md:p-8 flex flex-col justify-start">
+              <SubHeading title="About The Project" className="mb-2 md:mb-3" />
+              <p className="text-sm md:text-[16px] leading-relaxed text-gray-700 font-medium">
+                Strategic, technical, and commercial advice designed to help clients make informed decisions, reduce risk, and improve performance. Our team brings deep industry expertise and a commitment to delivering practical, results-driven solutions tailored to your unique challenges.
               </p>
             </div>
 
+            {/* Right Value Delivered Box */}
+            <div className="lg:col-span-3 bg-[#f8fafc] border-t lg:border-t-0 lg:border-l border-gray-200 p-6 md:p-8 flex flex-col justify-center relative">
+              <div className="w-10 h-10 md:w-11 md:h-11 border-2 border-secondary-dark/30 text-secondary-dark rounded-lg flex items-center justify-center mb-3 shrink-0 bg-white shadow-2xs">
+                <TbShieldCheck className="w-6 h-6" />
+              </div>
+              <h3 className="font-oswald text-lg md:text-xl font-bold text-secondary-dark mb-2">
+                Value Delivered
+              </h3>
+              <p className="text-xs md:text-sm leading-relaxed text-gray-600 font-medium">
+                Clear strategic direction, reduced operational risk, stronger decision-making, improved compliance, and practical implementation plans.
+              </p>
+            </div>
+          </div>
+
+          {/* Lower Grid: What We Deliver 3-Column Checklist */}
+          <div className="border-t border-gray-200 bg-white">
             <div className="flex items-center border-y border-gray-200 flex-col md:flex-row py-3 px-4 md:px-8">
               <h2 className="text-lg md:text-xl font-bold font-oswald text-secondary uppercase tracking-wide">
                 What <span className="text-secondary-dark">We Deliver</span>
               </h2>
             </div>
-
-            <div className="flex flex-row flex-wrap gap-y-3.5 gap-x-8 px-4 md:px-8 py-5">
+            <div className="grid grid-cols-1  px-4 md:px-8 py-5 md:grid-cols-2 lg:grid-cols-3 gap-y-3.5 gap-x-6">
               {deliverables.map((item) => (
-                <div key={item} className="flex items-center gap-3 w-full md:w-[calc(50%-1rem)]">
-                  <span className="shrink-0 w-5 h-5 rounded-full bg-primary flex items-center justify-center">
-                    <TbCheck className="h-3 w-3 text-white stroke-[2]" />
+                <div key={item} className="flex items-center gap-3">
+                  <span className="shrink-0 w-5 h-5 rounded-full bg-primary flex items-center justify-center text-white">
+                    <TbCheck className="h-3.5 w-3.5 stroke-[2.5]" />
                   </span>
-                  <p className="min-w-0 text-sm md:text-[15px] leading-snug font-medium text-gray-700">
+                  <span className="text-xs md:text-sm font-semibold text-gray-700 leading-tight">
                     {item}
-                  </p>
+                  </span>
                 </div>
               ))}
             </div>
           </div>
-
-          <aside className="relative shrink-0 overflow-hidden bg-secondary-dark/5 border-t lg:border-t-0 lg:border-l border-[rgba(173,29,65,0.12)] shadow-[0_4px_16px_rgba(0,0,0,0.03)] lg:w-[320px] p-6 md:p-8 flex flex-col justify-center">
-            <Image src={colorLogo} alt="Colored Logo" className="absolute  top-0 right-0 opacity-5" />
-            <div className="relative z-[1]">
-              <LuHandshake className="mb-4 h-11 w-11 md:h-12 md:w-12 text-secondary-dark" />
-              <div className="flex flex-col gap-2">
-                <h3 className="font-oswald text-xl md:text-2xl font-bold text-secondary-dark">
-                  Value Delivered
-                </h3>
-                <p className="text-sm md:text-[15px] leading-relaxed text-gray-700">
-                  Clear strategic direction, reduced operational risk, stronger decision-making, improved compliance, and practical implementation plans.
-                </p>
-              </div>
-            </div>
-          </aside>
         </div>
       </section>
 
@@ -318,7 +317,7 @@ export default function ContainerTracking() {
                   className={`relative flex flex-row md:flex-col items-center overflow-hidden border-b sm:border-b-0 lg:border-b-0 lg:border-r border-gray-200 last:border-r-0 pt-0 md:pt-6 cursor-pointer transition-all duration-300 ${isActive ? "bg-primary text-white" : "bg-white text-secondary-dark"
                     }`}
                 >
-                  <div className="w-full pointer-events-none overflow-hidden">
+                  <div className="w-0 md:w-full pointer-events-none overflow-hidden">
                     <Image
                       src={stepArrow}
                       alt="Arrow"
@@ -359,7 +358,7 @@ export default function ContainerTracking() {
               return (
                 <article
                   key={standard.title}
-                  className="flex min-h-[140px] items-start gap-4 border-r border-b border-gray-200 bg-white p-5 md:p-6"
+                  className="flex md:min-h-[140px] items-start gap-4 border-r border-b border-gray-200 bg-white p-5 md:p-6"
                 >
                   <div className="shrink-0 w-12 h-12 md:w-14 md:h-14 bg-primary/5 text-primary flex items-center justify-center">
                     <StandardIcon className="h-6 w-6 md:h-7 md:w-7" />

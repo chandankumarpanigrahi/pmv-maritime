@@ -462,7 +462,7 @@ export default function AdminLayout({ children }) {
       {/* Content Area */}
       <main className={`${styles.content} ${sidebarOpen ? "" : styles.contentFull}`}>
         {/* Common Page Header */}
-        <div className="bg-white border-b border-gray-200 px-3 md:px-5 py-3 flex items-center justify-between">
+        <div className="sticky top-0 z-30 w-full bg-white border-b border-gray-200 px-3 md:px-5 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setSidebarOpen((prev) => !prev)}
@@ -477,10 +477,10 @@ export default function AdminLayout({ children }) {
             </h1>
           </div>
           <div className="hidden md:flex flex-col items-end gap-1">
-            <span className="text-lg font-bold text-primary">
+            <span className="text-xl font-bold text-primary font-mono">
               {currentTime.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true })}
             </span>
-            <span className="text-[11px] font-semibold text-gray-400 uppercase leading-0 tracking-wider">
+            <span className="text-[12px] font-semibold text-gray-600 uppercase leading-0 tracking-wider">
               {currentTime.toLocaleDateString("en-IN", { weekday: "short", day: "2-digit", month: "short", year: "numeric" })}
             </span>
           </div>

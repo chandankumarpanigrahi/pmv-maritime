@@ -18,7 +18,7 @@ import {
 } from "react-icons/lu";
 
 export default function MasterPage() {
-  const [activeTab, setActiveTab] = useState("projects");
+  const [activeTab, setActiveTab] = useState("services");
   const [masterData, setMasterData] = useState({
     projects: [],
     services: [],
@@ -229,8 +229,8 @@ export default function MasterPage() {
   );
 
   const tabConfig = [
-    { key: "projects", label: "Projects Master", icon: LuFolderOpen },
     { key: "services", label: "Services Master", icon: LuShip },
+    { key: "projects", label: "Projects Master", icon: LuFolderOpen },
     { key: "contact", label: "Contact Form Master", icon: LuMail },
     { key: "careers", label: "Careers Master", icon: LuBriefcaseBusiness },
   ];
@@ -249,11 +249,10 @@ export default function MasterPage() {
               <button
                 key={tab.key}
                 onClick={() => handleTabChange(tab.key)}
-                className={`flex items-center gap-2 px-4 py-2.5 font-bold text-xs md:text-sm uppercase tracking-wider transition-all cursor-pointer ${
-                  isActive
-                    ? "border border-primary bg-primary text-white shadow-xs"
-                    : "border border-gray-200 bg-slate-50 text-secondary-dark hover:bg-slate-100"
-                }`}
+                className={`flex items-center gap-2 px-4 py-2.5 font-bold text-xs md:text-sm uppercase tracking-wider transition-all cursor-pointer ${isActive
+                  ? "border border-primary bg-primary text-white shadow-xs"
+                  : "border border-gray-200 bg-slate-50 text-secondary-dark hover:bg-slate-100"
+                  }`}
               >
                 <TabIcon className="text-base" />
                 <span>{tab.label}</span>
@@ -421,11 +420,10 @@ export default function MasterPage() {
                         </td>
                         <td className="py-3.5 px-4">
                           <span
-                            className={`inline-flex items-center gap-1 px-2.5 py-0.5 text-[11px] font-bold uppercase rounded-xs ${
-                              item.status === "Active"
-                                ? "bg-emerald-100 text-emerald-800"
-                                : "bg-gray-100 text-gray-600"
-                            }`}
+                            className={`inline-flex items-center gap-1 px-2.5 py-0.5 text-[11px] font-bold uppercase rounded-xs ${item.status === "Active"
+                              ? "bg-emerald-100 text-emerald-800"
+                              : "bg-gray-100 text-gray-600"
+                              }`}
                           >
                             <LuCheck className="text-xs" />
                             {item.status || "Active"}

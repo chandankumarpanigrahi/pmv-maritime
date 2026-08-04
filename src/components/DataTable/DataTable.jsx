@@ -30,7 +30,9 @@ export default function DataTable({
   searchPlaceholder = "Search records...",
   reorderable = false,
   onSaveOrder = null,
+  onReorder = null,
 }) {
+  const saveOrderCallback = onSaveOrder || onReorder;
   const [search, setSearch] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("");
   const [pageSize, setPageSize] = useState(10);
@@ -79,10 +81,10 @@ export default function DataTable({
   };
 
   const handleSaveReorder = async () => {
-    if (!onSaveOrder) return;
+    if (!saveOrderCallback) return;
     setIsSavingOrder(true);
     try {
-      await onSaveOrder(reorderedData);
+      await saveOrderCallback(reorderedData);
       setIsReorderMode(false);
     } catch (err) {
       // Remain in reorder mode if save fails
