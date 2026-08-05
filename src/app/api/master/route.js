@@ -115,15 +115,23 @@ export async function PUT(request) {
     // Cascade update category name to services if module is "services" and name changed
     if (
       existingRecord &&
-      existingRecord.module === "services" &&
       existingRecord.name !== newName
     ) {
-      await db
-        .collection("services")
-        .updateMany(
-          { category: existingRecord.name },
-          { $set: { category: newName } }
-        );
+      if (existingRecord.module === "services") {
+        await db
+          .collection("services")
+          .updateMany(
+            { category: existingRecord.name },
+            { $set: { category: newName } }
+          );
+      } else if (existingRecord.module === "projects") {
+        await db
+          .collection("projects")
+          .updateMany(
+            { category: existingRecord.name },
+            { $set: { category: newName } }
+          );
+      }
     }
 
     return NextResponse.json({
