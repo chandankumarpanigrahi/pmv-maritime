@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import toast from "react-hot-toast";
+import DataTable from "@/components/DataTable/DataTable";
+
 import {
   LuFolderOpen,
   LuShip,
@@ -11,10 +13,8 @@ import {
   LuTrash2,
   LuShieldAlert,
   LuX,
-  LuSearch,
   LuPlus,
   LuCheck,
-  LuRotateCw,
 } from "react-icons/lu";
 
 export default function MasterPage() {
@@ -27,7 +27,6 @@ export default function MasterPage() {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [search, setSearch] = useState("");
 
   // Form State: Name & Status
   const [name, setName] = useState("");
@@ -92,7 +91,6 @@ export default function MasterPage() {
   // Switch Tab Handler
   const handleTabChange = (tabKey) => {
     setActiveTab(tabKey);
-    setSearch("");
     resetForm();
   };
 
@@ -154,7 +152,7 @@ export default function MasterPage() {
         if (result.data) {
           setMasterData((prev) => ({
             ...prev,
-            [activeTab]: [result.data, ...prev[activeTab]],
+            [activeTab]: [...prev[activeTab], result.data],
           }));
         } else {
           fetchMasterRecords();
@@ -222,17 +220,98 @@ export default function MasterPage() {
     }
   };
 
-  // Filter List by Search Query
+  // ── Reorder (persisted to MongoDB via PATCH) ────────────────────────────
+  const handleSaveOrder = async (newOrderedItems) => {
+    try {
+      const orderedIds = newOrderedItems.map((item) => item._id || item.id);
+      const res = await fetch("/api/master", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderedIds }),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData?.error || "Failed to save sequence.");
+      }
+
+      setMasterData((prev) => {
+        const orderMap = new Map(orderedIds.map((id, index) => [id, index + 1]));
+        return {
+          ...prev,
+          [activeTab]: prev[activeTab]
+            .map((item) => ({
+              ...item,
+              order: orderMap.has(item._id || item.id) ? orderMap.get(item._id || item.id) : item.order,
+            }))
+            .sort((a, b) => (a.order || 0) - (b.order || 0)),
+        };
+      });
+
+      toast.success("Master sequence updated successfully!");
+    } catch (err) {
+      toast.error(err.message || "Failed to save sequence.");
+      throw err;
+    }
+  };
+
   const items = masterData[activeTab] || [];
-  const filteredItems = items.filter((item) =>
-    (item.name || "").toLowerCase().includes(search.toLowerCase())
-  );
 
   const tabConfig = [
     { key: "services", label: "Services Master", icon: LuShip },
     { key: "projects", label: "Projects Master", icon: LuFolderOpen },
     { key: "contact", label: "Contact Form Master", icon: LuMail },
     { key: "careers", label: "Careers Master", icon: LuBriefcaseBusiness },
+  ];
+
+  // ── DataTable Columns ────────────────────────────────────────────────────
+  const columns = [
+    {
+      header: "Name",
+      accessor: "name",
+      cell: (row) => (
+        <p className="text-sm font-bold text-gray-900 leading-snug">{row.name}</p>
+      ),
+    },
+    {
+      header: "Status",
+      accessor: "status",
+      className: "w-32",
+      cell: (row) => (
+        <span
+          className={`inline-flex items-center gap-1 px-2.5 py-0.5 text-[11px] font-bold uppercase rounded-xs ${row.status === "Active"
+            ? "bg-emerald-100 text-emerald-800"
+            : "bg-gray-100 text-gray-600"
+            }`}
+        >
+          <LuCheck className="text-xs" />
+          {row.status || "Active"}
+        </span>
+      ),
+    },
+    {
+      header: "Actions",
+      accessor: "actions",
+      className: "w-28 text-right",
+      cell: (row) => (
+        <div className="flex items-center justify-end gap-2">
+          <button
+            onClick={() => handleEdit(row)}
+            className="p-1.5 bg-slate-100 hover:bg-secondary hover:text-white text-secondary-dark border border-secondary transition-colors cursor-pointer"
+            title="Edit Record"
+          >
+            <LuPencil className="text-sm" />
+          </button>
+          <button
+            onClick={() => openDeleteModal(row)}
+            className="p-1.5 bg-slate-100 hover:bg-primary hover:text-white text-primary border border-primary transition-colors cursor-pointer"
+            title="Delete Record"
+          >
+            <LuTrash2 className="text-sm" />
+          </button>
+        </div>
+      ),
+    },
   ];
 
   return (
@@ -263,7 +342,7 @@ export default function MasterPage() {
       </div>
 
       {/* ═══════════════════════════════════════════════════
-          MAIN CONTENT GRID (Form Left + Table Right)
+          MAIN CONTENT GRID (Form Left + DataTable Right)
          ═══════════════════════════════════════════════════ */}
       <div className="flex flex-col xl:flex-row gap-5">
         {/* ─── LEFT PANEL: Add / Edit Form (Only Name & Status) ─── */}
@@ -349,111 +428,21 @@ export default function MasterPage() {
           </div>
         </div>
 
-        {/* ─── RIGHT PANEL: Plain Data Table (Only #, Name, Status, Actions) ─── */}
+        {/* ─── RIGHT PANEL: DataTable with Drag & Drop Reordering ─── */}
         <div className="flex-1 min-w-0">
-          <div className="bg-white border border-gray-200 shadow-xs">
-            {/* Table Header Controls */}
-            <div className="p-4 border-b border-gray-200 bg-slate-50 flex flex-col sm:flex-row items-center justify-between gap-3">
-              <div className="relative w-full sm:w-72">
-                <input
-                  type="text"
-                  placeholder="Search by name..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="w-full bg-white border border-gray-200 focus:border-secondary outline-none pl-9 pr-4 py-2 text-xs transition-all text-gray-900 placeholder-gray-400 font-medium"
-                />
-                <LuSearch className="absolute left-3 top-2.5 text-gray-400 text-sm" />
-              </div>
-
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={fetchMasterRecords}
-                  className="p-2 bg-white border border-gray-200 text-gray-600 hover:text-primary hover:border-primary transition-all shadow-xs cursor-pointer flex items-center justify-center"
-                  title="Refresh Data"
-                >
-                  <LuRotateCw className={`text-sm ${loading ? "animate-spin" : ""}`} />
-                </button>
-                <div className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                  Total Records: <span className="text-primary font-bold">{filteredItems.length}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Table */}
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="bg-slate-100/70 border-b border-gray-200 text-xs font-bold text-secondary-dark uppercase tracking-wider">
-                    <th className="py-3 px-4 w-12 text-center">#</th>
-                    <th className="py-3 px-4">Name</th>
-                    <th className="py-3 px-4 w-32">Status</th>
-                    <th className="py-3 px-4 w-28 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100 text-xs md:text-sm">
-                  {loading ? (
-                    <tr>
-                      <td colSpan={4} className="py-12 text-center text-gray-400 font-medium">
-                        Loading master records...
-                      </td>
-                    </tr>
-                  ) : error ? (
-                    <tr>
-                      <td colSpan={4} className="py-12 text-center text-red-500 font-medium">
-                        {error}
-                      </td>
-                    </tr>
-                  ) : filteredItems.length === 0 ? (
-                    <tr>
-                      <td colSpan={4} className="py-12 text-center text-gray-400 font-medium">
-                        No master records found.
-                      </td>
-                    </tr>
-                  ) : (
-                    filteredItems.map((item, idx) => (
-                      <tr key={item._id || item.id} className="hover:bg-slate-50/80 transition-colors">
-                        <td className="py-3.5 px-4 text-center font-bold text-gray-400 text-xs">
-                          {idx + 1}
-                        </td>
-                        <td className="py-3.5 px-4 font-bold text-gray-900">
-                          {item.name}
-                        </td>
-                        <td className="py-3.5 px-4">
-                          <span
-                            className={`inline-flex items-center gap-1 px-2.5 py-0.5 text-[11px] font-bold uppercase rounded-xs ${item.status === "Active"
-                              ? "bg-emerald-100 text-emerald-800"
-                              : "bg-gray-100 text-gray-600"
-                              }`}
-                          >
-                            <LuCheck className="text-xs" />
-                            {item.status || "Active"}
-                          </span>
-                        </td>
-                        <td className="py-3.5 px-4 text-right">
-                          <div className="flex items-center justify-end gap-2">
-                            <button
-                              onClick={() => handleEdit(item)}
-                              className="p-1.5 bg-slate-100 hover:bg-secondary hover:text-white text-secondary-dark border border-secondary transition-colors cursor-pointer"
-                              title="Edit Record"
-                            >
-                              <LuPencil className="text-sm" />
-                            </button>
-                            <button
-                              onClick={() => openDeleteModal(item)}
-                              className="p-1.5 bg-slate-100 hover:bg-primary hover:text-white text-primary border border-primary transition-colors cursor-pointer"
-                              title="Delete Record"
-                            >
-                              <LuTrash2 className="text-sm" />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <DataTable
+            data={items}
+            loading={loading}
+            error={error}
+            onRefresh={fetchMasterRecords}
+            columns={columns}
+            reorderable={true}
+            onSaveOrder={handleSaveOrder}
+            onReorder={handleSaveOrder}
+            title={`${tabConfig.find((t) => t.key === activeTab)?.label || "Master Records"}`}
+            searchPlaceholder="Search records by name..."
+            exportFilename={`${activeTab}_master_export.csv`}
+          />
         </div>
       </div>
 

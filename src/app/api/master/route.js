@@ -13,17 +13,11 @@ export async function GET(request) {
     const client = await clientPromise;
     const db = client.db("pmv_maritime");
 
-    // Check count and seed if empty
-    const totalCount = await db.collection("masters").countDocuments();
-    if (totalCount === 0) {
-      await db.collection("masters").insertMany(defaultMasterRecords);
-    }
-
     const query = moduleParam ? { module: moduleParam } : {};
     const records = await db
       .collection("masters")
       .find(query)
-      .sort({ createdAt: -1 })
+      .sort({ order: 1, createdAt: -1 })
       .toArray();
 
     const formattedData = records.map((item) => ({
@@ -57,10 +51,17 @@ export async function POST(request) {
     const client = await clientPromise;
     const db = client.db("pmv_maritime");
 
+    const lastRecord = await db.collection("masters").findOne(
+      { module: targetModule.trim() },
+      { sort: { order: -1 } }
+    );
+    const nextOrder = (lastRecord?.order || 0) + 1;
+
     const newRecord = {
       module: targetModule.trim(),
       name: name.trim(),
       status: status ? status.trim() : "Active",
+      order: nextOrder,
       createdAt: new Date().toISOString(),
     };
 
@@ -112,7 +113,7 @@ export async function PUT(request) {
       .collection("masters")
       .updateOne({ _id: new ObjectId(id) }, { $set: updateData });
 
-    // Cascade update category name to services if module is "services" and name changed
+    // Cascade update category name to services/projects if name changed
     if (
       existingRecord &&
       existingRecord.name !== newName
@@ -144,6 +145,39 @@ export async function PUT(request) {
       { error: `Failed to update master record: ${error.message}` },
       { status: 500 }
     );
+  }
+}
+
+// PATCH: Reorder master records sequence
+export async function PATCH(request) {
+  try {
+    const body = await request.json();
+    const { orderedIds } = body;
+
+    const client = await clientPromise;
+    const db = client.db("pmv_maritime");
+
+    if (Array.isArray(orderedIds)) {
+      const bulkOps = orderedIds.map((docId, index) => ({
+        updateOne: {
+          filter: { _id: new ObjectId(docId) },
+          update: { $set: { order: index + 1, updatedAt: new Date().toISOString() } },
+        },
+      }));
+
+      if (bulkOps.length > 0) {
+        await db.collection("masters").bulkWrite(bulkOps);
+      }
+
+      return NextResponse.json({
+        success: true,
+        message: "Master sequence updated successfully.",
+      });
+    }
+
+    return NextResponse.json({ error: "orderedIds array is required." }, { status: 400 });
+  } catch (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 

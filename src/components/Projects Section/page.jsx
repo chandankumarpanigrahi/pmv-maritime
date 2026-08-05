@@ -8,224 +8,65 @@ import Image from "next/image";
 
 // Icons
 import { FaArrowRight } from "react-icons/fa";
-import { TbShip, TbTarget, TbShieldCheck, TbActivity, TbGlobe } from "react-icons/tb";
-import { PiGraduationCap } from "react-icons/pi";
-import { LuShipWheel, LuShip, LuGlobe, LuUsers, LuAward, LuMapPin, LuCalendar, LuTrendingUp } from "react-icons/lu";
-import { TbUserShield } from "react-icons/tb";
-import { TbDeviceDesktopCheck } from "react-icons/tb";
+import { LuShip, LuGlobe, LuUsers, LuAward } from "react-icons/lu";
 
 import bannerBg from "../../../public/assets/images/map-bg.png";
+import defaultImage from "../../../public/assets/images/about-image-1.jpg";
 
-import image1 from "../../../public/assets/images/about-image-1.jpg";
-import image2 from "../../../public/assets/images/about-image-2.jpg";
-import image3 from "../../../public/assets/images/about-image-3.jpg";
-
-const projectCategories = [
-  "Port Projects",
-  "Fleet Projects",
-  "Consultancy Projects",
-  "Shipbuilding Projects",
-  "Digital Projects"
-];
-
-const projectsData = [
-  // ========================= PORT PROJECTS =========================
-  {
-    title: "Port Development Projects",
-    tag: "Port Development",
-    category: "Port Projects",
-    description:
-      "Supporting port master planning, terminal development, logistics optimisation, and infrastructure improvements for modern maritime operations.",
-    location: "Global",
-    year: "Ongoing",
-    stat: "Capacity Improvement",
-    image: image1,
-    link: "/projects/port-development"
-  },
-  {
-    title: "Port Operations Projects",
-    tag: "Port Operations",
-    category: "Port Projects",
-    description:
-      "Improving port-call coordination, cargo handling, marine logistics, vessel turnaround, and operational efficiency across ports.",
-    location: "Worldwide",
-    year: "Ongoing",
-    stat: "Reduced Delays",
-    image: image2,
-    link: "/projects/port-operations"
-  },
-  {
-    title: "Port Digitisation Projects",
-    tag: "Port Digitisation",
-    category: "Port Projects",
-    description:
-      "Implementing connected digital systems, workflow automation, dashboards, and operational visibility for smarter port management.",
-    location: "International",
-    year: "Ongoing",
-    stat: "Digital Transformation",
-    image: image3,
-    link: "/projects/port-digitisation"
-  },
-
-  // ========================= FLEET PROJECTS =========================
-  {
-    title: "Fleet Management Projects",
-    tag: "Fleet Management",
-    category: "Fleet Projects",
-    description:
-      "Enhancing vessel reliability through maintenance planning, compliance management, inspections, and technical performance monitoring.",
-    location: "Global",
-    year: "Ongoing",
-    stat: "Reduced Downtime",
-    image: image1,
-    link: "/projects/fleet-management"
-  },
-  {
-    title: "Crew Management Projects",
-    tag: "Crew Management",
-    category: "Fleet Projects",
-    description:
-      "Managing recruitment, deployment, certification, welfare, and workforce planning for compliant maritime operations worldwide.",
-    location: "Worldwide",
-    year: "Ongoing",
-    stat: "Qualified Workforce",
-    image: image2,
-    link: "/projects/crew-management"
-  },
-  {
-    title: "Marine Logistics Projects",
-    tag: "Marine Logistics",
-    category: "Fleet Projects",
-    description:
-      "Delivering logistics support for vessels, equipment, offshore operations, spare parts, and maritime infrastructure projects.",
-    location: "International",
-    year: "Ongoing",
-    stat: "Reliable Delivery",
-    image: image3,
-    link: "/projects/marine-logistics"
-  },
-
-  // ========================= CONSULTANCY PROJECTS =========================
-  {
-    title: "Maritime Consultancy Projects",
-    tag: "Consultancy",
-    category: "Consultancy Projects",
-    description:
-      "Providing strategic, technical, operational, and commercial advisory services for maritime organisations and stakeholders.",
-    location: "Global",
-    year: "Ongoing",
-    stat: "Better Decisions",
-    image: image1,
-    link: "/projects/maritime-consultancy"
-  },
-  {
-    title: "Risk Management Projects",
-    tag: "Risk Management",
-    category: "Consultancy Projects",
-    description:
-      "Developing digital risk management solutions for monitoring, compliance, incident reporting, and operational safety.",
-    location: "Worldwide",
-    year: "Ongoing",
-    stat: "Reduced Risk",
-    image: image2,
-    link: "/projects/risk-management"
-  },
-  {
-    title: "Case Advisory Projects",
-    tag: "Case Advisory",
-    category: "Consultancy Projects",
-    description:
-      "Supporting maritime investigations, claims, disputes, technical reviews, and regulatory compliance through expert advisory.",
-    location: "International",
-    year: "Ongoing",
-    stat: "Expert Guidance",
-    image: image3,
-    link: "/projects/case-advisory"
-  },
-
-  // ========================= SHIPBUILDING PROJECTS =========================
-  {
-    title: "Shipbuilding Projects",
-    tag: "Shipbuilding",
-    category: "Shipbuilding Projects",
-    description:
-      "Supporting vessel construction, conversion, refurbishment, quality assurance, commissioning, and final project delivery.",
-    location: "Global",
-    year: "Ongoing",
-    stat: "Quality Assurance",
-    image: image1,
-    link: "/projects/shipbuilding"
-  },
-  {
-    title: "Infrastructure Projects",
-    tag: "Infrastructure",
-    category: "Shipbuilding Projects",
-    description:
-      "Managing maritime infrastructure projects from feasibility and planning through construction and successful handover.",
-    location: "Worldwide",
-    year: "Ongoing",
-    stat: "Project Success",
-    image: image2,
-    link: "/projects/infrastructure"
-  },
-  {
-    title: "Inland Waterway Projects",
-    tag: "Waterways",
-    category: "Shipbuilding Projects",
-    description:
-      "Improving inland transport, navigation safety, connectivity, and operational readiness through strategic waterway development.",
-    location: "Regional",
-    year: "Ongoing",
-    stat: "Safer Navigation",
-    image: image3,
-    link: "/projects/inland-waterways"
-  },
-
-  // ========================= DIGITAL PROJECTS =========================
-  {
-    title: "Maritime Software Projects",
-    tag: "Software Development",
-    category: "Digital Projects",
-    description:
-      "Designing, testing, reviewing, and deploying maritime software solutions that improve reliability and operational performance.",
-    location: "Global",
-    year: "Ongoing",
-    stat: "Reliable Systems",
-    image: image1,
-    link: "/projects/software-development"
-  },
-  {
-    title: "Artificial Intelligence Projects",
-    tag: "Artificial Intelligence",
-    category: "Digital Projects",
-    description:
-      "Applying AI-powered analytics, predictive maintenance, intelligent planning, and automation across maritime operations.",
-    location: "International",
-    year: "Ongoing",
-    stat: "Smarter Decisions",
-    image: image2,
-    link: "/projects/artificial-intelligence"
-  },
-  {
-    title: "Training LMS Projects",
-    tag: "Digital Learning",
-    category: "Digital Projects",
-    description:
-      "Developing Learning Management Systems for maritime training, certification, competency tracking, and professional development.",
-    location: "Worldwide",
-    year: "Ongoing",
-    stat: "Digital Learning",
-    image: image3,
-    link: "/projects/training-lms"
-  }
-];
-
-export default function Projects() {
+export default function ProjectsSection() {
+  const [projects, setProjects] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState(0);
-  // Filter projects based on activeTab (category)
-  const filteredProjects = projectsData.filter(
-    project => project.category === projectCategories[activeTab]
-  );
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        // Fetch projects from MongoDB API
+        const projectsRes = await fetch("/api/projects", { cache: "no-store" });
+        let projectsList = [];
+        if (projectsRes.ok) {
+          const data = await projectsRes.json();
+          if (Array.isArray(data)) projectsList = data;
+        }
+        setProjects(projectsList);
+
+        // Fetch master project categories
+        const masterRes = await fetch("/api/master?module=projects", { cache: "no-store" });
+        let masterCatNames = [];
+        if (masterRes.ok) {
+          const masterData = await masterRes.json();
+          if (Array.isArray(masterData) && masterData.length > 0) {
+            masterCatNames = masterData
+              .filter((item) => item.status === "Active")
+              .map((item) => item.name);
+          }
+        }
+
+        // Combine categories from master and projects
+        const dbCatNames = Array.from(new Set(projectsList.map((p) => p.category).filter(Boolean)));
+        const combined = Array.from(new Set([...masterCatNames, ...dbCatNames]));
+
+        const finalCategories = combined.length > 0
+          ? combined
+          : ["Port Operations", "Fleet Management", "Maritime Consultancy", "Shipbuilding", "Digitisation"];
+
+        setCategories(finalCategories);
+      } catch (err) {
+        console.error("Failed to load projects section data:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, []);
+
+  const selectedCategory = categories[activeTab] || "";
+  // Filter projects by selected category and limit to max 3
+  const filteredProjects = projects
+    .filter((project) => project.category === selectedCategory)
+    .slice(0, 3);
 
   return (
     <div className="flex flex-col md:flex-row container max-w-7xl mx-auto items-stretch relative">
@@ -307,15 +148,13 @@ export default function Projects() {
 
         {/* Tabs Headers */}
         <div className="w-full border-b border-gray-200">
-          <div className="flex overflow-x-auto gap-6 md:gap-8 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden snap-x snap-mandatory">
-            {projectCategories.map((category, idx) => {
+          <div className="flex overflow-x-auto gap-3 md:gap-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden snap-x snap-mandatory">
+            {categories.map((category, idx) => {
               const isActive = activeTab === idx;
               return (
                 <button
-                  key={idx}
-                  onClick={() => {
-                    setActiveTab(idx);
-                  }}
+                  key={category}
+                  onClick={() => setActiveTab(idx)}
                   className={`pb-3 px-3 pt-2 text-sm md:text-[15px] whitespace-nowrap cursor-pointer transition-all duration-300 border-b-3 -mb-[1.5px] uppercase tracking-wider text-left snap-start flex-shrink-0 group ${isActive
                     ? "border-primary text-secondary-dark font-bold"
                     : "border-transparent text-gray-400 hover:text-gray-600 font-semibold"
@@ -325,6 +164,8 @@ export default function Projects() {
                 </button>
               );
             })}
+
+            {/* ALL PROJECTS TAB LINK */}
             <Link
               href="/projects"
               className="pb-3 px-3 pt-2 text-sm md:text-[15px] whitespace-nowrap cursor-pointer transition-all duration-300 border-b-3 -mb-[1.5px] uppercase tracking-wider text-left snap-start flex-shrink-0 text-gray-400 hover:text-gray-600 font-semibold border-transparent flex items-center gap-1 group"
@@ -335,77 +176,86 @@ export default function Projects() {
           </div>
         </div>
 
-        {/* Tab Content Display (Projects Grid) */}
-        <div className=" bg-gray-50/30">
+        {/* Tab Content Display (Projects Grid - Max 3 Projects) */}
+        <div className="bg-gray-50/30">
           <div className="grid grid-cols-1 gap-px md:grid-cols-2 lg:grid-cols-3 items-stretch bg-gray-200">
-            {filteredProjects.map((project, idx) => (
-              <div
-                key={idx}
-                className="flex flex-col bg-white overflow-hidden group/card cursor-pointer"
-              >
-                {/* Image container */}
-                <div className="relative h-[220px] w-full overflow-hidden flex-shrink-0">
-                  <Image
-                    src={project.image}
-                    alt={project.title}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover/card:scale-105"
-                  />
-                  <div className="absolute top-3 left-3 bg-primary text-white text-[10px] md:text-[11px] font-bold px-2.5 py-1 uppercase tracking-wider">
-                    {project.tag}
-                  </div>
+            {loading
+              ? Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="flex flex-col bg-white overflow-hidden p-6 min-h-[300px] animate-pulse">
+                  <div className="h-[220px] bg-gray-200 mb-4 w-full" />
+                  <div className="h-5 bg-gray-200 w-3/4 mb-3" />
+                  <div className="h-3 bg-gray-100 w-full mb-2" />
+                  <div className="h-3 bg-gray-100 w-2/3" />
                 </div>
+              ))
+              : filteredProjects.map((project, idx) => {
+                const projectTitle = project.title || project.name || "Untitled Project";
+                const projectSlug = project.slug || projectTitle.toLowerCase().replace(/[^a-z0-9\s-]/g, "").trim().replace(/\s+/g, "-");
+                const imgSrc = project.imageUrl || defaultImage;
 
-                {/* Content */}
-                <div className="flex flex-col flex-grow p-5 md:p-6 justify-between">
-                  <div>
-                    {/* Title and Arrow */}
-                    <div className="flex items-start justify-between gap-4">
-                      <h3 className="text-lg md:text-xl font-bold text-secondary-gray-900 leading-tight">
-                        {project.title}
-                      </h3>
-                    </div>
-
-                    {/* Description */}
-                    <p className="text-gray-500 text-[13px] md:text-[14px] leading-relaxed mt-3 line-clamp-3">
-                      {project.description}
-                    </p>
-                  </div>
-
-                  <div>
-                    {/* Stats divider line */}
-                    <div className="hidden items-center justify-between py-3.5 border-t border-gray-100 mt-5 text-gray-700">
-                      {/* Location */}
-                      <div className="flex items-center gap-1.5">
-                        <LuMapPin className="text-secondary text-base flex-shrink-0" />
-                        <span className="text-[11px] md:text-xs font-semibold">{project.location}</span>
-                      </div>
-
-                      {/* Year */}
-                      <div className="flex items-center gap-1.5">
-                        <LuCalendar className="text-secondary text-base flex-shrink-0" />
-                        <span className="text-[11px] md:text-xs font-semibold">{project.year}</span>
-                      </div>
-
-                      {/* Metric */}
-                      <div className="flex items-center gap-1.5 max-w-[50%]">
-                        <LuTrendingUp className="text-secondary text-base flex-shrink-0" />
-                        <span className="text-[10px] md:text-[11px] font-semibold text-gray-800 truncate">
-                          <span className="text-primary">{project.stat.split(' ')[0]}</span> {project.stat.split(' ').slice(1).join(' ')}
-                        </span>
+                return (
+                  <Link
+                    key={project._id || idx}
+                    href={`/projects/${projectSlug}`}
+                    className="flex flex-col bg-white overflow-hidden group/card cursor-pointer"
+                  >
+                    {/* Image container */}
+                    <div className="relative h-[220px] w-full overflow-hidden flex-shrink-0 bg-slate-100">
+                      {typeof imgSrc === "string" ? (
+                        <Image
+                          src={imgSrc}
+                          alt={projectTitle}
+                          fill
+                          unoptimized
+                          className="object-cover transition-transform duration-500 group-hover/card:scale-105"
+                        />
+                      ) : (
+                        <Image
+                          src={imgSrc}
+                          alt={projectTitle}
+                          fill
+                          className="object-cover transition-transform duration-500 group-hover/card:scale-105"
+                        />
+                      )}
+                      <div className="absolute top-3 left-3 bg-primary text-white text-[10px] md:text-[11px] font-bold px-2.5 py-1 uppercase tracking-wider">
+                        {project.category || "General"}
                       </div>
                     </div>
 
-                    {/* View Case Study link */}
-                    <div className="flex items-center gap-1.5 text-xs md:text-[13px] font-bold text-primary hover:text-primary-hover group/link transition-colors duration-300 mt-3 pt-2">
-                      <span>View Case Study</span>
-                      <FaArrowRight className="text-xs transition-transform duration-300 group-hover/link:translate-x-1" />
+                    {/* Content */}
+                    <div className="flex flex-col flex-grow p-5 md:p-6 justify-between">
+                      <div>
+                        {/* Title */}
+                        <div className="flex items-start justify-between gap-4">
+                          <h3 className="text-lg md:text-xl font-bold text-secondary-gray-900 leading-tight">
+                            {projectTitle}
+                          </h3>
+                        </div>
+
+                        {/* Description */}
+                        <p className="text-gray-500 text-[13px] md:text-[14px] leading-relaxed mt-3 line-clamp-3">
+                          {project.shortDesc || project.description || ""}
+                        </p>
+                      </div>
+
+                      <div>
+                        {/* View Case Study link */}
+                        <div className="flex items-center gap-1.5 text-xs md:text-[13px] font-bold text-primary hover:text-primary-hover group/link transition-colors duration-300 mt-3 pt-2">
+                          <span>View Case Study</span>
+                          <FaArrowRight className="text-xs transition-transform duration-300 group-hover/link:translate-x-1" />
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-            ))}
+                  </Link>
+                );
+              })}
           </div>
+
+          {!loading && filteredProjects.length === 0 && (
+            <div className="p-12 text-center text-gray-500 font-medium bg-white">
+              No projects available in this category yet.
+            </div>
+          )}
         </div>
       </div>
     </div>
