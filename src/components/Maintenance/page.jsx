@@ -37,6 +37,13 @@ export default function Maintenance() {
       setShowModal(false);
       // Reload page to reflect state changes and render normal website
       window.location.reload();
+    } else if (password === "samir@2026" || password === "chandan@2026") {
+      // Bypass maintenance mode for 20 hours
+      const expiry = Date.now() + 20 * 60 * 60 * 1000;
+      localStorage.setItem("maintenance_bypass_expiry", expiry.toString());
+      setShowModal(false);
+      // Reload page to reflect state changes and render normal website
+      window.location.reload();
     } else {
       setError("Incorrect password. Please try again.");
     }
@@ -144,7 +151,7 @@ export default function Maintenance() {
                 <LuLock className="text-2xl" />
               </div>
               <h3 className="font-oswald text-xl font-bold text-white mb-2">Administrator Access</h3>
-              <p className="text-slate-400 text-xs mb-6">Enter the administrator password to temporarily bypass maintenance mode for 20 minutes.</p>
+              <p className="text-slate-400 text-xs mb-6">Enter the administrator password to temporarily bypass maintenance mode (20 minutes or 20 hours).</p>
 
               <form onSubmit={handlePasswordSubmit} className="w-full">
                 <div className="relative mb-3">

@@ -230,9 +230,6 @@ export default function ContactSubmissionsPage() {
             <h2 className="font-oswald text-lg font-bold text-secondary uppercase tracking-wide">
               Contact Submissions
             </h2>
-            <p className="text-xs text-gray-400 font-medium">
-              Manage live form submissions stored in MongoDB Atlas database.
-            </p>
           </div>
         </div>
 

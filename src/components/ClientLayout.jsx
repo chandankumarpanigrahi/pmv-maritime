@@ -72,10 +72,15 @@ export default function ClientLayout({ children, maintenanceMode, showLoader }) 
         const difference = expiryTime - Date.now();
         if (difference > 0) {
           setShowMaintenance(false);
-          // Calculate time left in MM:SS
-          const mins = Math.floor(difference / 60000);
-          const secs = Math.floor((difference % 60000) / 1000);
-          setTimeLeft(`${mins}:${secs.toString().padStart(2, "0")}`);
+          // Calculate time left in HH:MM:SS or MM:SS
+          const hours = Math.floor(difference / (1000 * 60 * 60));
+          const mins = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+          const secs = Math.floor((difference % (1000 * 60)) / 1000);
+          if (hours > 0) {
+            setTimeLeft(`${hours}:${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`);
+          } else {
+            setTimeLeft(`${mins}:${secs.toString().padStart(2, "0")}`);
+          }
           return;
         } else {
           localStorage.removeItem("maintenance_bypass_expiry");
