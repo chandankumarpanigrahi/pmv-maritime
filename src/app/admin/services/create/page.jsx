@@ -15,6 +15,7 @@ import {
 } from "react-icons/lu";
 
 import { PRESET_ICONS, renderIconById } from "@/lib/maritimeIcons";
+import { hasPermission } from "@/lib/permissions";
 
 const DEFAULT_HIGHLIGHTS = [
   {
@@ -38,6 +39,10 @@ export default function CreateServicePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const editId = searchParams.get("edit");
+
+  const canCreate = hasPermission(null, "services:create");
+  const canEdit = hasPermission(null, "services:edit");
+  const isAllowed = editId ? canEdit : canCreate;
 
   // Form State
   const [name, setName] = useState("");
@@ -247,6 +252,28 @@ export default function CreateServicePage() {
       setIsSubmitting(false);
     }
   };
+
+  if (!isAllowed) {
+    return (
+      <div className="p-8 text-center bg-white border border-gray-200 m-6 flex flex-col items-center justify-center min-h-[400px]">
+        <div className="w-16 h-16 bg-red-50 text-red-600 border border-red-200 flex items-center justify-center text-3xl mb-4">
+          <LuSparkles />
+        </div>
+        <h2 className="font-oswald text-2xl font-bold text-secondary uppercase tracking-wider">
+          403 - Access Restricted
+        </h2>
+        <p className="text-sm text-gray-500 max-w-md mt-1">
+          You do not have permission to {editId ? "edit" : "create"} service offerings. Please contact your Super Administrator.
+        </p>
+        <Link
+          href="/admin/services"
+          className="mt-6 px-5 py-2 bg-primary hover:bg-primary-hover text-white text-xs font-bold uppercase tracking-wider transition-colors inline-block"
+        >
+          Back to Services Engine
+        </Link>
+      </div>
+    );
+  }
 
   if (isFetchingEdit) {
     return (

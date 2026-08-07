@@ -17,6 +17,7 @@ import {
 } from "react-icons/lu";
 
 import { PRESET_ICONS, renderIconById } from "@/lib/maritimeIcons";
+import { hasPermission } from "@/lib/permissions";
 import defaultProjectImage from "../../../../../public/assets/images/about-image-1.jpg";
 
 const EMPTY_HIGHLIGHTS = [
@@ -41,6 +42,10 @@ export default function CreateProjectPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const editId = searchParams.get("edit");
+
+  const canCreate = hasPermission(null, "projects:create");
+  const canEdit = hasPermission(null, "projects:edit");
+  const isAllowed = editId ? canEdit : canCreate;
 
   // Form State - Empty by default for new project
   const [title, setTitle] = useState("");
@@ -263,6 +268,28 @@ export default function CreateProjectPage() {
       setIsSubmitting(false);
     }
   };
+
+  if (!isAllowed) {
+    return (
+      <div className="p-8 text-center bg-white border border-gray-200 m-6 flex flex-col items-center justify-center min-h-[400px]">
+        <div className="w-16 h-16 bg-red-50 text-red-600 border border-red-200 flex items-center justify-center text-3xl mb-4">
+          <LuSparkles />
+        </div>
+        <h2 className="font-oswald text-2xl font-bold text-secondary uppercase tracking-wider">
+          403 - Access Restricted
+        </h2>
+        <p className="text-sm text-gray-500 max-w-md mt-1">
+          You do not have permission to {editId ? "edit" : "create"} project showcases. Please contact your Super Administrator.
+        </p>
+        <Link
+          href="/admin/projects"
+          className="mt-6 px-5 py-2 bg-primary hover:bg-primary-hover text-white text-xs font-bold uppercase tracking-wider transition-colors inline-block"
+        >
+          Back to Projects Hub
+        </Link>
+      </div>
+    );
+  }
 
   if (isFetchingEdit) {
     return (

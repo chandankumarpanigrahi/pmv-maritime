@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import toast from "react-hot-toast";
 import DataTable from "@/components/DataTable/DataTable";
+import { hasPermission } from "@/lib/permissions";
 import {
   LuPencil,
   LuTrash2,
@@ -14,6 +15,10 @@ export default function FAQsPage() {
   const [faqs, setFaqs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const canCreate = hasPermission(null, "faqs:create");
+  const canEdit = hasPermission(null, "faqs:edit");
+  const canDelete = hasPermission(null, "faqs:delete");
 
   // Form state
   const [question, setQuestion] = useState("");
@@ -210,20 +215,27 @@ export default function FAQsPage() {
       className: "w-[120px]",
       cell: (row) => (
         <div className="flex items-center gap-2">
-          <button
-            onClick={() => handleEdit(row)}
-            className="p-1.5 bg-slate-100 hover:bg-secondary hover:text-white text-secondary-dark border border-secondary transition-colors cursor-pointer"
-            title="Edit FAQ"
-          >
-            <LuPencil className="text-sm" />
-          </button>
-          <button
-            onClick={() => openDeleteModal(row)}
-            className="p-1.5 bg-slate-100 hover:bg-primary hover:text-white text-primary border border-primary transition-colors cursor-pointer"
-            title="Delete FAQ"
-          >
-            <LuTrash2 className="text-sm" />
-          </button>
+          {canEdit && (
+            <button
+              onClick={() => handleEdit(row)}
+              className="p-1.5 bg-slate-100 hover:bg-secondary hover:text-white text-secondary-dark border border-secondary transition-colors cursor-pointer"
+              title="Edit FAQ"
+            >
+              <LuPencil className="text-sm" />
+            </button>
+          )}
+          {canDelete && (
+            <button
+              onClick={() => openDeleteModal(row)}
+              className="p-1.5 bg-slate-100 hover:bg-primary hover:text-white text-primary border border-primary transition-colors cursor-pointer"
+              title="Delete FAQ"
+            >
+              <LuTrash2 className="text-sm" />
+            </button>
+          )}
+          {!canEdit && !canDelete && (
+            <span className="text-[11px] text-gray-400 font-semibold italic">View Only</span>
+          )}
         </div>
       ),
     },
@@ -233,9 +245,10 @@ export default function FAQsPage() {
     <div className="p-3 md:p-5">
       <div className="flex flex-col xl:flex-row gap-5">
         {/* ═══════════════════════════════════════════════════
-            LEFT PANEL — Add / Edit FAQ Form
+            LEFT PANEL — Add / Edit FAQ Form (Requires Permission)
            ═══════════════════════════════════════════════════ */}
-        <div className="w-full xl:w-[340px] xl:min-w-[340px] flex-shrink-0">
+        {(canCreate || (editingId && canEdit)) && (
+          <div className="w-full xl:w-[340px] xl:min-w-[340px] flex-shrink-0">
           <div className="bg-white border border-gray-200 shadow-xs">
             {/* Form Header */}
             <div className="px-5 py-4 border-b border-gray-200 bg-slate-50 flex items-center justify-between">
@@ -319,6 +332,7 @@ export default function FAQsPage() {
             </form>
           </div>
         </div>
+        )}
 
         {/* ═══════════════════════════════════════════════════
             RIGHT PANEL — Reusable DataTable Component with Drag & Drop Reordering

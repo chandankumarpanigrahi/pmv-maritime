@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import toast from "react-hot-toast";
 import DataTable from "@/components/DataTable/DataTable";
+import { hasPermission } from "@/lib/permissions";
 import {
   LuMail,
   LuArchive,
@@ -26,6 +27,9 @@ export default function ContactSubmissionsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState("active"); // "active" | "archive"
+
+  const canExport = hasPermission(null, "submissions:export");
+  const canDelete = hasPermission(null, "submissions:delete");
 
   // Delete modal state
   const [deleteTarget, setDeleteTarget] = useState(null);
@@ -203,13 +207,15 @@ export default function ContactSubmissionsPage() {
               >
                 <span>Restore</span>
               </button>
-              <button
-                onClick={() => setDeleteTarget(row)}
-                className="px-2.5 pt-1.5 pb-1 bg-red-50 hover:bg-primary hover:text-white text-red-800 border border-red-200 font-bold text-[11px] uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1"
-                title="Delete Permanently"
-              >
-                <span>Delete</span>
-              </button>
+              {canDelete && (
+                <button
+                  onClick={() => setDeleteTarget(row)}
+                  className="px-2.5 pt-1.5 pb-1 bg-red-50 hover:bg-primary hover:text-white text-red-800 border border-red-200 font-bold text-[11px] uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1"
+                  title="Delete Permanently"
+                >
+                  <span>Delete</span>
+                </button>
+              )}
             </>
           )}
         </div>

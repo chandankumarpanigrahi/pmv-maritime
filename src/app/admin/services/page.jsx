@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import DataTable from "@/components/DataTable/DataTable";
+import { hasPermission } from "@/lib/permissions";
 
 import {
   LuShip,
@@ -26,6 +27,11 @@ export default function AdminServicesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState("active");
+
+  const canCreate = hasPermission(null, "services:create");
+  const canEdit = hasPermission(null, "services:edit");
+  const canArchive = hasPermission(null, "services:archive");
+  const canDelete = hasPermission(null, "services:delete");
 
   // Delete Modal State
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -215,39 +221,47 @@ export default function AdminServicesPage() {
 
             {activeTab === "active" ? (
               <>
-                <Link
-                  href={`/admin/services/create?edit=${row._id}`}
-                  className="p-1.5 bg-slate-100 hover:bg-secondary hover:text-white text-secondary-dark border border-secondary transition-colors cursor-pointer"
-                  title="Edit Service"
-                >
-                  <LuPencil className="text-sm" />
-                </Link>
-                <button
-                  onClick={() => handleToggleArchive(row, "archive")}
-                  className="px-2.5 py-1 bg-amber-50 hover:bg-amber-800 hover:text-white text-amber-700 border border-amber-200 font-bold text-[11px] uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1"
-                  title="Move to Archive"
-                >
-                  <LuArchive className="text-xs" />
-                  <span>Archive</span>
-                </button>
+                {canEdit && (
+                  <Link
+                    href={`/admin/services/create?edit=${row._id}`}
+                    className="p-1.5 bg-slate-100 hover:bg-secondary hover:text-white text-secondary-dark border border-secondary transition-colors cursor-pointer"
+                    title="Edit Service"
+                  >
+                    <LuPencil className="text-sm" />
+                  </Link>
+                )}
+                {canArchive && (
+                  <button
+                    onClick={() => handleToggleArchive(row, "archive")}
+                    className="px-2.5 py-1 bg-amber-50 hover:bg-amber-800 hover:text-white text-amber-700 border border-amber-200 font-bold text-[11px] uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1"
+                    title="Move to Archive"
+                  >
+                    <LuArchive className="text-xs" />
+                    <span>Archive</span>
+                  </button>
+                )}
               </>
             ) : (
               <>
-                <button
-                  onClick={() => handleToggleArchive(row, "restore")}
-                  className="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-800 hover:text-white text-emerald-700 border border-emerald-200 font-bold text-[11px] uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1"
-                  title="Restore to Published"
-                >
-                  <LuCheck className="text-xs" />
-                  <span>Restore</span>
-                </button>
-                <button
-                  onClick={() => openDeleteModal(row)}
-                  className="p-1.5 bg-red-50 hover:bg-primary hover:text-white text-primary border border-red-200 transition-colors cursor-pointer"
-                  title="Delete Permanently"
-                >
-                  <LuTrash2 className="text-sm" />
-                </button>
+                {canArchive && (
+                  <button
+                    onClick={() => handleToggleArchive(row, "restore")}
+                    className="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-800 hover:text-white text-emerald-700 border border-emerald-200 font-bold text-[11px] uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1"
+                    title="Restore to Published"
+                  >
+                    <LuCheck className="text-xs" />
+                    <span>Restore</span>
+                  </button>
+                )}
+                {canDelete && (
+                  <button
+                    onClick={() => openDeleteModal(row)}
+                    className="p-1.5 bg-red-50 hover:bg-primary hover:text-white text-primary border border-red-200 transition-colors cursor-pointer"
+                    title="Delete Permanently"
+                  >
+                    <LuTrash2 className="text-sm" />
+                  </button>
+                )}
               </>
             )}
           </div>
@@ -261,13 +275,17 @@ export default function AdminServicesPage() {
       {/* Combined Action Bar */}
       <div className="bg-white border border-gray-200 p-2.5 md:px-5 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3">
         {/* Add New Service Button */}
-        <Link
-          href="/admin/services/create"
-          className="w-full sm:w-auto px-5 py-2 bg-primary hover:bg-primary-hover text-white font-bold text-xs uppercase tracking-wider transition-all shadow-xs flex items-center justify-center gap-2"
-        >
-          <LuPlus className="text-base" />
-          <span>Add New Service</span>
-        </Link>
+        {canCreate ? (
+          <Link
+            href="/admin/services/create"
+            className="w-full sm:w-auto px-5 py-2 bg-primary hover:bg-primary-hover text-white font-bold text-xs uppercase tracking-wider transition-all shadow-xs flex items-center justify-center gap-2"
+          >
+            <LuPlus className="text-base" />
+            <span>Add New Service</span>
+          </Link>
+        ) : (
+          <div />
+        )}
 
         {/* Tabs */}
         <div className="flex items-center gap-[1.5px] bg-slate-100 p-1 border border-gray-200 w-full sm:w-auto max-w-full overflow-x-auto">

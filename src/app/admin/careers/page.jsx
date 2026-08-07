@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import toast from "react-hot-toast";
 import DataTable from "@/components/DataTable/DataTable";
+import { hasPermission } from "@/lib/permissions";
 import {
   LuPencil,
   LuTrash2,
@@ -33,6 +34,11 @@ export default function AdminCareersPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState("active"); // "active" (Published) | "archive" (Archived)
+
+  const canCreate = hasPermission(null, "careers:create");
+  const canEdit = hasPermission(null, "careers:edit");
+  const canArchive = hasPermission(null, "careers:archive");
+  const canDelete = hasPermission(null, "careers:delete");
 
   // Form State
   const [category, setCategory] = useState("sea");
@@ -372,39 +378,47 @@ export default function AdminCareersPage() {
         <div className="flex items-center gap-1.5 justify-start">
           {activeTab === "active" ? (
             <>
-              <button
-                onClick={() => handleEdit(row)}
-                className="p-1.5 bg-slate-100 hover:bg-secondary hover:text-white text-secondary-dark border border-secondary transition-colors cursor-pointer"
-                title="Edit Position"
-              >
-                <LuPencil className="text-sm" />
-              </button>
-              <button
-                onClick={() => handleToggleArchive(row, "archive")}
-                className="px-2.5 py-1 bg-amber-50 hover:bg-amber-800 hover:text-white text-amber-700 border border-amber-200 font-bold text-[11px] uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1"
-                title="Move to Archive"
-              >
-                <LuArchive className="text-xs" />
-                <span>Archive</span>
-              </button>
+              {canEdit && (
+                <button
+                  onClick={() => handleEdit(row)}
+                  className="p-1.5 bg-slate-100 hover:bg-secondary hover:text-white text-secondary-dark border border-secondary transition-colors cursor-pointer"
+                  title="Edit Position"
+                >
+                  <LuPencil className="text-sm" />
+                </button>
+              )}
+              {canArchive && (
+                <button
+                  onClick={() => handleToggleArchive(row, "archive")}
+                  className="px-2.5 py-1 bg-amber-50 hover:bg-amber-800 hover:text-white text-amber-700 border border-amber-200 font-bold text-[11px] uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1"
+                  title="Move to Archive"
+                >
+                  <LuArchive className="text-xs" />
+                  <span>Archive</span>
+                </button>
+              )}
             </>
           ) : (
             <>
-              <button
-                onClick={() => handleToggleArchive(row, "restore")}
-                className="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-800 hover:text-white text-emerald-700 border border-emerald-200 font-bold text-[11px] uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1"
-                title="Restore to Published"
-              >
-                <LuCheck className="text-xs" />
-                <span>Restore</span>
-              </button>
-              <button
-                onClick={() => openDeleteModal(row)}
-                className="p-1.5 bg-red-50 hover:bg-primary hover:text-white text-primary border border-red-200 transition-colors cursor-pointer"
-                title="Delete Permanently"
-              >
-                <LuTrash2 className="text-sm" />
-              </button>
+              {canArchive && (
+                <button
+                  onClick={() => handleToggleArchive(row, "restore")}
+                  className="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-800 hover:text-white text-emerald-700 border border-emerald-200 font-bold text-[11px] uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1"
+                  title="Restore to Published"
+                >
+                  <LuCheck className="text-xs" />
+                  <span>Restore</span>
+                </button>
+              )}
+              {canDelete && (
+                <button
+                  onClick={() => openDeleteModal(row)}
+                  className="p-1.5 bg-red-50 hover:bg-primary hover:text-white text-primary border border-red-200 transition-colors cursor-pointer"
+                  title="Delete Permanently"
+                >
+                  <LuTrash2 className="text-sm" />
+                </button>
+              )}
             </>
           )}
         </div>
@@ -422,9 +436,10 @@ export default function AdminCareersPage() {
     <div className="p-3 md:p-5">
       <div className="flex flex-col xl:flex-row gap-5">
         {/* ═══════════════════════════════════════════════════
-            LEFT PANEL — Add / Edit Career Form
+            LEFT PANEL — Add / Edit Career Form (Requires Permission)
            ═══════════════════════════════════════════════════ */}
-        <div className="w-full xl:w-[360px] xl:min-w-[360px] flex-shrink-0">
+        {(canCreate || (editingId && canEdit)) && (
+          <div className="w-full xl:w-[360px] xl:min-w-[360px] flex-shrink-0">
           <div className="bg-white border border-gray-200 shadow-xs">
             {/* Form Header */}
             <div className="px-5 py-4 border-b border-gray-200 bg-slate-50 flex items-center justify-between">
@@ -609,6 +624,7 @@ export default function AdminCareersPage() {
             </form>
           </div>
         </div>
+        )}
 
         {/* ═══════════════════════════════════════════════════
             RIGHT PANEL — Published / Archived Tabs & DataTable
