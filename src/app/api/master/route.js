@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
+import { getPerformedBy } from "@/lib/permissions";
 
 export const dynamic = "force-dynamic";
 
@@ -66,6 +67,17 @@ export async function POST(request) {
     };
 
     const result = await db.collection("masters").insertOne(newRecord);
+
+    // Create Notification
+    const performedBy = getPerformedBy(request);
+    await db.collection("notifications").insertOne({
+      title: "Master Category Created",
+      message: `Master category "${name.trim()}" under module "${targetModule.trim()}" was created by ${performedBy}.`,
+      category: "CMS",
+      targetRole: "ALL",
+      isRead: false,
+      createdAt: new Date().toISOString(),
+    });
 
     return NextResponse.json({
       success: true,
@@ -135,6 +147,17 @@ export async function PUT(request) {
       }
     }
 
+    // Create Notification
+    const performedBy = getPerformedBy(request);
+    await db.collection("notifications").insertOne({
+      title: "Master Category Updated",
+      message: `Master category "${newName}" was updated by ${performedBy}.`,
+      category: "CMS",
+      targetRole: "ALL",
+      isRead: false,
+      createdAt: new Date().toISOString(),
+    });
+
     return NextResponse.json({
       success: true,
       modifiedCount: result.modifiedCount,
@@ -156,6 +179,7 @@ export async function PATCH(request) {
 
     const client = await clientPromise;
     const db = client.db("pmv_maritime");
+    const performedBy = getPerformedBy(request);
 
     if (Array.isArray(orderedIds)) {
       const bulkOps = orderedIds.map((docId, index) => ({
@@ -168,6 +192,16 @@ export async function PATCH(request) {
       if (bulkOps.length > 0) {
         await db.collection("masters").bulkWrite(bulkOps);
       }
+
+      // Create Notification
+      await db.collection("notifications").insertOne({
+        title: "Master Sequence Reordered",
+        message: `Master category sequence was updated by ${performedBy}.`,
+        category: "CMS",
+        targetRole: "ALL",
+        isRead: false,
+        createdAt: new Date().toISOString(),
+      });
 
       return NextResponse.json({
         success: true,
@@ -196,10 +230,25 @@ export async function DELETE(request) {
 
     const client = await clientPromise;
     const db = client.db("pmv_maritime");
+    const performedBy = getPerformedBy(request);
+
+    // Get details before deleting
+    const record = await db.collection("masters").findOne({ _id: new ObjectId(id) });
+    const recordName = record ? record.name : "Unknown Master Category";
 
     const result = await db
       .collection("masters")
       .deleteOne({ _id: new ObjectId(id) });
+
+    // Create Notification
+    await db.collection("notifications").insertOne({
+      title: "Master Category Deleted",
+      message: `Master category "${recordName}" was deleted permanently by ${performedBy}.`,
+      category: "CMS",
+      targetRole: "ALL",
+      isRead: false,
+      createdAt: new Date().toISOString(),
+    });
 
     return NextResponse.json({
       success: true,

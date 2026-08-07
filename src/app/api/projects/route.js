@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
+import { getPerformedBy } from "@/lib/permissions";
 
 export const dynamic = "force-dynamic";
 
@@ -144,6 +145,18 @@ export async function POST(request) {
     };
 
     const result = await db.collection("projects").insertOne(newProject);
+
+    // Create Notification
+    const performedBy = getPerformedBy(request);
+    await db.collection("notifications").insertOne({
+      title: "Project Created",
+      message: `Project "${title.trim()}" was created by ${performedBy}.`,
+      category: "CMS",
+      targetRole: "ALL",
+      isRead: false,
+      createdAt: new Date().toISOString(),
+    });
+
     return NextResponse.json({
       success: true,
       insertedId: result.insertedId.toString(),
@@ -187,6 +200,17 @@ export async function PUT(request) {
       { $set: updateData }
     );
 
+    // Create Notification
+    const performedBy = getPerformedBy(request);
+    await db.collection("notifications").insertOne({
+      title: "Project Updated",
+      message: `Project "${title.trim()}" was updated by ${performedBy}.`,
+      category: "CMS",
+      targetRole: "ALL",
+      isRead: false,
+      createdAt: new Date().toISOString(),
+    });
+
     return NextResponse.json({ success: true, message: "Project updated successfully." });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -201,6 +225,7 @@ export async function PATCH(request) {
 
     const client = await clientPromise;
     const db = client.db("pmv_maritime");
+    const performedBy = getPerformedBy(request);
 
     // Bulk sequence reorder
     if (Array.isArray(orderedIds)) {
@@ -215,6 +240,16 @@ export async function PATCH(request) {
         await db.collection("projects").bulkWrite(bulkOps);
       }
 
+      // Create Notification
+      await db.collection("notifications").insertOne({
+        title: "Projects Reordered",
+        message: `Projects sequence was updated by ${performedBy}.`,
+        category: "CMS",
+        targetRole: "ALL",
+        isRead: false,
+        createdAt: new Date().toISOString(),
+      });
+
       return NextResponse.json({
         success: true,
         message: "Projects sequence updated successfully.",
@@ -225,10 +260,24 @@ export async function PATCH(request) {
       return NextResponse.json({ error: "ID is required." }, { status: 400 });
     }
 
+    // Get project title
+    const project = await db.collection("projects").findOne({ _id: new ObjectId(id) });
+    const projectTitle = project ? project.title : "Unknown Project";
+
     await db.collection("projects").updateOne(
       { _id: new ObjectId(id) },
       { $set: { archived: !!archived, updatedAt: new Date().toISOString() } }
     );
+
+    // Create Notification
+    await db.collection("notifications").insertOne({
+      title: archived ? "Project Archived" : "Project Restored",
+      message: `Project "${projectTitle}" was ${archived ? "archived" : "restored"} by ${performedBy}.`,
+      category: "CMS",
+      targetRole: "ALL",
+      isRead: false,
+      createdAt: new Date().toISOString(),
+    });
 
     return NextResponse.json({
       success: true,
@@ -251,8 +300,24 @@ export async function DELETE(request) {
 
     const client = await clientPromise;
     const db = client.db("pmv_maritime");
+    const performedBy = getPerformedBy(request);
+
+    // Get project title
+    const project = await db.collection("projects").findOne({ _id: new ObjectId(id) });
+    const projectTitle = project ? project.title : "Unknown Project";
 
     await db.collection("projects").deleteOne({ _id: new ObjectId(id) });
+
+    // Create Notification
+    await db.collection("notifications").insertOne({
+      title: "Project Deleted",
+      message: `Project "${projectTitle}" was deleted permanently by ${performedBy}.`,
+      category: "CMS",
+      targetRole: "ALL",
+      isRead: false,
+      createdAt: new Date().toISOString(),
+    });
+
     return NextResponse.json({ success: true, message: "Project deleted permanently." });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

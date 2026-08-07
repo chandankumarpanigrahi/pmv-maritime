@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
+import { getPerformedBy } from "@/lib/permissions";
 
 export const dynamic = "force-dynamic";
 
@@ -69,6 +70,17 @@ export async function POST(request) {
 
     const result = await db.collection("faqs").insertOne(newFaq);
 
+    // Create Notification
+    const performedBy = getPerformedBy(request);
+    await db.collection("notifications").insertOne({
+      title: "FAQ Created",
+      message: `FAQ "${question.trim()}" was created by ${performedBy}.`,
+      category: "CMS",
+      targetRole: "ALL",
+      isRead: false,
+      createdAt: new Date().toISOString(),
+    });
+
     return NextResponse.json({
       success: true,
       insertedId: result.insertedId.toString(),
@@ -112,6 +124,17 @@ export async function PUT(request) {
         }
       );
 
+    // Create Notification
+    const performedBy = getPerformedBy(request);
+    await db.collection("notifications").insertOne({
+      title: "FAQ Updated",
+      message: `FAQ "${question.trim()}" was updated by ${performedBy}.`,
+      category: "CMS",
+      targetRole: "ALL",
+      isRead: false,
+      createdAt: new Date().toISOString(),
+    });
+
     return NextResponse.json({
       success: true,
       modifiedCount: result.modifiedCount,
@@ -140,6 +163,7 @@ export async function PATCH(request) {
 
     const client = await clientPromise;
     const db = client.db("pmv_maritime");
+    const performedBy = getPerformedBy(request);
 
     const bulkOps = orderedIds.map((id, index) => ({
       updateOne: {
@@ -151,6 +175,16 @@ export async function PATCH(request) {
     if (bulkOps.length > 0) {
       await db.collection("faqs").bulkWrite(bulkOps);
     }
+
+    // Create Notification
+    await db.collection("notifications").insertOne({
+      title: "FAQs Reordered",
+      message: `FAQs sequence was updated by ${performedBy}.`,
+      category: "CMS",
+      targetRole: "ALL",
+      isRead: false,
+      createdAt: new Date().toISOString(),
+    });
 
     return NextResponse.json({
       success: true,
@@ -179,10 +213,25 @@ export async function DELETE(request) {
 
     const client = await clientPromise;
     const db = client.db("pmv_maritime");
+    const performedBy = getPerformedBy(request);
+
+    // Get FAQ details before deleting
+    const faq = await db.collection("faqs").findOne({ _id: new ObjectId(id) });
+    const faqQuestion = faq ? faq.question : "Unknown FAQ";
 
     const result = await db
       .collection("faqs")
       .deleteOne({ _id: new ObjectId(id) });
+
+    // Create Notification
+    await db.collection("notifications").insertOne({
+      title: "FAQ Deleted",
+      message: `FAQ "${faqQuestion}" was deleted permanently by ${performedBy}.`,
+      category: "CMS",
+      targetRole: "ALL",
+      isRead: false,
+      createdAt: new Date().toISOString(),
+    });
 
     return NextResponse.json({
       success: true,

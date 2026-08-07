@@ -93,6 +93,7 @@ const NAV_ITEMS = [
     icon: LuShieldAlert,
     superAdminOnly: true,
     children: [
+      { key: "master", label: "Master Settings", href: "/admin/master", icon: LuKey },
       { key: "users", label: "User Management", href: "/admin/users", icon: LuUsers },
       { key: "sessions", label: "Sessions", href: "/admin/sessions", icon: LuCircleGauge },
     ],
@@ -102,11 +103,11 @@ const NAV_ITEMS = [
 // Page titles for header
 const PAGE_TITLES = {
   dashboard: "Dashboard",
-  services: "Services Engine",
-  projects: "Projects Hub",
-  careers: "Careers Pipeline",
-  faqs: "Knowledge Base",
-  contact: "Contact Inquiries",
+  services: "Services",
+  projects: "Projects",
+  careers: "Careers",
+  faqs: "FAQs",
+  contact: "Contact",
   notifications: "Activity Center",
   users: "User Management",
   sessions: "Sessions",
@@ -145,6 +146,34 @@ export default function AdminLayout({ children }) {
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
+  }, []);
+
+  // Intercept window.fetch to automatically append X-Performed-By header for write requests
+  useEffect(() => {
+    const originalFetch = window.fetch;
+    window.fetch = async (url, options = {}) => {
+      const method = (options.method || "GET").toUpperCase();
+      if (typeof url === "string" && url.startsWith("/api/") && ["POST", "PUT", "DELETE", "PATCH"].includes(method)) {
+        const sessionStr = localStorage.getItem("pmv_admin_session");
+        if (sessionStr) {
+          try {
+            const parsed = JSON.parse(sessionStr);
+            const user = parsed.user;
+            const performedBy = user ? (user.fullName || user.username) : "Admin";
+            options.headers = {
+              ...options.headers,
+              "X-Performed-By": encodeURIComponent(performedBy),
+            };
+          } catch (e) {
+            console.error("Error setting X-Performed-By header:", e);
+          }
+        }
+      }
+      return originalFetch(url, options);
+    };
+    return () => {
+      window.fetch = originalFetch;
+    };
   }, []);
 
   // Fetch unread notifications count for sidebar badge
@@ -442,6 +471,7 @@ export default function AdminLayout({ children }) {
 
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto py-4 relative">
+          <div className={styles.bachgroundAnchor}></div>
           {filteredNavItems.map((item) => {
             if (item.type === "item") {
               const isActive = activeKey === item.key;

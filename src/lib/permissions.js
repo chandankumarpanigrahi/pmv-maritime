@@ -97,3 +97,17 @@ export function canViewPage(userSession, moduleKey) {
   }
   return hasPermission(user, `${moduleKey}:view`);
 }
+
+// Server-side helper to extract performedBy username/name from request headers
+export function getPerformedBy(request) {
+  if (!request) return "Admin";
+  try {
+    const performedByHeader = request.headers.get("x-performed-by");
+    if (performedByHeader) {
+      return decodeURIComponent(performedByHeader);
+    }
+  } catch (e) {
+    console.error("Error getting performedBy from request:", e);
+  }
+  return "Admin";
+}

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
+import { getPerformedBy } from "@/lib/permissions";
 
 export const dynamic = "force-dynamic";
 
@@ -84,6 +85,17 @@ export async function POST(request) {
 
     const result = await db.collection("careers").insertOne(newCareer);
 
+    // Create Notification
+    const performedBy = getPerformedBy(request);
+    await db.collection("notifications").insertOne({
+      title: "Career Position Created",
+      message: `Career position "${position.trim()}" was created by ${performedBy}.`,
+      category: "CMS",
+      targetRole: "ALL",
+      isRead: false,
+      createdAt: new Date().toISOString(),
+    });
+
     return NextResponse.json({
       success: true,
       insertedId: result.insertedId.toString(),
@@ -139,6 +151,17 @@ export async function PUT(request) {
       .collection("careers")
       .updateOne({ _id: new ObjectId(id) }, { $set: updateData });
 
+    // Create Notification
+    const performedBy = getPerformedBy(request);
+    await db.collection("notifications").insertOne({
+      title: "Career Position Updated",
+      message: `Career position "${position.trim()}" was updated by ${performedBy}.`,
+      category: "CMS",
+      targetRole: "ALL",
+      isRead: false,
+      createdAt: new Date().toISOString(),
+    });
+
     return NextResponse.json({
       success: true,
       modifiedCount: result.modifiedCount,
@@ -160,14 +183,30 @@ export async function PATCH(request) {
 
     const client = await clientPromise;
     const db = client.db("pmv_maritime");
+    const performedBy = getPerformedBy(request);
 
     // Single item Archive or Restore
     if (id && action) {
       const isArchived = action === "archive";
+
+      // Get position details before updating
+      const career = await db.collection("careers").findOne({ _id: new ObjectId(id) });
+      const careerPos = career ? career.position : "Unknown Position";
+
       await db.collection("careers").updateOne(
         { _id: new ObjectId(id) },
         { $set: { archived: isArchived, updatedAt: new Date().toISOString() } }
       );
+
+      // Create Notification
+      await db.collection("notifications").insertOne({
+        title: isArchived ? "Career Position Archived" : "Career Position Restored",
+        message: `Career position "${careerPos}" was ${isArchived ? "archived" : "restored"} by ${performedBy}.`,
+        category: "CMS",
+        targetRole: "ALL",
+        isRead: false,
+        createdAt: new Date().toISOString(),
+      });
 
       return NextResponse.json({
         success: true,
@@ -187,6 +226,16 @@ export async function PATCH(request) {
       if (bulkOps.length > 0) {
         await db.collection("careers").bulkWrite(bulkOps);
       }
+
+      // Create Notification
+      await db.collection("notifications").insertOne({
+        title: "Careers Reordered",
+        message: `Careers sequence was updated by ${performedBy}.`,
+        category: "CMS",
+        targetRole: "ALL",
+        isRead: false,
+        createdAt: new Date().toISOString(),
+      });
 
       return NextResponse.json({
         success: true,
@@ -221,10 +270,25 @@ export async function DELETE(request) {
 
     const client = await clientPromise;
     const db = client.db("pmv_maritime");
+    const performedBy = getPerformedBy(request);
+
+    // Get position details before deleting
+    const career = await db.collection("careers").findOne({ _id: new ObjectId(id) });
+    const careerPos = career ? career.position : "Unknown Position";
 
     const result = await db
       .collection("careers")
       .deleteOne({ _id: new ObjectId(id) });
+
+    // Create Notification
+    await db.collection("notifications").insertOne({
+      title: "Career Position Deleted",
+      message: `Career position "${careerPos}" was deleted permanently by ${performedBy}.`,
+      category: "CMS",
+      targetRole: "ALL",
+      isRead: false,
+      createdAt: new Date().toISOString(),
+    });
 
     return NextResponse.json({
       success: true,

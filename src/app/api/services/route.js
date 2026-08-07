@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
+import { getPerformedBy } from "@/lib/permissions";
 
 export const dynamic = "force-dynamic";
 
@@ -86,6 +87,18 @@ export async function POST(request) {
     };
 
     const result = await db.collection("services").insertOne(newService);
+
+    // Create Notification
+    const performedBy = getPerformedBy(request);
+    await db.collection("notifications").insertOne({
+      title: "Service Created",
+      message: `Service "${name.trim()}" was created by ${performedBy}.`,
+      category: "CMS",
+      targetRole: "ALL",
+      isRead: false,
+      createdAt: new Date().toISOString(),
+    });
+
     return NextResponse.json({
       success: true,
       insertedId: result.insertedId.toString(),
@@ -128,6 +141,17 @@ export async function PUT(request) {
       { $set: updateData }
     );
 
+    // Create Notification
+    const performedBy = getPerformedBy(request);
+    await db.collection("notifications").insertOne({
+      title: "Service Updated",
+      message: `Service "${name.trim()}" was updated by ${performedBy}.`,
+      category: "CMS",
+      targetRole: "ALL",
+      isRead: false,
+      createdAt: new Date().toISOString(),
+    });
+
     return NextResponse.json({ success: true, message: "Service updated successfully." });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -142,6 +166,7 @@ export async function PATCH(request) {
 
     const client = await clientPromise;
     const db = client.db("pmv_maritime");
+    const performedBy = getPerformedBy(request);
 
     // Bulk sequence reorder
     if (Array.isArray(orderedIds)) {
@@ -156,6 +181,16 @@ export async function PATCH(request) {
         await db.collection("services").bulkWrite(bulkOps);
       }
 
+      // Create Notification
+      await db.collection("notifications").insertOne({
+        title: "Services Reordered",
+        message: `Services sequence was updated by ${performedBy}.`,
+        category: "CMS",
+        targetRole: "ALL",
+        isRead: false,
+        createdAt: new Date().toISOString(),
+      });
+
       return NextResponse.json({
         success: true,
         message: "Services sequence updated successfully.",
@@ -166,10 +201,24 @@ export async function PATCH(request) {
       return NextResponse.json({ error: "ID is required." }, { status: 400 });
     }
 
+    // Get the service name before modifying it
+    const service = await db.collection("services").findOne({ _id: new ObjectId(id) });
+    const serviceName = service ? service.name : "Unknown Service";
+
     await db.collection("services").updateOne(
       { _id: new ObjectId(id) },
       { $set: { archived: !!archived, updatedAt: new Date().toISOString() } }
     );
+
+    // Create Notification
+    await db.collection("notifications").insertOne({
+      title: archived ? "Service Archived" : "Service Restored",
+      message: `Service "${serviceName}" was ${archived ? "archived" : "restored"} by ${performedBy}.`,
+      category: "CMS",
+      targetRole: "ALL",
+      isRead: false,
+      createdAt: new Date().toISOString(),
+    });
 
     return NextResponse.json({
       success: true,
@@ -192,8 +241,24 @@ export async function DELETE(request) {
 
     const client = await clientPromise;
     const db = client.db("pmv_maritime");
+    const performedBy = getPerformedBy(request);
+
+    // Get the service name before deleting it
+    const service = await db.collection("services").findOne({ _id: new ObjectId(id) });
+    const serviceName = service ? service.name : "Unknown Service";
 
     await db.collection("services").deleteOne({ _id: new ObjectId(id) });
+
+    // Create Notification
+    await db.collection("notifications").insertOne({
+      title: "Service Deleted",
+      message: `Service "${serviceName}" was deleted permanently by ${performedBy}.`,
+      category: "CMS",
+      targetRole: "ALL",
+      isRead: false,
+      createdAt: new Date().toISOString(),
+    });
+
     return NextResponse.json({ success: true, message: "Service deleted permanently." });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

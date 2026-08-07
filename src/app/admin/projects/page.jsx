@@ -192,7 +192,7 @@ export default function AdminProjectsPage() {
       accessor: "category",
       className: "min-w-[160px]",
       cell: (row) => (
-        <span className="px-2 py-0.5 text-xs font-bold bg-slate-100 text-slate-700 border border-slate-200">
+        <span className="px-2 py-0.5 text-xs font-bold bg-slate-100 whitespace-nowrap text-slate-700 border border-slate-200">
           {row.category || "—"}
         </span>
       ),
