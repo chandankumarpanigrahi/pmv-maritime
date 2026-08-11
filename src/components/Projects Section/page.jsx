@@ -20,15 +20,17 @@ export default function ProjectsSection() {
   const [activeTab, setActiveTab] = useState(0);
 
   useEffect(() => {
-    async function fetchData() {
+    let cancelled = false;
+
+    async function fetchData(attempt = 1) {
       try {
-        // Fetch projects from MongoDB API
+        // Fetch projects from MongoDB API — with retry for cold-start DB latency
         const projectsRes = await fetch("/api/projects", { cache: "no-store" });
+        if (!projectsRes.ok) throw new Error(`Projects HTTP ${projectsRes.status}`);
         let projectsList = [];
-        if (projectsRes.ok) {
-          const data = await projectsRes.json();
-          if (Array.isArray(data)) projectsList = data;
-        }
+        const data = await projectsRes.json();
+        if (Array.isArray(data)) projectsList = data;
+        if (cancelled) return;
         setProjects(projectsList);
 
         // Fetch master project categories
@@ -51,15 +53,21 @@ export default function ProjectsSection() {
           ? combined
           : ["Port Operations", "Fleet Management", "Maritime Consultancy", "Shipbuilding", "Digitisation"];
 
-        setCategories(finalCategories);
+        if (!cancelled) setCategories(finalCategories);
       } catch (err) {
-        console.error("Failed to load projects section data:", err);
+        console.error(`Projects Section fetch attempt ${attempt} failed:`, err);
+        // Retry up to 3 times with exponential backoff (1s, 2s, 4s)
+        if (!cancelled && attempt < 3) {
+          setTimeout(() => fetchData(attempt + 1), 1000 * attempt);
+          return;
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
 
     fetchData();
+    return () => { cancelled = true; };
   }, []);
 
   const selectedCategory = categories[activeTab] || "";

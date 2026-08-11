@@ -36,23 +36,33 @@ export default function Services() {
   const [activeTab, setActiveTab] = useState(0);
   const [currentImageIdx, setCurrentImageIdx] = useState(0);
 
-  // Fetch first 5 published services
+  // Fetch first 5 published services — with retry for cold-start DB latency
   useEffect(() => {
-    async function fetchServices() {
+    let cancelled = false;
+
+    async function fetchServices(attempt = 1) {
       try {
         const res = await fetch("/api/services", { cache: "no-store" });
-        if (!res.ok) return;
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
+        if (cancelled) return;
         if (Array.isArray(data)) {
           setTabs(data.slice(0, 5));
         }
       } catch (err) {
-        console.error("Failed to load Services Section:", err);
+        console.error(`Services Section fetch attempt ${attempt} failed:`, err);
+        // Retry up to 3 times with exponential backoff (1s, 2s, 4s)
+        if (!cancelled && attempt < 3) {
+          setTimeout(() => fetchServices(attempt + 1), 1000 * attempt);
+          return;
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
+
     fetchServices();
+    return () => { cancelled = true; };
   }, []);
 
   // Image slideshow auto-play — independent of active tab
@@ -66,7 +76,7 @@ export default function Services() {
 
   const activeService = tabs[activeTab] || null;
 
-  if (loading || !activeService) {
+  if (loading) {
     return (
       <div className="container max-w-7xl mx-auto border border-t-0 border-gray-200 py-12 px-8 bg-white animate-pulse">
         <div className="h-8 bg-gray-200 rounded w-1/3 mb-4" />
@@ -74,6 +84,8 @@ export default function Services() {
       </div>
     );
   }
+
+  if (!activeService) return null;
 
   // Build benefit items from first 4 deliverables
   const deliverables = Array.isArray(activeService.deliverables) ? activeService.deliverables : [];
@@ -181,7 +193,7 @@ export default function Services() {
                 {/* Header: icon + title */}
                 <div className="flex items-center gap-3">
                   <div className="flex items-center justify-center p-2 bg-primary/5 text-primary">
-                    <TabIcon className="text-2xl" />
+                    {TabIcon({ className: "text-2xl" })}
                   </div>
                   <h3 className="text-xl md:text-2xl text-secondary-dark font-bold">
                     {activeService.name}

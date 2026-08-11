@@ -32,8 +32,12 @@ export default function ClientLayout({ children, maintenanceMode, showLoader }) 
 
   useEffect(() => {
     if (!showLoader) return;
+
+    let timer;
     const handleLoad = () => {
-      setTimeout(() => {
+      // Wait an extra 700ms after window load so async data fetches can start
+      // before the loader disappears (prevents blank flash on cold DB connections)
+      timer = setTimeout(() => {
         setLoading(false);
       }, 300);
     };
@@ -42,12 +46,15 @@ export default function ClientLayout({ children, maintenanceMode, showLoader }) 
       handleLoad();
     } else {
       window.addEventListener("load", handleLoad);
-      const fallback = setTimeout(handleLoad, 3000);
+      // Extended fallback to 5s to cover slow MongoDB Atlas cold-start connections
+      const fallback = setTimeout(() => setLoading(false), 5000);
       return () => {
         window.removeEventListener("load", handleLoad);
         clearTimeout(fallback);
+        clearTimeout(timer);
       };
     }
+    return () => clearTimeout(timer);
   }, [showLoader]);
 
   useEffect(() => {

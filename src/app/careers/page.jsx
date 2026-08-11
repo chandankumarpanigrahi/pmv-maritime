@@ -253,7 +253,7 @@ export default function Careers() {
         </div>
       </section>
 
-      <main className="bg-white pb-12 md:pb-16">
+      <main className="bg-white">
         <section className="container mx-auto max-w-7xl">
           <div className="flex flex-col md:p-8 gap-3 md:gap-8 overflow-hidden border-x border-b border-gray-200 bg-white lg:flex-row">
             <div className="w-full md:w-3/7 h-[220px] md:h-auto relative overflow-hidden shadow-md group/img">
@@ -406,7 +406,7 @@ export default function Careers() {
         <section className="container mx-auto max-w-7xl">
           <div
             id="apply"
-            className="relative min-h-[300px] overflow-hidden border-x border-b border-gray-200 px-6 py-8 md:px-8 md:py-10"
+            className="relative h-[420px] sm:h-auto sm:min-h-[300px] overflow-hidden border-x border-b border-gray-200 px-6 py-8 md:px-8 md:py-10"
           >
             <Image
               src={sea}

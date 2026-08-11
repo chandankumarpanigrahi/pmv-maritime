@@ -22,22 +22,31 @@ export default function PopularServices() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchServices() {
+    let cancelled = false;
+
+    async function fetchServices(attempt = 1) {
       try {
         const res = await fetch("/api/services", { cache: "no-store" });
-        if (!res.ok) return;
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
+        if (cancelled) return;
         if (Array.isArray(data)) {
           // Items 6–9 (indices 5–8, after the 5 Services Section tabs)
           setServices(data.slice(5, 9));
         }
       } catch (err) {
-        console.error("Failed to load Popular Services:", err);
+        console.error(`Popular Services fetch attempt ${attempt} failed:`, err);
+        if (!cancelled && attempt < 3) {
+          setTimeout(() => fetchServices(attempt + 1), 1000 * attempt);
+          return;
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
+
     fetchServices();
+    return () => { cancelled = true; };
   }, []);
 
   return (

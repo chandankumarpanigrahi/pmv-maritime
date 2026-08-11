@@ -20,15 +20,17 @@ export default function Projects() {
   const [activeTab, setActiveTab] = useState(0);
 
   useEffect(() => {
-    async function fetchData() {
+    let cancelled = false;
+
+    async function fetchData(attempt = 1) {
       try {
-        // Fetch published projects from API
+        // Fetch published projects from API — with retry for cold-start DB latency
         const projectsRes = await fetch("/api/projects", { cache: "no-store" });
+        if (!projectsRes.ok) throw new Error(`HTTP ${projectsRes.status}`);
         let projectsList = [];
-        if (projectsRes.ok) {
-          const data = await projectsRes.json();
-          if (Array.isArray(data)) projectsList = data;
-        }
+        const data = await projectsRes.json();
+        if (Array.isArray(data)) projectsList = data;
+        if (cancelled) return;
         setProjects(projectsList);
 
         // Fetch master project categories
@@ -46,14 +48,20 @@ export default function Projects() {
         // Combine categories from master and projects
         const dbCatNames = Array.from(new Set(projectsList.map((p) => p.category).filter(Boolean)));
         const allCatSet = new Set([...masterCatNames, ...dbCatNames]);
-        setCategories(["All Projects", ...Array.from(allCatSet)]);
+        if (!cancelled) setCategories(["All Projects", ...Array.from(allCatSet)]);
       } catch (err) {
-        console.error("Failed to load projects data:", err);
+        console.error(`Projects page fetch attempt ${attempt} failed:`, err);
+        if (!cancelled && attempt < 3) {
+          setTimeout(() => fetchData(attempt + 1), 1000 * attempt);
+          return;
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
+
     fetchData();
+    return () => { cancelled = true; };
   }, []);
 
   const selectedCategory = categories[activeTab] || "All Projects";

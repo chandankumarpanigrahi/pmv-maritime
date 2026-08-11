@@ -24,19 +24,28 @@ export default function Services() {
   const [activeTab, setActiveTab] = useState("All Services");
 
   useEffect(() => {
-    async function fetchServices() {
+    let cancelled = false;
+
+    async function fetchServices(attempt = 1) {
       try {
         const res = await fetch("/api/services", { cache: "no-store" });
-        if (!res.ok) return;
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
+        if (cancelled) return;
         if (Array.isArray(data)) setServices(data);
       } catch (err) {
-        console.error("Failed to load services:", err);
+        console.error(`Services page fetch attempt ${attempt} failed:`, err);
+        if (!cancelled && attempt < 3) {
+          setTimeout(() => fetchServices(attempt + 1), 1000 * attempt);
+          return;
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
+
     fetchServices();
+    return () => { cancelled = true; };
   }, []);
 
   // Build unique category list from DB data
