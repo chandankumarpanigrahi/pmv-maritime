@@ -21,8 +21,10 @@ import member4 from "../../../public/assets/members/member4.png";
 const directionImages = [image1, image2, image3];
 
 // icons
-import { FaLinkedinIn, FaFacebookF, FaInstagram, FaWhatsapp, FaGlobe } from "react-icons/fa";
-import { TbMailFilled } from "react-icons/tb";
+import { FaLinkedinIn, FaFacebookF, FaWhatsapp } from "react-icons/fa";
+import { BsGlobe2 } from "react-icons/bs";
+import { GrInstagram } from "react-icons/gr";
+import { MdOutlineEmail } from "react-icons/md";
 import { FaXTwitter } from "react-icons/fa6";
 import { FaArrowRight } from "react-icons/fa";
 import Accreditation from "@/components/Accreditation/page";
@@ -206,41 +208,41 @@ export default function About() {
                 <Image src={member.image} alt={member.name} className="h-full object-contain object-bottom relative z-10" fill />
               </div>
               <h3 className="text-xl font-bold font-oswald text-gray-900">{member.name}</h3>
-              <p className="text-sm text-secondary uppercase font-semibold">{member.role}</p>
-              <div className="flex flex-wrap flex-row gap-1">
+              <p className="text-[13px] text-secondary uppercase font-semibold mb-2">{member.role}</p>
+              <div className="flex flex-wrap flex-row gap-1 md:gap-2">
                 {member.socials.email && (
-                  <a href={`mailto:${member.socials.email}`} target="_blank" className="bg-primary/7 hover:bg-primary transition-all duration-300 hover:text-white p-2 text-primary">
-                    <TbMailFilled className="scale-120" />
+                  <a href={`mailto:${member.socials.email}`} target="_blank" className="bg-primary/7 hover:bg-primary transition-all duration-300 hover:text-white p-1.5 text-primary">
+                    <MdOutlineEmail className="scale-120" />
                   </a>
                 )}
                 {member.socials.linkedin && (
-                  <a href={member.socials.linkedin} target="_blank" className="bg-primary/7 hover:bg-primary transition-all duration-300 hover:text-white p-2 text-primary">
+                  <a href={member.socials.linkedin} target="_blank" className="bg-primary/7 hover:bg-[#0077b5] transition-all duration-300 hover:text-white p-1.5 text-primary">
                     <FaLinkedinIn />
                   </a>
                 )}
                 {member.socials.x && (
-                  <a href={member.socials.x} target="_blank" className="bg-primary/7 hover:bg-primary transition-all duration-300 hover:text-white p-2 text-primary">
+                  <a href={member.socials.x} target="_blank" className="bg-primary/7 hover:bg-black transition-all duration-300 hover:text-white p-1.5 text-primary">
                     <FaXTwitter />
                   </a>
                 )}
                 {member.socials.facebook && (
-                  <a href={member.socials.facebook} target="_blank" className="bg-primary/7 hover:bg-primary transition-all duration-300 hover:text-white p-2 text-primary">
+                  <a href={member.socials.facebook} target="_blank" className="bg-primary/7 hover:bg-[#1877f2] transition-all duration-300 hover:text-white p-1.5 text-primary">
                     <FaFacebookF />
                   </a>
                 )}
                 {member.socials.instagram && (
-                  <a href={member.socials.instagram} target="_blank" className="bg-primary/7 hover:bg-primary transition-all duration-300 hover:text-white p-2 text-primary">
-                    <FaInstagram />
+                  <a href={member.socials.instagram} target="_blank" className="bg-primary/7 hover:bg-gradient-to-tr hover:from-[#e28827] hover:via-[#d41d39] hover:to-[#aa0c78] transition-all duration-300 hover:text-white p-1.5 text-primary">
+                    <GrInstagram />
                   </a>
                 )}
                 {member.socials.whatsapp && (
-                  <a href={member.socials.whatsapp} target="_blank" className="bg-primary/7 hover:bg-primary transition-all duration-300 hover:text-white p-2 text-primary">
+                  <a href={member.socials.whatsapp} target="_blank" className="bg-primary/7 hover:bg-[#0ea545] transition-all duration-300 hover:text-white p-1.5 text-primary">
                     <FaWhatsapp />
                   </a>
                 )}
                 {member.socials.website && (
-                  <a href={member.socials.website} target="_blank" className="bg-primary/7 hover:bg-primary transition-all duration-300 hover:text-white p-2 text-primary">
-                    <FaGlobe />
+                  <a href={member.socials.website} target="_blank" className="bg-primary/7 hover:bg-primary transition-all duration-300 hover:text-white p-1.5 text-primary">
+                    <BsGlobe2 />
                   </a>
                 )}
               </div>

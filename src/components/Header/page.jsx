@@ -253,7 +253,7 @@ export default function Header({ transparent = false }) {
                 <Link href="/careers" onClick={() => setMenuOpen(false)} className="flex flex-row gap-3 items-center px-2 py-1.5 hover:text-white hover:pl-3 transition-all duration-300">
                   <FiBriefcase className="text-rose-500" /> <span className="pt-1">Career</span>
                 </Link>
-                <Link href="/" onClick={() => setMenuOpen(false)} className="flex flex-row gap-3 items-center px-2 py-1.5 hover:text-white hover:pl-3 transition-all duration-300">
+                <Link href="/gallery" onClick={() => setMenuOpen(false)} className="flex flex-row gap-3 items-center px-2 py-1.5 hover:text-white hover:pl-3 transition-all duration-300">
                   <FiImage className="text-rose-500" /> <span className="pt-1">Gallery</span>
                 </Link>
                 <Link href="/" onClick={() => setMenuOpen(false)} className="flex flex-row gap-3 items-center px-2 py-1.5 hover:text-white hover:pl-3 transition-all duration-300">

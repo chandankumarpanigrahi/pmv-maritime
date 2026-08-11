@@ -192,6 +192,7 @@ export default function AdminLayout({ children }) {
 
   useEffect(() => {
     if (isLoggedIn) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchUnreadNotificationsCount();
       const interval = setInterval(fetchUnreadNotificationsCount, 5000);
       return () => clearInterval(interval);
@@ -207,6 +208,7 @@ export default function AdminLayout({ children }) {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSidebarOpen(window.innerWidth >= 1024);
     }
   }, []);
@@ -214,6 +216,7 @@ export default function AdminLayout({ children }) {
   useEffect(() => {
     if (typeof window !== "undefined") {
       if (window.innerWidth < 1024) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSidebarOpen(false);
       } else {
         setSidebarOpen(true);
@@ -297,6 +300,7 @@ export default function AdminLayout({ children }) {
 
   useEffect(() => {
     if (isLoggedIn) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       verifyRemoteSession();
       const interval = setInterval(verifyRemoteSession, 5000); // Check every 5s
       window.addEventListener("focus", verifyRemoteSession);
@@ -379,6 +383,7 @@ export default function AdminLayout({ children }) {
 
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
