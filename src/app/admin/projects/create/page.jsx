@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -14,6 +14,10 @@ import {
   LuX,
   LuSparkles,
   LuSearch,
+  LuUpload,
+  LuLink,
+  LuCheck,
+  LuCloudUpload,
 } from "react-icons/lu";
 
 import { PRESET_ICONS, renderIconById } from "@/lib/maritimeIcons";
@@ -59,6 +63,13 @@ export default function CreateProjectPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isFetchingEdit, setIsFetchingEdit] = useState(false);
   const [imageModalOpen, setImageModalOpen] = useState(false);
+
+  // Image section: "upload" | "url"
+  const [imageTab, setImageTab] = useState("upload");
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadedFileName, setUploadedFileName] = useState("");
+  const [dragOver, setDragOver] = useState(false);
+  const fileInputRef = useRef(null);
 
   // Icon Modal State
   const [iconModalTarget, setIconModalTarget] = useState(null); // index number (0, 1, 2)
@@ -138,6 +149,48 @@ export default function CreateProjectPage() {
 
     fetchProjectForEdit();
   }, [editId]);
+
+  // ── Cloudinary File Upload ────────────────────────────────────────────────
+  const handleFileUpload = async (file) => {
+    if (!file) return;
+
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/svg+xml"];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("Only JPG, PNG, WEBP, GIF, or SVG images are allowed.");
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error("File size must be under 10 MB.");
+      return;
+    }
+
+    setIsUploading(true);
+    setUploadedFileName(file.name);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("/api/cloudinary", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Upload failed.");
+      }
+
+      const data = await res.json();
+      setImageUrl(data.url);
+      toast.success("Image uploaded successfully!");
+    } catch (err) {
+      toast.error(err.message || "Image upload failed.");
+      setUploadedFileName("");
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   const handleHighlightChange = (index, field, value) => {
     setHighlights((prev) => {
@@ -403,67 +456,165 @@ export default function CreateProjectPage() {
             </div>
           </div>
 
-          {/* Image Link Input + Live Preview using Next.js Image component */}
-          <div className="space-y-2">
-            <label className="text-xs font-bold text-gray-500 uppercase tracking-widest block">
-              Image Link (URL) <span className="text-gray-400 font-normal">(Direct Image URL, e.g. https://...)</span>
-            </label>
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
-              <div className="lg:col-span-9">
-                <input
-                  type="url"
-                  value={imageUrl}
-                  onChange={(e) => setImageUrl(e.target.value)}
-                  placeholder="https://iili.io/Ck11H4s.jpg"
-                  className="w-full bg-slate-50 border border-gray-200 focus:border-secondary focus:ring-1 focus:ring-secondary outline-none px-4 py-2.5 text-sm transition-all text-gray-900 placeholder-gray-400 font-medium"
-                />
-                <p className="text-[11px] text-gray-400 mt-1">
-                  Enter a direct image URL. This image will be reflected on the website listing card and inner page.
-                </p>
-              </div>
 
-              {/* Preview Thumbnail Box & Modal Trigger */}
-              <div className="lg:col-span-3 flex items-center justify-between gap-3 bg-slate-50 p-2 border border-gray-200">
-                <div className="flex items-center gap-2.5">
+          {/* ── Image Section: Upload or URL ─────────────────────────────── */}
+          <div className="space-y-0 border border-gray-200 overflow-hidden">
+            {/* Tab Headers */}
+            <div className="flex border-b border-gray-200 bg-slate-50">
+              <button
+                type="button"
+                onClick={() => setImageTab("upload")}
+                className={`flex items-center gap-2 px-4 py-2.5 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border-b-2 ${imageTab === "upload"
+                  ? "border-primary text-primary bg-white"
+                  : "border-transparent text-gray-500 hover:text-gray-700"
+                  }`}
+              >
+                <LuCloudUpload className="text-sm" />
+                Upload Image
+              </button>
+              <button
+                type="button"
+                onClick={() => setImageTab("url")}
+                className={`flex items-center gap-2 px-4 py-2.5 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border-b-2 ${imageTab === "url"
+                  ? "border-primary text-primary bg-white"
+                  : "border-transparent text-gray-500 hover:text-gray-700"
+                  }`}
+              >
+                <LuLink className="text-sm" />
+                Paste URL
+              </button>
+
+              {/* Current image status badge */}
+              {imageUrl && (
+                <div className="ml-auto flex items-center gap-1.5 px-4 text-[11px] font-bold text-emerald-600">
+                  <LuCheck className="text-xs" />
+                  <span>Image Set</span>
+                </div>
+              )}
+            </div>
+
+            {/* Tab Bodies */}
+            <div className="p-4">
+              {/* ── TAB 1: UPLOAD ── */}
+              {imageTab === "upload" && (
+                <div className="space-y-3">
+                  {/* Hidden file input */}
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) handleFileUpload(file);
+                    }}
+                  />
+
+                  {/* Drop Zone */}
                   <div
-                    onClick={() => setImageModalOpen(true)}
-                    className="relative w-16 h-12 bg-slate-200 border border-gray-300 overflow-hidden shrink-0 cursor-pointer group"
-                    title="Click to view full image"
+                    onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+                    onDragLeave={() => setDragOver(false)}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      setDragOver(false);
+                      const file = e.dataTransfer.files?.[0];
+                      if (file) handleFileUpload(file);
+                    }}
+                    onClick={() => !isUploading && fileInputRef.current?.click()}
+                    className={`relative flex flex-col items-center justify-center gap-3 border-2 border-dashed cursor-pointer transition-all duration-200 min-h-[140px] rounded
+                      ${dragOver ? "border-primary bg-primary/5 scale-[1.01]" : "border-gray-300 hover:border-secondary hover:bg-slate-50"}
+                      ${isUploading ? "pointer-events-none opacity-70" : ""}
+                    `}
                   >
-                    {typeof previewImage === "string" ? (
-                      <Image
-                        src={previewImage}
-                        alt="Project Preview"
-                        fill
-                        unoptimized
-                        className="object-cover group-hover:scale-105 transition-transform"
-                      />
+                    {isUploading ? (
+                      <>
+                        <LuLoader className="text-3xl text-primary animate-spin" />
+                        <p className="text-sm font-semibold text-gray-600">Uploading to PMV...</p>
+                        {uploadedFileName && (
+                          <p className="text-xs text-gray-400 truncate max-w-[200px]">{uploadedFileName}</p>
+                        )}
+                      </>
+                    ) : imageUrl ? (
+                      <>
+                        <div className="relative w-24 h-16 overflow-hidden border border-gray-200 bg-slate-100">
+                          <Image src={imageUrl} alt="Uploaded" fill unoptimized className="object-cover" />
+                        </div>
+                        <p className="text-xs font-bold text-emerald-600 flex items-center gap-1">
+                          <LuCheck /> Upload Successful — click to replace
+                        </p>
+                        {uploadedFileName && (
+                          <p className="text-[11px] text-gray-400">{uploadedFileName}</p>
+                        )}
+                      </>
                     ) : (
-                      <Image
-                        src={previewImage}
-                        alt="Project Preview"
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform"
-                      />
+                      <>
+                        <LuUpload className="text-3xl text-gray-400" />
+                        <div className="text-center">
+                          <p className="text-sm font-bold text-gray-600">
+                            Drag & drop image here, or <span className="text-primary underline">click to browse</span>
+                          </p>
+                          <p className="text-xs text-gray-400 mt-1">
+                            JPG, PNG, WEBP, GIF, SVG — Max 10 MB
+                          </p>
+                        </div>
+                      </>
                     )}
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity text-white">
-                      <LuEye className="text-sm" />
+                  </div>
+
+                  <p className="text-[11px] text-gray-400">
+                    Image will be stored on Cloudinary CDN and auto-optimised for web.
+                  </p>
+                </div>
+              )}
+
+              {/* ── TAB 2: PASTE URL ── */}
+              {imageTab === "url" && (
+                <div className="space-y-3">
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+                    <div className="lg:col-span-9">
+                      <input
+                        type="url"
+                        value={imageUrl}
+                        onChange={(e) => setImageUrl(e.target.value)}
+                        placeholder="https://res.cloudinary.com/... or https://iili.io/Ck11H4s.jpg"
+                        className="w-full bg-slate-50 border border-gray-200 focus:border-secondary focus:ring-1 focus:ring-secondary outline-none px-4 py-2.5 text-sm transition-all text-gray-900 placeholder-gray-400 font-medium"
+                      />
+                      <p className="text-[11px] text-gray-400 mt-1">
+                        Enter any direct image URL. This will be shown on the project listing and inner page.
+                      </p>
+                    </div>
+
+                    {/* Preview Thumbnail */}
+                    <div className="lg:col-span-3 flex items-center justify-between gap-3 bg-slate-50 p-2 border border-gray-200">
+                      <div className="flex items-center gap-2.5">
+                        <div
+                          onClick={() => setImageModalOpen(true)}
+                          className="relative w-16 h-12 bg-slate-200 border border-gray-300 overflow-hidden shrink-0 cursor-pointer group"
+                          title="Click to view full image"
+                        >
+                          {typeof previewImage === "string" ? (
+                            <Image src={previewImage} alt="Project Preview" fill unoptimized className="object-cover group-hover:scale-105 transition-transform" />
+                          ) : (
+                            <Image src={previewImage} alt="Project Preview" fill className="object-cover group-hover:scale-105 transition-transform" />
+                          )}
+                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity text-white">
+                            <LuEye className="text-sm" />
+                          </div>
+                        </div>
+                        <div className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Preview</div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setImageModalOpen(true)}
+                        className="px-2.5 py-1.5 bg-white hover:bg-secondary hover:text-white border border-gray-300 text-gray-700 text-[11px] font-bold uppercase tracking-wider transition-all flex items-center gap-1 cursor-pointer shrink-0"
+                      >
+                        <LuEye className="text-xs" />
+                        <span>View</span>
+                      </button>
                     </div>
                   </div>
-                  <div className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">
-                    Image Preview
-                  </div>
                 </div>
-
-                <button
-                  type="button"
-                  onClick={() => setImageModalOpen(true)}
-                  className="px-2.5 py-1.5 bg-white hover:bg-secondary hover:text-white border border-gray-300 text-gray-700 text-[11px] font-bold uppercase tracking-wider transition-all flex items-center gap-1 cursor-pointer shrink-0"
-                >
-                  <LuEye className="text-xs" />
-                  <span>View Image</span>
-                </button>
-              </div>
+              )}
             </div>
           </div>
 

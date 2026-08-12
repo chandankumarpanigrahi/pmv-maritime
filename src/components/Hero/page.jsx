@@ -71,7 +71,7 @@ export default function Hero() {
 
       <div className={`${styles.content} container max-w-7xl mx-auto px-4 sm:px-12 lg:px-0 flex flex-col justify-between`}>
         <div className="flex flex-col items-center mb-8 md:mb-0 md:items-start max-w-4xl mt-6 md:mt-auto">
-          <div className="inline-flex w-fit items-center gap-2 px-3 py-2 bg-white/8 backdrop-blur-md text-white text-xs font-semibold uppercase tracking-wider mb-2">
+          <div className="inline-flex w-fit items-center gap-2 px-3 py-2 bg-white/5 backdrop-blur-md text-white text-xs font-semibold uppercase tracking-wider mb-2">
             Your Maritime Partner
           </div>
 
@@ -118,7 +118,7 @@ export default function Hero() {
           <div className="flex flex-col w-fit md:flex-row gap-2 md:gap-4 items-center">
             <Link
               href="/services"
-              className="group flex gap-5 items-center pl-3 md:pl-5 pr-2 md:pr-4 py-1.5 md:py-2 bg-secondary hover:bg-secondary-dark text-white font-bold border border-secondary hover:border-secondary-dark tracking-wider uppercase rounded shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
+              className="group flex gap-5 items-center pl-3 md:pl-5 pr-2 md:pr-4 py-1.5 md:py-2 bg-secondary hover:bg-primary text-white font-bold border border-secondary hover:border-primary tracking-wider uppercase shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
             >
               Explore Services{" "}
               <FaArrowRight className="group-hover:-rotate-45 transition-all duration-300 ease-in-out" />
@@ -126,7 +126,7 @@ export default function Hero() {
 
             <Link
               href="/contact"
-              className="flex gap-5 items-center pl-3 md:pl-5 pr-2 md:pr-4 py-1.5 md:py-2 bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 text-white font-bold tracking-wider uppercase rounded backdrop-blur-sm transition-all duration-300 transform hover:-translate-y-0.5"
+              className="flex gap-5 items-center pl-3 md:pl-5 pr-2 md:pr-4 py-1.5 md:py-2 bg-white/10 hover:bg-white/20 border border-white/40 hover:border-white/80 text-white font-bold tracking-wider uppercase backdrop-blur-sm transition-all duration-300 transform hover:-translate-y-0.5"
             >
               Contact Us
             </Link>

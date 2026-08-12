@@ -168,7 +168,7 @@ const VerticalCutReveal = forwardRef((
           <span
             key={wordIndex}
             aria-hidden="true"
-            className={cn("inline-flex overflow-hidden", wordLevelClassName)}>
+            className={cn("inline-flex pb-1 overflow-hidden", wordLevelClassName)}>
             {wordObj.characters.map((charObj, charIndex) => (
               <span
                 className={cn(elementLevelClassName, "whitespace-pre-wrap relative", charObj.className)}
