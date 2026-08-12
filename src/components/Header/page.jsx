@@ -150,7 +150,10 @@ export default function Header({ transparent = false }) {
                   : "text-sky-700 border-sky-700/60 hover:bg-sky-700/10"
                   }`}
               >
-                Contact Us
+                <LetterSwapPingPong
+                  label="Contact Us"
+                  reverse={false}
+                />
               </Link>
               <button
                 ref={buttonRef}
@@ -265,15 +268,15 @@ export default function Header({ transparent = false }) {
                 <Link href="/gallery" onClick={() => setMenuOpen(false)} className="flex flex-row gap-3 items-center px-2 py-1.5 hover:text-white hover:pl-3 transition-all duration-300">
                   <FiImage className="text-rose-500" /> <span className="pt-1">Gallery</span>
                 </Link>
-                <Link href="/" onClick={() => setMenuOpen(false)} className="flex flex-row gap-3 items-center px-2 py-1.5 hover:text-white hover:pl-3 transition-all duration-300">
-                  <FiFileText className="text-rose-500" /> <span className="pt-1">Tenders</span>
+                <Link href="/faqs" onClick={() => setMenuOpen(false)} className="flex flex-row gap-3 items-center px-2 py-1.5 hover:text-white hover:pl-3 transition-all duration-300">
+                  <FiFileText className="text-rose-500" /> <span className="pt-1">FAQs</span>
                 </Link>
-                <Link href="/" onClick={() => setMenuOpen(false)} className="flex flex-row gap-3 items-center px-2 py-1.5 hover:text-white hover:pl-3 transition-all duration-300">
+                {/* <Link href="/" onClick={() => setMenuOpen(false)} className="flex flex-row gap-3 items-center px-2 py-1.5 hover:text-white hover:pl-3 transition-all duration-300">
                   <FiRss className="text-rose-500" /> <span className="pt-1">News</span>
                 </Link>
                 <Link href="/" onClick={() => setMenuOpen(false)} className="flex flex-row gap-3 items-center px-2 py-1.5 hover:text-white hover:pl-3 transition-all duration-300">
                   <LuAnchor className="text-rose-500" /> <span className="pt-1">Fleet</span>
-                </Link>
+                </Link> */}
               </div>
             </div>
           </div>
