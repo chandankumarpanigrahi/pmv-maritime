@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
+import ComesInGoesOutUnderline from "@/components/fancy/text/underline-comes-in-goes-out"
+
 // Icons
 import { LuPhone, LuMail, LuMapPin, LuFacebook, LuInstagram, LuLinkedin, LuShieldCheck, LuLeaf } from "react-icons/lu";
 import { FaXTwitter } from "react-icons/fa6";
@@ -146,34 +148,34 @@ export default function Footer() {
                 </h4>
                 <div className="w-8 h-[2.5px] bg-primary mt-1 mb-4"></div>
                 <ul className="flex flex-col gap-2">
-                  <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                    <Link href="/" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
-                      Home
+                  <li className="">
+                    <Link href="/" className="text-sm font-semibold text-secondary-dark w-full block hover:text-primary-hover transition-colors duration-200">
+                      <ComesInGoesOutUnderline direction="left">Home</ComesInGoesOutUnderline>
                     </Link>
                   </li>
-                  <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                    <Link href="/about" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
-                      About Us
+                  <li className="">
+                    <Link href="/about" className="text-sm font-semibold text-secondary-dark w-full block hover:text-primary-hover transition-colors duration-200">
+                      <ComesInGoesOutUnderline direction="left">About Us</ComesInGoesOutUnderline>
                     </Link>
                   </li>
-                  <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                    <Link href="/services" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
-                      Our Services
+                  <li className="">
+                    <Link href="/services" className="text-sm font-semibold text-secondary-dark w-full block hover:text-primary-hover transition-colors duration-200">
+                      <ComesInGoesOutUnderline direction="left">Our Services</ComesInGoesOutUnderline>
                     </Link>
                   </li>
-                  <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                    <Link href="/projects" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
-                      Our Projects
+                  <li className="">
+                    <Link href="/projects" className="text-sm font-semibold text-secondary-dark w-full block hover:text-primary-hover transition-colors duration-200">
+                      <ComesInGoesOutUnderline direction="left">Our Projects</ComesInGoesOutUnderline>
                     </Link>
                   </li>
-                  <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                    <Link href="/careers" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
-                      Careers
+                  <li className="">
+                    <Link href="/careers" className="text-sm font-semibold text-secondary-dark w-full block hover:text-primary-hover transition-colors duration-200">
+                      <ComesInGoesOutUnderline direction="left">Careers</ComesInGoesOutUnderline>
                     </Link>
                   </li>
-                  <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                    <Link href="/gallery" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
-                      Gallery
+                  <li className="">
+                    <Link href="/gallery" className="text-sm font-semibold text-secondary-dark w-full block hover:text-primary-hover transition-colors duration-200">
+                      <ComesInGoesOutUnderline direction="left">Gallery</ComesInGoesOutUnderline>
                     </Link>
                   </li>
                 </ul>
@@ -188,45 +190,45 @@ export default function Footer() {
                 <ul className="flex flex-col gap-2">
                   {popularServices.length > 0 ? (
                     popularServices.map((service) => (
-                      <li key={service._id || service.slug} className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
+                      <li key={service._id || service.slug} className="">
                         <Link
                           href={`/services/${service.slug}`}
-                          className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200 line-clamp-1"
+                          className="text-sm font-semibold text-secondary-dark w-full block hover:text-primary-hover transition-colors duration-200 line-clamp-1"
                         >
-                          {service.name}
+                          <ComesInGoesOutUnderline direction="left">{service.name}</ComesInGoesOutUnderline>
                         </Link>
                       </li>
                     ))
                   ) : (
                     <>
-                      <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                        <Link href="/services/consultancy" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
-                          Maritime Consultancy
+                      <li className="">
+                        <Link href="/services/consultancy" className="text-sm font-semibold text-secondary-dark w-full block hover:text-primary-hover transition-colors duration-200">
+                          <ComesInGoesOutUnderline direction="left">Maritime Consultancy</ComesInGoesOutUnderline>
                         </Link>
                       </li>
-                      <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                        <Link href="/services/training" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
-                          Maritime Training
+                      <li className="">
+                        <Link href="/services/training" className="text-sm font-semibold text-secondary-dark w-full block hover:text-primary-hover transition-colors duration-200">
+                          <ComesInGoesOutUnderline direction="left">Maritime Training</ComesInGoesOutUnderline>
                         </Link>
                       </li>
-                      <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                        <Link href="/services/fleet" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
-                          Fleet Management
+                      <li className="">
+                        <Link href="/services/fleet" className="text-sm font-semibold text-secondary-dark w-full block hover:text-primary-hover transition-colors duration-200">
+                          <ComesInGoesOutUnderline direction="left">Fleet Management</ComesInGoesOutUnderline>
                         </Link>
                       </li>
-                      <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                        <Link href="/services/crew" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
-                          Crew Management
+                      <li className="">
+                        <Link href="/services/crew" className="text-sm font-semibold text-secondary-dark w-full block hover:text-primary-hover transition-colors duration-200">
+                          <ComesInGoesOutUnderline direction="left">Crew Management</ComesInGoesOutUnderline>
                         </Link>
                       </li>
-                      <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                        <Link href="/services/port-operations" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
-                          Port Operations
+                      <li className="">
+                        <Link href="/services/port-operations" className="text-sm font-semibold text-secondary-dark w-full block hover:text-primary-hover transition-colors duration-200">
+                          <ComesInGoesOutUnderline direction="left">Port Operations</ComesInGoesOutUnderline>
                         </Link>
                       </li>
-                      <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                        <Link href="/services/shipbuilding" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
-                          Shipbuilding
+                      <li className="">
+                        <Link href="/services/shipbuilding" className="text-sm font-semibold text-secondary-dark w-full block hover:text-primary-hover transition-colors duration-200">
+                          <ComesInGoesOutUnderline direction="left">Shipbuilding</ComesInGoesOutUnderline>
                         </Link>
                       </li>
                     </>
@@ -241,34 +243,34 @@ export default function Footer() {
                 </h4>
                 <div className="w-8 h-[2.5px] bg-primary mt-1 mb-4"></div>
                 <ul className="flex flex-col gap-2">
-                  <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                    <Link href="/contact" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
-                      Contact Us
+                  <li className="">
+                    <Link href="/contact" className="text-sm font-semibold text-secondary-dark w-full block hover:text-primary-hover transition-colors duration-200">
+                      <ComesInGoesOutUnderline direction="left">Contact Us</ComesInGoesOutUnderline>
                     </Link>
                   </li>
-                  <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                    <Link href="/faqs" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
-                      FAQs
+                  <li className="">
+                    <Link href="/faqs" className="text-sm font-semibold text-secondary-dark w-full block hover:text-primary-hover transition-colors duration-200">
+                      <ComesInGoesOutUnderline direction="left">FAQs</ComesInGoesOutUnderline>
                     </Link>
                   </li>
-                  <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                    <Link href="/privacy" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
-                      Privacy Policy
+                  <li className="">
+                    <Link href="/privacy" className="text-sm font-semibold text-secondary-dark w-full block hover:text-primary-hover transition-colors duration-200">
+                      <ComesInGoesOutUnderline direction="left">Privacy Policy</ComesInGoesOutUnderline>
                     </Link>
                   </li>
-                  <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                    <Link href="/terms" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
-                      Terms & Conditions
+                  <li className="">
+                    <Link href="/terms" className="text-sm font-semibold text-secondary-dark w-full block hover:text-primary-hover transition-colors duration-200">
+                      <ComesInGoesOutUnderline direction="left">Terms & Conditions</ComesInGoesOutUnderline>
                     </Link>
                   </li>
-                  <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                    <Link href="/copyright" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
-                      Copy Rights
+                  <li className="">
+                    <Link href="/copyright" className="text-sm font-semibold text-secondary-dark w-full block hover:text-primary-hover transition-colors duration-200">
+                      <ComesInGoesOutUnderline direction="left">Copy Rights</ComesInGoesOutUnderline>
                     </Link>
                   </li>
-                  <li className="group hover:translate-x-2 ease-in-out duration-200 transition-all">
-                    <Link href="/sitemap" className="text-sm font-semibold text-secondary-dark w-full block group-hover:text-primary-hover transition-colors duration-200">
-                      Sitemap
+                  <li className="">
+                    <Link href="/sitemap" className="text-sm font-semibold text-secondary-dark w-full block hover:text-primary-hover transition-colors duration-200">
+                      <ComesInGoesOutUnderline direction="left">Sitemap</ComesInGoesOutUnderline>
                     </Link>
                   </li>
                 </ul>

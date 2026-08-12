@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import styles from "./style.module.css";
+import LetterSwapPingPong from "@/components/fancy/text/letter-swap-pingpong-anim"
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -105,7 +105,10 @@ export default function Header({ transparent = false }) {
                   : "text-sky-700 hover:text-rose-700 border-transparent"
                 }`}
             >
-              Home
+              <LetterSwapPingPong
+                label="Home"
+                reverse={false}
+              />
             </Link>
             <Link
               href="/about"
@@ -118,7 +121,10 @@ export default function Header({ transparent = false }) {
                   : "text-sky-700 hover:text-rose-700 border-transparent"
                 }`}
             >
-              About
+              <LetterSwapPingPong
+                label="About"
+                reverse={false}
+              />
             </Link>
             <Link
               href="/services"
@@ -131,7 +137,10 @@ export default function Header({ transparent = false }) {
                   : "text-sky-700 hover:text-rose-700 border-transparent"
                 }`}
             >
-              Services
+              <LetterSwapPingPong
+                label="Services"
+                reverse={false}
+              />
             </Link>
             <div className="flex flex-row items-center gap-3">
               <Link
