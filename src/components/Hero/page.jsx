@@ -72,6 +72,9 @@ export default function Hero() {
           </div>
 
           {/* Headline */}
+          {/* <h1 className="text-5xl sm:text-5xl md:text-6xl lg:text-7xl font-oswald text-white font-extrabold leading-tight tracking-tight text-center md:text-left uppercase mb-3">
+            Maritime Excellence
+          </h1> */}
           <h1 className="text-5xl sm:text-5xl md:text-6xl lg:text-7xl font-oswald text-white font-extrabold leading-tight tracking-tight text-center md:text-left uppercase mb-3">
             Maritime Excellence
           </h1>

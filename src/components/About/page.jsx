@@ -5,6 +5,7 @@ import SubHeading from "@/design/sub-heading/page";
 import Link from "next/link";
 import Image from "next/image";
 import styles from "./style.module.css"
+import VerticalCutReveal from "@/components/fancy/text/vertical-cut-reveal"
 
 // Icons
 import { FaArrowRight } from "react-icons/fa";
@@ -63,9 +64,47 @@ export default function About() {
           <SubHeading title="About Us" className="mb-4 md:mb-8" />
 
           <h1 className="font-oswald text-3xl md:text-4xl text-sky-700 font-bold mb-5 md:mb-8">
-            Beyond the<br />
-            <span className="text-sky-900">Maritime Services<span className="text-primary">.</span></span> <br />
-            Advancing Maritime Possibilities<span className="text-primary">.</span>
+            <VerticalCutReveal
+              splitBy="characters"
+              staggerDuration={0.01}
+              staggerFrom="first"
+              transition={{
+                type: "spring",
+                stiffness: 200,
+                damping: 21,
+              }}
+            >
+              Beyond the
+            </VerticalCutReveal><br />
+            <span className="text-sky-900">
+              <VerticalCutReveal
+                splitBy="characters"
+                staggerDuration={0.01}
+                staggerFrom="last"
+                reverse={true}
+                transition={{
+                  type: "spring",
+                  stiffness: 200,
+                  damping: 21,
+                  delay: 0.2,
+                }}
+              >
+                Maritime Services<span className="text-primary">.</span>
+              </VerticalCutReveal>
+            </span> <br />
+            <VerticalCutReveal
+              splitBy="characters"
+              staggerDuration={0.01}
+              staggerFrom="first"
+              transition={{
+                type: "spring",
+                stiffness: 200,
+                damping: 21,
+                delay: 0.5,
+              }}
+            >
+              Advancing Maritime Possibilities<span className="text-primary">.</span>
+            </VerticalCutReveal>
           </h1>
 
           <p className="text-sm md:text-[16px] text-gray-600 font-medium">
