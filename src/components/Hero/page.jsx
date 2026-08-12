@@ -4,6 +4,10 @@ import Link from "next/link";
 
 import NumberTicker from "@/components/fancy/text/basic-number-ticker"
 
+import { LayoutGroup, motion } from "motion/react"
+
+import TextRotate from "@/components/fancy/text/text-rotate"
+
 // Icons
 import { FaArrowRight } from "react-icons/fa";
 import { LuShip, LuAnchor, LuGlobe, LuAward, LuCompass } from "react-icons/lu";
@@ -66,7 +70,7 @@ export default function Hero() {
       </div>
 
       <div className={`${styles.content} container max-w-7xl mx-auto px-4 sm:px-12 lg:px-0 flex flex-col justify-between`}>
-        <div className="flex flex-col items-center mb-8 md:mb-0 md:items-start max-w-4xl mt-16 md:mt-auto">
+        <div className="flex flex-col items-center mb-8 md:mb-0 md:items-start max-w-4xl mt-6 md:mt-auto">
           <div className="inline-flex w-fit items-center gap-2 px-3 py-2 bg-white/8 backdrop-blur-md text-white text-xs font-semibold uppercase tracking-wider mb-2">
             Your Maritime Partner
           </div>
@@ -75,8 +79,34 @@ export default function Hero() {
           {/* <h1 className="text-5xl sm:text-5xl md:text-6xl lg:text-7xl font-oswald text-white font-extrabold leading-tight tracking-tight text-center md:text-left uppercase mb-3">
             Maritime Excellence
           </h1> */}
-          <h1 className="text-5xl sm:text-5xl md:text-6xl lg:text-7xl font-oswald text-white font-extrabold leading-tight tracking-tight text-center md:text-left uppercase mb-3">
-            Maritime Excellence
+          <h1 className="text-5xl sm:text-5xl md:text-6xl lg:text-7xl font-oswald text-white font-extrabold leading-tight tracking-tight text-center md:text-left uppercase mb-2 sm:mb-0">
+            <motion.div className="flex flex-col sm:flex-row items-center md:items-start sm:whitespace-pre" layout>
+              <motion.span
+                className="pt-0.5 sm:pt-1 md:pt-2"
+                layout
+                transition={{ type: "spring", damping: 30, stiffness: 400 }}
+              >
+                <span>Maritime</span>{" "}
+              </motion.span>
+              <TextRotate
+                texts={[
+                  "Excellence",
+                  "Expertise",
+                  "Advantage",
+                  "Solutions",
+                  "Innovations",
+                ]}
+                mainClassName="overflow-hidden py-0.5 sm:py-1 md:py-2 justify-center rounded-lg"
+                staggerFrom={"first"}
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                exit={{ y: "-120%" }}
+                staggerDuration={0.025}
+                splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
+                transition={{ type: "spring", damping: 30, stiffness: 400 }}
+                rotationInterval={4500}
+              />
+            </motion.div>
           </h1>
 
           {/* Subtitle */}
