@@ -8,7 +8,7 @@ import { usePathname } from "next/navigation";
 
 // Icons
 import { LuMenu, LuX, LuAnchor, LuCompass, LuShieldAlert, LuBookOpen, LuPhone, LuMail } from "react-icons/lu";
-import { FiHome, FiInfo, FiCpu, FiLayers, FiPhone, FiBriefcase, FiImage, FiFileText, FiRss } from "react-icons/fi";
+import { FiHome, FiInfo, FiCpu, FiLayers, FiPhone, FiBriefcase, FiImage, FiFileText } from "react-icons/fi";
 
 // Images
 import logoLight from "../../../public/assets/images/logo-light.png"
