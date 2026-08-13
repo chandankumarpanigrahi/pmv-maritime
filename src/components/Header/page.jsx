@@ -207,32 +207,32 @@ export default function Header({ transparent = false }) {
               Maritime Services
             </h3>
             <div className="px-4 py-4 flex flex-col gap-3">
-              <Link href="/services#surveys" onClick={() => setMenuOpen(false)} className="group flex items-start gap-3 p-2 hover:bg-white/5 rounded transition-all">
+              <Link href="/services/marine-consultancy" onClick={() => setMenuOpen(false)} className="group flex items-start gap-3 p-2 hover:bg-white/5 rounded transition-all">
                 <LuAnchor className="text-rose-500 text-xl mt-0.5 group-hover:scale-110 transition-transform" />
                 <div>
-                  <h4 className="font-bold text-sm">Marine Surveys</h4>
+                  <h4 className="font-bold text-sm">Marine Consultancy</h4>
                   <p className="text-xs text-slate-400">Pre-purchase, damage & technical vessel assessments.</p>
                 </div>
               </Link>
-              <Link href="/services#consultancy" onClick={() => setMenuOpen(false)} className="group flex items-start gap-3 p-2 hover:bg-white/5 rounded transition-all">
-                <LuCompass className="text-rose-500 text-xl mt-0.5 group-hover:scale-110 transition-transform" />
-                <div>
-                  <h4 className="font-bold text-sm">Vessel Consultancy</h4>
-                  <p className="text-xs text-slate-400">Technical management, layouts, and registration guidance.</p>
-                </div>
-              </Link>
-              <Link href="/services#safety" onClick={() => setMenuOpen(false)} className="group flex items-start gap-3 p-2 hover:bg-white/5 rounded transition-all">
-                <LuShieldAlert className="text-rose-500 text-xl mt-0.5 group-hover:scale-110 transition-transform" />
-                <div>
-                  <h4 className="font-bold text-sm">Audits & Inspections</h4>
-                  <p className="text-xs text-slate-400">ISM, ISPS, MLC audits and safety compliance guidance.</p>
-                </div>
-              </Link>
-              <Link href="/services#training" onClick={() => setMenuOpen(false)} className="group flex items-start gap-3 p-2 hover:bg-white/5 rounded transition-all">
+              <Link href="/services/maritime-training" onClick={() => setMenuOpen(false)} className="group flex items-start gap-3 p-2 hover:bg-white/5 rounded transition-all">
                 <LuBookOpen className="text-rose-500 text-xl mt-0.5 group-hover:scale-110 transition-transform" />
                 <div>
                   <h4 className="font-bold text-sm">Maritime Training</h4>
-                  <p className="text-xs text-slate-400">Certified professional crew training & DP preparations.</p>
+                  <p className="text-xs text-slate-400">Industry-focused training programmes.</p>
+                </div>
+              </Link>
+              <Link href="/services/ship-building" onClick={() => setMenuOpen(false)} className="group flex items-start gap-3 p-2 hover:bg-white/5 rounded transition-all">
+                <LuShieldAlert className="text-rose-500 text-xl mt-0.5 group-hover:scale-110 transition-transform" />
+                <div>
+                  <h4 className="font-bold text-sm">Ship Building</h4>
+                  <p className="text-xs text-slate-400">New build, conversions, and technical supervision.</p>
+                </div>
+              </Link>
+              <Link href="/services/port-operations" onClick={() => setMenuOpen(false)} className="group flex items-start gap-3 p-2 hover:bg-white/5 rounded transition-all">
+                <LuCompass className="text-rose-500 text-xl mt-0.5 group-hover:scale-110 transition-transform" />
+                <div>
+                  <h4 className="font-bold text-sm">Port Operations</h4>
+                  <p className="text-xs text-slate-400">Efficient cargo handling, vessel coordination & supply chain.</p>
                 </div>
               </Link>
             </div>
