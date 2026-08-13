@@ -89,11 +89,11 @@ const NAV_ITEMS = [
   {
     type: "group",
     key: "roles",
-    label: "Access & Security",
+    label: "Settings",
     icon: LuShieldAlert,
     superAdminOnly: true,
     children: [
-      { key: "master", label: "Master Settings", href: "/admin/master", icon: LuKey },
+      { key: "master", label: "Master", href: "/admin/master", icon: LuKey },
       { key: "users", label: "User Management", href: "/admin/users", icon: LuUsers },
       { key: "sessions", label: "Sessions", href: "/admin/sessions", icon: LuCircleGauge },
     ],

@@ -51,7 +51,10 @@ export default function DataTable({
   // Sync reorderedData when data updates (and not actively reordering)
   useEffect(() => {
     if (!isReorderMode) {
-      setReorderedData(data);
+      const timer = setTimeout(() => {
+        setReorderedData(data);
+      }, 0);
+      return () => clearTimeout(timer);
     }
   }, [data, isReorderMode]);
 
@@ -214,10 +217,10 @@ export default function DataTable({
         </div>
 
         {/* Action Controls: Show Entries -> Rearrange -> Refresh -> CSV Export */}
-        <div className="flex flex-wrap items-center gap-2.5 w-full 2xl:w-auto justify-center sm:justify-end">
+        <div id="datatable-top-controls" className="flex flex-wrap items-center gap-2.5 w-full 2xl:w-auto justify-center sm:justify-end">
           {/* Rows selector */}
           {!isReorderMode && (
-            <div className="flex items-center gap-2 text-xs text-gray-500 font-bold">
+            <div id="datatable-page-size" className="flex items-center gap-2 text-xs text-gray-500 font-bold">
               <span>Show</span>
               <select
                 value={pageSize}
@@ -243,6 +246,7 @@ export default function DataTable({
               <>
                 {!isReorderMode ? (
                   <button
+                    id="datatable-reorder-btn"
                     onClick={handleStartReorder}
                     disabled={data.length <= 1}
                     className="h-[34px] px-3 py-1.5 bg-secondary hover:bg-secondary-dark text-white font-bold text-xs uppercase tracking-wider transition-all shadow-xs cursor-pointer disabled:opacity-40 disabled:pointer-events-none flex items-center gap-1.5"
@@ -276,6 +280,7 @@ export default function DataTable({
             {/* Refresh Button */}
             {onRefresh && !isReorderMode && (
               <button
+                id="datatable-refresh-btn"
                 onClick={onRefresh}
                 className="h-[34px] w-[34px] bg-white border border-gray-200 text-gray-600 hover:text-primary hover:border-primary transition-all shadow-xs cursor-pointer flex items-center justify-center"
                 title="Refresh Data"
@@ -287,6 +292,7 @@ export default function DataTable({
             {/* Export CSV Button */}
             {!isReorderMode && (
               <button
+                id="datatable-export-btn"
                 onClick={handleExportCSV}
                 disabled={filteredData.length === 0}
                 className="h-[34px] px-3 py-1.5 bg-primary hover:bg-primary-hover text-white font-bold text-xs uppercase tracking-wider transition-all shadow-xs cursor-pointer disabled:bg-slate-200 disabled:text-slate-400 disabled:pointer-events-none flex items-center gap-1.5"
@@ -401,6 +407,7 @@ export default function DataTable({
                       {/* View Button */}
                       <td className="px-5 py-3 align-top text-right whitespace-nowrap">
                         <button
+                          id={rowIdx === 0 ? "datatable-first-row-view-btn" : undefined}
                           onClick={() => openDrawer(row)}
                           className="p-1.5 bg-slate-100 hover:bg-secondary hover:text-white text-secondary-dark border border-secondary transition-colors cursor-pointer"
                           title="View Full Details"
@@ -426,7 +433,7 @@ export default function DataTable({
 
           {/* Pagination Controls */}
           {!loading && totalPages > 1 && !isReorderMode && (
-            <div className="flex items-center justify-center gap-2 pt-2">
+            <div id="datatable-pagination" className="flex items-center justify-center gap-2 pt-2">
               <button
                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}

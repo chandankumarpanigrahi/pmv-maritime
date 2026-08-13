@@ -10,6 +10,10 @@ import {
   LuShieldAlert,
   LuX,
 } from "react-icons/lu";
+import { LiaStreetViewSolid } from "react-icons/lia";
+
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
 
 export default function FAQsPage() {
   const [faqs, setFaqs] = useState([]);
@@ -19,6 +23,142 @@ export default function FAQsPage() {
   const canCreate = hasPermission(null, "faqs:create");
   const canEdit = hasPermission(null, "faqs:edit");
   const canDelete = hasPermission(null, "faqs:delete");
+
+  // Driver.js Guided Tour Handler
+  const handleStartTour = () => {
+    const steps = [];
+
+    if (canCreate || (editingId && canEdit)) {
+      steps.push(
+        {
+          element: "#faq-form-panel",
+          popover: {
+            title: "Add / Edit FAQ Form",
+            description: "Use this panel to create new FAQs or update existing ones.",
+            side: "right",
+            align: "start",
+          },
+        },
+        {
+          element: "#faq-question-field",
+          popover: {
+            title: "Question Field",
+            description: "Enter the question title here.",
+            side: "bottom",
+            align: "start",
+          },
+        },
+        {
+          element: "#faq-answer-field",
+          popover: {
+            title: "Answer Field",
+            description: "Provide the complete answer for the FAQ.",
+            side: "bottom",
+            align: "start",
+          },
+        },
+        {
+          element: "#faq-submit-btn",
+          popover: {
+            title: "Save Button",
+            description: "Click here to save or update the FAQ entry.",
+            side: "bottom",
+            align: "start",
+          },
+        }
+      );
+    }
+
+    steps.push(
+      {
+        element: "#faq-table-panel",
+        popover: {
+          title: "FAQs Management Table",
+          description: "View, search, edit, delete, or drag-and-drop to reorder all FAQs in real time.",
+          side: "left",
+          align: "start",
+        },
+      },
+      {
+        element: "#datatable-page-size",
+        popover: {
+          title: "Page Size Selector",
+          description: "Choose how many FAQ records (5, 10, 20, 50, 100) to display per page.",
+          side: "bottom",
+          align: "start",
+        },
+      },
+      {
+        element: "#datatable-reorder-btn",
+        popover: {
+          title: "Rearrange Sequence",
+          description: "Toggle drag-and-drop mode to reorder FAQs in your preferred display sequence.",
+          side: "bottom",
+          align: "center",
+        },
+      },
+      {
+        element: "#datatable-refresh-btn",
+        popover: {
+          title: "Refresh Table",
+          description: "Click to reload and fetch the latest FAQ data from the database.",
+          side: "bottom",
+          align: "center",
+        },
+      },
+      {
+        element: "#datatable-export-btn",
+        popover: {
+          title: "Export to CSV",
+          description: "Download all current FAQ records as a CSV spreadsheet file.",
+          side: "bottom",
+          align: "end",
+        },
+      },
+      {
+        element: "#faq-first-row-actions",
+        popover: {
+          title: "Edit & Delete Actions",
+          description: "Click the pencil icon to edit an FAQ entry, or click the trash icon to permanently delete it.",
+          side: "left",
+          align: "center",
+        },
+      },
+      {
+        element: "#datatable-first-row-view-btn",
+        popover: {
+          title: "View Details Drawer",
+          description: "Click the eye icon on any row to open the full detailed view for that FAQ.",
+          side: "left",
+          align: "center",
+        },
+      },
+      {
+        element: "#datatable-pagination",
+        popover: {
+          title: "Pagination Controls",
+          description: "Use the pagination controls to navigate through the FAQ records.",
+          side: "top",
+          align: "start",
+        },
+      }
+    );
+
+    const driverObj = driver({
+      popoverClass: "driverjs-theme",
+      stagePadding: 8,
+      stageRadius: 6,
+      showProgress: true,
+      animate: true,
+      progressText: "Step {{current}} of {{total}}",
+      nextBtnText: "Next →",
+      prevBtnText: "← Back",
+      doneBtnText: "Done",
+      steps,
+    });
+
+    driverObj.drive();
+  };
 
   // Form state
   const [question, setQuestion] = useState("");
@@ -53,7 +193,10 @@ export default function FAQsPage() {
   }, []);
 
   useEffect(() => {
-    fetchFaqs();
+    const loadFaqs = async () => {
+      await fetchFaqs();
+    };
+    loadFaqs();
   }, [fetchFaqs]);
 
   // ─── Form Handlers ───────────────────────────────────────
@@ -194,7 +337,7 @@ export default function FAQsPage() {
       accessor: "question",
       className: "min-w-[220px]",
       cell: (row) => (
-        <p className="text-sm font-bold text-gray-900 leading-snug line-clamp-3">
+        <p className="text-sm font-bold text-gray-900 leading-snug line-clamp-2">
           {row.question}
         </p>
       ),
@@ -204,7 +347,7 @@ export default function FAQsPage() {
       accessor: "answer",
       className: "min-w-[300px]",
       cell: (row) => (
-        <p className="text-sm text-gray-600 leading-relaxed line-clamp-3" title={row.answer}>
+        <p className="text-sm text-gray-600 leading-relaxed line-clamp-2" title={row.answer}>
           {row.answer}
         </p>
       ),
@@ -214,7 +357,10 @@ export default function FAQsPage() {
       accessor: "actions",
       className: "w-[120px]",
       cell: (row) => (
-        <div className="flex items-center gap-2">
+        <div
+          id={faqs.length > 0 && row._id === faqs[0]._id ? "faq-first-row-actions" : undefined}
+          className="flex items-center gap-2"
+        >
           {canEdit && (
             <button
               onClick={() => handleEdit(row)}
@@ -243,101 +389,112 @@ export default function FAQsPage() {
 
   return (
     <div className="p-3 md:p-5">
+
+      {/* driver.js button */}
+      <button
+        type="button"
+        onClick={handleStartTour}
+        title="Start Page Tour"
+        className="hidden sm:inline-block fixed top-4 right-12 sm:right-52 z-31 text-primary hover:text-secondary-dark cursor-pointer"
+      >
+        <LiaStreetViewSolid className="text-3xl" />
+      </button>
       <div className="flex flex-col xl:flex-row gap-5">
         {/* ═══════════════════════════════════════════════════
             LEFT PANEL — Add / Edit FAQ Form (Requires Permission)
            ═══════════════════════════════════════════════════ */}
         {(canCreate || (editingId && canEdit)) && (
           <div className="w-full xl:w-[340px] xl:min-w-[340px] flex-shrink-0">
-          <div className="bg-white border border-gray-200 shadow-xs">
-            {/* Form Header */}
-            <div className="px-5 py-4 border-b border-gray-200 bg-slate-50 flex items-center justify-between">
-              <div className="flex items-center gap-2.5">
-                <h2 className="font-oswald text-lg font-bold text-secondary uppercase tracking-wide">
-                  {editingId ? "Edit FAQ" : "Add New FAQ"}
-                  <span className="text-primary">.</span>
-                </h2>
-              </div>
-              {editingId && (
-                <button
-                  onClick={resetForm}
-                  className="p-1.5 text-gray-400 hover:text-primary transition-colors cursor-pointer"
-                  title="Cancel Edit"
-                >
-                  <LuX className="text-lg" />
-                </button>
-              )}
-            </div>
-
-            {/* Form Body */}
-            <form onSubmit={handleSubmit} className="p-5 space-y-4">
-              {/* Question Field */}
-              <div>
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-1.5">
-                  Question <span className="text-primary">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={question}
-                  onChange={(e) => setQuestion(e.target.value)}
-                  placeholder="Enter the FAQ question..."
-                  className="w-full bg-slate-50 border border-gray-200 focus:border-secondary focus:ring-1 focus:ring-secondary outline-none px-4 py-2.5 text-sm transition-all text-gray-900 placeholder-gray-400 font-medium"
-                  required
-                />
-              </div>
-
-              {/* Answer Field */}
-              <div>
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-1.5">
-                  Answer <span className="text-primary">*</span>
-                </label>
-                <textarea
-                  value={answer}
-                  onChange={(e) => setAnswer(e.target.value)}
-                  placeholder="Enter the FAQ answer..."
-                  rows={6}
-                  className="w-full bg-slate-50 border border-gray-200 focus:border-secondary focus:ring-1 focus:ring-secondary outline-none px-4 py-2.5 text-sm transition-all text-gray-900 placeholder-gray-400 font-medium resize-none"
-                  required
-                />
-              </div>
-
-              {/* Submit Buttons */}
-              <div className="flex items-center gap-3 pt-2">
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="flex-1 px-4 py-2.5 bg-primary hover:bg-primary-hover text-white font-bold text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50"
-                >
-                  <span>
-                    {isSubmitting
-                      ? editingId
-                        ? "Updating..."
-                        : "Adding..."
-                      : editingId
-                        ? "Update FAQ"
-                        : "Add FAQ"}
-                  </span>
-                </button>
-                {(question || answer) && (
+            <div id="faq-form-panel" className="bg-white border border-gray-200 shadow-xs">
+              {/* Form Header */}
+              <div className="px-5 py-4 border-b border-gray-200 bg-slate-50 flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <h2 className="font-oswald text-lg font-bold text-secondary uppercase tracking-wide">
+                    {editingId ? "Edit FAQ" : "Add New FAQ"}
+                    <span className="text-primary">.</span>
+                  </h2>
+                </div>
+                {editingId && (
                   <button
-                    type="button"
                     onClick={resetForm}
-                    disabled={isSubmitting}
-                    className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-gray-600 font-bold text-xs uppercase tracking-wider transition-all cursor-pointer disabled:opacity-50"
+                    className="p-1.5 text-gray-400 hover:text-primary transition-colors cursor-pointer"
+                    title="Cancel Edit"
                   >
-                    Clear
+                    <LuX className="text-lg" />
                   </button>
                 )}
               </div>
-            </form>
+
+              {/* Form Body */}
+              <form onSubmit={handleSubmit} className="p-5 space-y-4">
+                {/* Question Field */}
+                <div id="faq-question-field">
+                  <label className="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-1.5">
+                    Question <span className="text-primary">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={question}
+                    onChange={(e) => setQuestion(e.target.value)}
+                    placeholder="Enter the FAQ question..."
+                    className="w-full bg-slate-50 border border-gray-200 focus:border-secondary focus:ring-1 focus:ring-secondary outline-none px-4 py-2.5 text-sm transition-all text-gray-900 placeholder-gray-400 font-medium"
+                    required
+                  />
+                </div>
+
+                {/* Answer Field */}
+                <div id="faq-answer-field">
+                  <label className="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-1.5">
+                    Answer <span className="text-primary">*</span>
+                  </label>
+                  <textarea
+                    value={answer}
+                    onChange={(e) => setAnswer(e.target.value)}
+                    placeholder="Enter the FAQ answer..."
+                    rows={6}
+                    className="w-full bg-slate-50 border border-gray-200 focus:border-secondary focus:ring-1 focus:ring-secondary outline-none px-4 py-2.5 text-sm transition-all text-gray-900 placeholder-gray-400 font-medium resize-none"
+                    required
+                  />
+                </div>
+
+                {/* Submit Buttons */}
+                <div className="flex items-center gap-3 pt-2">
+                  <button
+                    id="faq-submit-btn"
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="flex-1 px-4 py-2.5 bg-primary hover:bg-primary-hover text-white font-bold text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50"
+                  >
+                    <span>
+                      {isSubmitting
+                        ? editingId
+                          ? "Updating..."
+                          : "Adding..."
+                        : editingId
+                          ? "Update FAQ"
+                          : "Add FAQ"}
+                    </span>
+                  </button>
+                  {(question || answer) && (
+                    <button
+                      type="button"
+                      onClick={resetForm}
+                      disabled={isSubmitting}
+                      className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-gray-600 font-bold text-xs uppercase tracking-wider transition-all cursor-pointer disabled:opacity-50"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
         )}
 
         {/* ═══════════════════════════════════════════════════
             RIGHT PANEL — Reusable DataTable Component with Drag & Drop Reordering
            ═══════════════════════════════════════════════════ */}
-        <div className="flex-1 min-w-0">
+        <div id="faq-table-panel" className="flex-1 min-w-0">
           <DataTable
             data={faqs}
             loading={loading}

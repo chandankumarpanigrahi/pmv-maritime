@@ -44,6 +44,7 @@ body {
   from {
     transform: translateX(100%);
   }
+
   to {
     transform: translateX(0);
   }
@@ -53,6 +54,7 @@ body {
   from {
     transform: translateX(0);
   }
+
   to {
     transform: translateX(100%);
   }
@@ -65,3 +67,137 @@ body {
 .animate-drawer-out {
   animation: slideOutRight 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* ==========================================================================
+   DRIVER.JS CUSTOM POPOVER THEME
+   ========================================================================== */
+.driver-active {
+  background: #0000002b;
+}
+
+.driver-popover.driverjs-theme {
+  min-width: 280px;
+  background-color: #ffffff !important;
+  color: #1a1a2e !important;
+  border-radius: 0px !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+  padding: 16px 18px !important;
+}
+
+.driver-popover.driverjs-theme .driver-popover-title {
+  font-family: var(--font-oswald), sans-serif !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  color: var(--cerulean-blue, #007ba7) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+.driver-popover.driverjs-theme .driver-popover-description {
+  font-size: 13px !important;
+  color: #475569 !important;
+  line-height: 1.5 !important;
+  margin-top: 6px !important;
+}
+
+.driver-popover.driverjs-theme .driver-popover-footer {
+  margin-top: 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+.driver-popover.driverjs-theme .driver-popover-progress-text {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: #94a3b8 !important;
+  text-transform: uppercase !important;
+}
+
+.driver-popover.driverjs-theme .driver-popover-next-btn {
+  background-color: var(--crimson-red, #ad1d41) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 0px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  padding: 6px 14px !important;
+  text-shadow: none !important;
+  transition: background-color 0.2s ease !important;
+  cursor: pointer !important;
+}
+
+.driver-popover.driverjs-theme .driver-popover-next-btn:hover {
+  background-color: var(--crimson-red-hover, #921232) !important;
+}
+
+.driver-popover.driverjs-theme .driver-popover-prev-btn {
+  background-color: #f1f5f9 !important;
+  color: #475569 !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 0px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  padding: 6px 12px !important;
+  text-shadow: none !important;
+  cursor: pointer !important;
+}
+
+.driver-popover.driverjs-theme .driver-popover-close-btn {
+  color: #94a3b8 !important;
+}
+
+.driver-popover.driverjs-theme .driver-popover-close-btn:hover {
+  color: var(--crimson-red, #ad1d41) !important;
+}
+
+/* ==========================================================================
+   PRINT STYLES - Ensures only page contents print cleanly
+   ========================================================================== */
+@media print {
+  /* Hide non-content elements during print */
+  header,
+  footer,
+  nav,
+  .no-print,
+  [data-toaster] {
+    display: none !important;
+  }
+
+  /* Optimize page layout for paper/PDF print */
+  html, body {
+    background: #ffffff !important;
+    color: #1a1a2e !important;
+    font-size: 11pt !important;
+    line-height: 1.5 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Format printable main content area */
+  .printable-content,
+  main {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+
+  /* Prevent awkward page breaks */
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  p, li, section, article {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+}
