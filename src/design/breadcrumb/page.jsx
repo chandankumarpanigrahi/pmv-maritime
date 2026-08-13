@@ -13,7 +13,7 @@ export default function Breadcrumb({
   return (
     <nav
       aria-label="Breadcrumb"
-      className={`absolute left-0 bottom-0 z-6 w-full h-fit px-4 py-3 overflow-x-scroll md:overflow-x-hidden items-center flex text-sm select-none ${className}`}
+      className={`absolute left-0 bottom-0 z-6 w-full h-fit px-4 py-3 overflow-x-scroll scrollbar-none md:overflow-x-hidden items-center flex text-sm select-none ${className}`}
     >
       <ol className="flex items-center gap-2">
         {showHome && (

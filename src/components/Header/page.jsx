@@ -15,24 +15,74 @@ import logoLight from "../../../public/assets/images/logo-light.png"
 import logoDark from "../../../public/assets/images/logo.png"
 import CtaHeader from "../Cta Header/page";
 
+const maritimeServices = [
+  {
+    slug: "marine-consultancy",
+    icon: LuAnchor,
+    title: "Marine Consultancy",
+    description: "Pre-purchase, damage & technical vessel assessments.",
+  },
+  {
+    slug: "maritime-training",
+    icon: LuBookOpen,
+    title: "Maritime Training",
+    description: "Industry-focused training programmes.",
+  },
+  {
+    slug: "ship-building",
+    icon: LuShieldAlert,
+    title: "Ship Building",
+    description: "New build, conversions, and technical supervision.",
+  },
+  {
+    slug: "port-operations",
+    icon: LuCompass,
+    title: "Port Operations",
+    description: "Efficient cargo handling, vessel coordination & supply chain.",
+  },
+];
+
+const quickLinksPrimary = [
+  { href: "/", icon: FiHome, label: "Home" },
+  { href: "/about", icon: FiInfo, label: "About Us" },
+  { href: "/services", icon: FiCpu, label: "Our Services" },
+  { href: "/projects", icon: FiLayers, label: "Our Projects" },
+  { href: "/contact", icon: FiPhone, label: "Contact Us" },
+];
+
+const quickLinksSecondary = [
+  { href: "/careers", icon: FiBriefcase, label: "Career" },
+  { href: "/gallery", icon: FiImage, label: "Gallery" },
+  { href: "/faqs", icon: FiFileText, label: "FAQs" },
+];
+
+const contactDeskDescription =
+  "Reach out directly to our 24/7 technical assistance center for urgent maritime support or survey bookings.";
+
 export default function Header({ transparent = false }) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
   const menuRef = useRef(null);
+  const mobileMenuRef = useRef(null);
   const buttonRef = useRef(null);
+  const mobileButtonRef = useRef(null);
+
+  const closeMenu = () => setMenuOpen(false);
 
   // Close mega menu when clicking outside or pressing Escape
   useEffect(() => {
     if (!menuOpen) return;
 
     const handleClickOutside = (event) => {
-      if (
-        menuRef.current &&
-        !menuRef.current.contains(event.target) &&
-        buttonRef.current &&
-        !buttonRef.current.contains(event.target)
-      ) {
+      const isInsideMenu =
+        menuRef.current?.contains(event.target) ||
+        mobileMenuRef.current?.contains(event.target);
+      const isToggleButton =
+        buttonRef.current?.contains(event.target) ||
+        mobileButtonRef.current?.contains(event.target);
+
+      if (!isInsideMenu && !isToggleButton) {
         setMenuOpen(false);
       }
     };
@@ -181,6 +231,7 @@ export default function Header({ transparent = false }) {
               Contact
             </Link>
             <button
+              ref={mobileButtonRef}
               onClick={() => setMenuOpen(!menuOpen)}
               className={`p-2 cursor-pointer text-white ${isTransparentMode ? "bg-white/10" : "bg-sky-700"
                 }`}
@@ -207,34 +258,27 @@ export default function Header({ transparent = false }) {
               Maritime Services
             </h3>
             <div className="px-4 py-4 flex flex-col gap-3">
-              <Link href="/services/marine-consultancy" onClick={() => setMenuOpen(false)} className="group flex items-start gap-3 p-2 hover:bg-white/5 rounded transition-all">
-                <LuAnchor className="text-rose-500 text-xl mt-0.5 group-hover:scale-110 transition-transform" />
-                <div>
-                  <h4 className="font-bold text-sm">Marine Consultancy</h4>
-                  <p className="text-xs text-slate-400">Pre-purchase, damage & technical vessel assessments.</p>
-                </div>
-              </Link>
-              <Link href="/services/maritime-training" onClick={() => setMenuOpen(false)} className="group flex items-start gap-3 p-2 hover:bg-white/5 rounded transition-all">
-                <LuBookOpen className="text-rose-500 text-xl mt-0.5 group-hover:scale-110 transition-transform" />
-                <div>
-                  <h4 className="font-bold text-sm">Maritime Training</h4>
-                  <p className="text-xs text-slate-400">Industry-focused training programmes.</p>
-                </div>
-              </Link>
-              <Link href="/services/ship-building" onClick={() => setMenuOpen(false)} className="group flex items-start gap-3 p-2 hover:bg-white/5 rounded transition-all">
-                <LuShieldAlert className="text-rose-500 text-xl mt-0.5 group-hover:scale-110 transition-transform" />
-                <div>
-                  <h4 className="font-bold text-sm">Ship Building</h4>
-                  <p className="text-xs text-slate-400">New build, conversions, and technical supervision.</p>
-                </div>
-              </Link>
-              <Link href="/services/port-operations" onClick={() => setMenuOpen(false)} className="group flex items-start gap-3 p-2 hover:bg-white/5 rounded transition-all">
-                <LuCompass className="text-rose-500 text-xl mt-0.5 group-hover:scale-110 transition-transform" />
-                <div>
-                  <h4 className="font-bold text-sm">Port Operations</h4>
-                  <p className="text-xs text-slate-400">Efficient cargo handling, vessel coordination & supply chain.</p>
-                </div>
-              </Link>
+              {maritimeServices.map((service) => {
+                const ServiceIcon = service.icon;
+                const serviceHref = `/services/${service.slug}`;
+
+                return (
+                  <Link
+                    key={service.slug}
+                    href={serviceHref}
+                    onClick={closeMenu}
+                    className="group flex items-start gap-3 w-full p-2 hover:bg-white/5 rounded transition-all"
+                  >
+                    <ServiceIcon className="text-rose-500 text-xl mt-0.5 group-hover:scale-110 transition-transform shrink-0" />
+                    <div className="min-w-0">
+                      <h4 className="font-bold text-sm text-white group-hover:text-rose-300 transition-colors">
+                        {service.title}
+                      </h4>
+                      <p className="text-xs text-slate-400">{service.description}</p>
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
           </div>
 
@@ -245,38 +289,34 @@ export default function Header({ transparent = false }) {
             </h3>
             <div className="flex">
               <div className="w-1/2 px-4 py-4 flex flex-col gap-1 text-sm font-semibold text-slate-300">
-                <Link href="/" onClick={() => setMenuOpen(false)} className="flex flex-row gap-3 items-center px-2 py-1.5 hover:text-white hover:pl-3 transition-all duration-300">
-                  <FiHome className="text-rose-500" /> <span className="pt-1">Home</span>
-                </Link>
-                <Link href="/about" onClick={() => setMenuOpen(false)} className="flex flex-row gap-3 items-center px-2 py-1.5 hover:text-white hover:pl-3 transition-all duration-300">
-                  <FiInfo className="text-rose-500" /> <span className="pt-1">About Us</span>
-                </Link>
-                <Link href="/services" onClick={() => setMenuOpen(false)} className="flex flex-row gap-3 items-center px-2 py-1.5 hover:text-white hover:pl-3 transition-all duration-300">
-                  <FiCpu className="text-rose-500" /> <span className="pt-1">Our Services</span>
-                </Link>
-                <Link href="/projects" onClick={() => setMenuOpen(false)} className="flex flex-row gap-3 items-center px-2 py-1.5 hover:text-white hover:pl-3 transition-all duration-300">
-                  <FiLayers className="text-rose-500" /> <span className="pt-1">Our Projects</span>
-                </Link>
-                <Link href="/contact" onClick={() => setMenuOpen(false)} className="flex flex-row gap-3 items-center px-2 py-1.5 hover:text-white hover:pl-3 transition-all duration-300">
-                  <FiPhone className="text-rose-500" /> <span className="pt-1">Contact Us</span>
-                </Link>
+                {quickLinksPrimary.map((link) => {
+                  const LinkIcon = link.icon;
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setMenuOpen(false)}
+                      className="flex flex-row gap-3 items-center px-2 py-1.5 hover:text-white hover:pl-3 transition-all duration-300"
+                    >
+                      <LinkIcon className="text-rose-500" /> <span className="pt-1">{link.label}</span>
+                    </Link>
+                  );
+                })}
               </div>
               <div className="w-1/2 px-4 py-4 flex flex-col gap-1 text-sm font-semibold text-slate-300">
-                <Link href="/careers" onClick={() => setMenuOpen(false)} className="flex flex-row gap-3 items-center px-2 py-1.5 hover:text-white hover:pl-3 transition-all duration-300">
-                  <FiBriefcase className="text-rose-500" /> <span className="pt-1">Career</span>
-                </Link>
-                <Link href="/gallery" onClick={() => setMenuOpen(false)} className="flex flex-row gap-3 items-center px-2 py-1.5 hover:text-white hover:pl-3 transition-all duration-300">
-                  <FiImage className="text-rose-500" /> <span className="pt-1">Gallery</span>
-                </Link>
-                <Link href="/faqs" onClick={() => setMenuOpen(false)} className="flex flex-row gap-3 items-center px-2 py-1.5 hover:text-white hover:pl-3 transition-all duration-300">
-                  <FiFileText className="text-rose-500" /> <span className="pt-1">FAQs</span>
-                </Link>
-                {/* <Link href="/" onClick={() => setMenuOpen(false)} className="flex flex-row gap-3 items-center px-2 py-1.5 hover:text-white hover:pl-3 transition-all duration-300">
-                  <FiRss className="text-rose-500" /> <span className="pt-1">News</span>
-                </Link>
-                <Link href="/" onClick={() => setMenuOpen(false)} className="flex flex-row gap-3 items-center px-2 py-1.5 hover:text-white hover:pl-3 transition-all duration-300">
-                  <LuAnchor className="text-rose-500" /> <span className="pt-1">Fleet</span>
-                </Link> */}
+                {quickLinksSecondary.map((link) => {
+                  const LinkIcon = link.icon;
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setMenuOpen(false)}
+                      className="flex flex-row gap-3 items-center px-2 py-1.5 hover:text-white hover:pl-3 transition-all duration-300"
+                    >
+                      <LinkIcon className="text-rose-500" /> <span className="pt-1">{link.label}</span>
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -287,7 +327,7 @@ export default function Header({ transparent = false }) {
               Contact Desk
             </h3>
             <p className="px-4 py-4 text-xs text-slate-400 leading-relaxed">
-              Reach out directly to our 24/7 technical assistance center for urgent maritime support or survey bookings.
+              {contactDeskDescription}
             </p>
             <div className="px-4 py-4 flex flex-col gap-3 font-semibold text-sm mt-2">
               <a href="tel:+971505342726" className="flex items-center gap-3 text-slate-300 hover:text-white">
@@ -333,6 +373,7 @@ export default function Header({ transparent = false }) {
 
       {/* Mobile Drawer (Slides from Right, Full Screen, Scrollable, Mobile only) */}
       <div
+        ref={mobileMenuRef}
         className={`fixed top-0 right-0 w-full h-screen bg-slate-950/98 backdrop-blur-2xl z-[100] flex flex-col transition-all duration-500 ease-in-out md:hidden ${menuOpen ? "translate-x-0 opacity-100" : "translate-x-full opacity-0 pointer-events-none"
           }`}
       >
@@ -350,65 +391,70 @@ export default function Header({ transparent = false }) {
 
         {/* Mobile Drawer Content (Scrollable) */}
         <div className="flex-1 overflow-y-auto px-6 py-8 flex flex-col gap-8">
-          {/* Section 1: Main Pages */}
+          {/* Section 1: Quick Links */}
           <div className="flex flex-col gap-4">
             <h3 className="font-oswald text-rose-500 text-xs uppercase tracking-widest font-semibold border-b border-white/10 pb-2">
-              Main Menu
+              Quick Links
             </h3>
-            <div className="flex flex-col gap-4 text-xl font-bold uppercase font-oswald">
-              <Link
-                href="/"
-                onClick={() => setMenuOpen(false)}
-                className={`transition-colors ${isActive("/") ? "text-rose-500" : "text-white"}`}
-              >
-                Home
-              </Link>
-              <Link
-                href="/about"
-                onClick={() => setMenuOpen(false)}
-                className={`transition-colors ${isActive("/about") ? "text-rose-500" : "text-white"}`}
-              >
-                About Us
-              </Link>
-              <Link
-                href="/services"
-                onClick={() => setMenuOpen(false)}
-                className={`transition-colors ${isActive("/services") ? "text-rose-500" : "text-white"}`}
-              >
-                Services
-              </Link>
-              <Link
-                href="/contact"
-                onClick={() => setMenuOpen(false)}
-                className={`transition-colors ${isActive("/contact") ? "text-rose-500" : "text-white"}`}
-              >
-                Contact Us
-              </Link>
+            <div className="flex flex-col gap-2">
+              {quickLinksPrimary.map((link) => {
+                const LinkIcon = link.icon;
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setMenuOpen(false)}
+                    className={`flex items-center gap-3 py-1.5 transition-colors ${isActive(link.href) ? "text-rose-500" : "text-slate-300 hover:text-white"}`}
+                  >
+                    <LinkIcon className="text-rose-500 text-lg shrink-0" />
+                    <span className="text-sm font-semibold">{link.label}</span>
+                  </Link>
+                );
+              })}
+              {quickLinksSecondary.map((link) => {
+                const LinkIcon = link.icon;
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setMenuOpen(false)}
+                    className={`flex items-center gap-3 py-1.5 transition-colors ${isActive(link.href) ? "text-rose-500" : "text-slate-300 hover:text-white"}`}
+                  >
+                    <LinkIcon className="text-rose-500 text-lg shrink-0" />
+                    <span className="text-sm font-semibold">{link.label}</span>
+                  </Link>
+                );
+              })}
             </div>
           </div>
 
-          {/* Section 2: Services list */}
+          {/* Section 2: Maritime Services */}
           <div className="flex flex-col gap-4">
             <h3 className="font-oswald text-rose-500 text-xs uppercase tracking-widest font-semibold border-b border-white/10 pb-2">
               Maritime Services
             </h3>
             <div className="flex flex-col gap-3">
-              <Link href="/services#surveys" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 py-1 text-slate-300 hover:text-white">
-                <LuAnchor className="text-rose-500 text-lg" />
-                <span className="text-sm font-semibold">Marine Surveys</span>
-              </Link>
-              <Link href="/services#consultancy" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 py-1 text-slate-300 hover:text-white">
-                <LuCompass className="text-rose-500 text-lg" />
-                <span className="text-sm font-semibold">Vessel Consultancy</span>
-              </Link>
-              <Link href="/services#safety" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 py-1 text-slate-300 hover:text-white">
-                <LuShieldAlert className="text-rose-500 text-lg" />
-                <span className="text-sm font-semibold">Audits & Inspections</span>
-              </Link>
-              <Link href="/services#training" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 py-1 text-slate-300 hover:text-white">
-                <LuBookOpen className="text-rose-500 text-lg" />
-                <span className="text-sm font-semibold">Maritime Training</span>
-              </Link>
+              {maritimeServices.map((service) => {
+                const ServiceIcon = service.icon;
+                const serviceHref = `/services/${service.slug}`;
+
+                return (
+                  <Link
+                    key={service.slug}
+                    href={serviceHref}
+                    onClick={closeMenu}
+                    className="group flex items-start gap-3 w-full p-2 rounded hover:bg-white/5 text-slate-300 hover:text-white transition-colors"
+                  >
+                    <ServiceIcon className="text-rose-500 text-lg mt-0.5 shrink-0 group-hover:scale-110 transition-transform" />
+                    <div className="min-w-0">
+                      <span className="text-sm font-semibold block text-white group-hover:text-rose-300 transition-colors">
+                        {service.title}
+                      </span>
+                      <span className="text-xs text-slate-400 block mt-0.5">{service.description}</span>
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
           </div>
 
@@ -417,6 +463,9 @@ export default function Header({ transparent = false }) {
             <h3 className="font-oswald text-rose-500 text-xs uppercase tracking-widest font-semibold pb-1">
               Contact Desk
             </h3>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              {contactDeskDescription}
+            </p>
             <div className="flex flex-col gap-3 text-sm text-slate-300">
               <a href="tel:+971505342726" className="flex items-center gap-3 hover:text-white">
                 <LuPhone className="text-rose-500" />
