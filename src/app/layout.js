@@ -18,7 +18,10 @@ const oswald = Oswald({
 });
 
 export const metadata = {
-  title: "PMV Maritime Solutions",
+  title: {
+    default: "Home - PMV Maritime Solutions",
+    template: "%s - PMV Maritime Solutions",
+  },
   description: "PMV Maritime operates at the intersection of technical precision and visionary management, delivering world-class marine surveys, technical vessel consultancy, audits, and professional maritime training.",
   keywords: [
     "PMV Maritime",
