@@ -107,7 +107,7 @@ export default function PopularServices() {
                     aria-label={`Learn more about ${service.name}`}
                     className="mt-auto text-secondary group-hover/card:text-white text-[12px] font-bold uppercase tracking-wider transition-all duration-300 ease-in-out inline-flex items-center gap-2 group/link"
                   >
-                    Learn More <FaArrowRight className="group-hover/link:translate-x-1 transition-transform duration-300 ease-in-out" />
+                    Learn More <span className="sr-only">about {service.name}</span> <FaArrowRight className="group-hover/link:translate-x-1 transition-transform duration-300 ease-in-out" />
                   </Link>
                 </div>
               );
