@@ -81,7 +81,7 @@ export default function Footer() {
             src={footerBg}
             alt="Footer Background Image"
             fill
-            className="object-cover object-[30%] translate-y-0 lg:translate-y-0 opacity-15 lg:opacity-100 lg:object-center overflow-visible"
+            className="object-cover object-[30%] translate-y-0 lg:translate-y-0 opacity-15 lg:opacity-100 lg:object-center"
             loading="lazy"
           />
         </div>

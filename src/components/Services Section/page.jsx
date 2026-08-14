@@ -226,6 +226,7 @@ export default function Services() {
               <div className="mt-8">
                 <Link
                   href={`/services/${activeService.slug || ""}`}
+                  aria-label={`Work together on ${activeService.name || "maritime services"}`}
                   className="group inline-flex items-center gap-4 border border-primary text-primary hover:bg-primary hover:text-white font-bold text-[14px] px-4 py-2.5 uppercase tracking-wider transition-all duration-300 w-fit cursor-pointer"
                 >
                   Let&apos;s Work Together <FaArrowRight className="group-hover:-rotate-45 transition-all duration-300 ease-in-out" />

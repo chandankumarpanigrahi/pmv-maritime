@@ -10,6 +10,9 @@ const nextConfig = {
       },
     ],
   },
+  experimental: {
+    optimizePackageImports: ['react-icons', 'lucide-react', 'driver.js', 'motion', 'react-hot-toast'],
+  },
   async redirects() {
     return [
       {
