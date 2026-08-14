@@ -19,21 +19,20 @@ export default function SessionsPage() {
   const [isTerminating, setIsTerminating] = useState(false);
   const [showClearModal, setShowClearModal] = useState(false);
   const [isClearing, setIsClearing] = useState(false);
-  const [currentSessionToken, setCurrentSessionToken] = useState("");
-
-  useEffect(() => {
+  const [currentSessionToken] = useState(() => {
     if (typeof window !== "undefined") {
       try {
         const sessionStr = localStorage.getItem("pmv_admin_session");
         if (sessionStr) {
           const parsed = JSON.parse(sessionStr);
-          setCurrentSessionToken(parsed?.sessionToken || "");
+          return parsed?.sessionToken || "";
         }
       } catch (e) {
         console.error("Error reading current session token:", e);
       }
     }
-  }, []);
+    return "";
+  });
 
   const fetchSessions = useCallback(async () => {
     try {
@@ -51,9 +50,15 @@ export default function SessionsPage() {
   }, []);
 
   useEffect(() => {
-    fetchSessions();
+    let ignore = false;
+    Promise.resolve().then(() => {
+      if (!ignore) void fetchSessions();
+    });
     const interval = setInterval(fetchSessions, 8000); // refresh every 8s
-    return () => clearInterval(interval);
+    return () => {
+      ignore = true;
+      clearInterval(interval);
+    };
   }, [fetchSessions]);
 
   const confirmTerminateSession = async () => {

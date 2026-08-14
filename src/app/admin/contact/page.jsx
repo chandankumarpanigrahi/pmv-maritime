@@ -56,7 +56,13 @@ export default function ContactSubmissionsPage() {
   }, []);
 
   useEffect(() => {
-    fetchSubmissions();
+    let ignore = false;
+    Promise.resolve().then(() => {
+      if (!ignore) fetchSubmissions();
+    });
+    return () => {
+      ignore = true;
+    };
   }, [fetchSubmissions]);
 
   // Archive or Restore submission

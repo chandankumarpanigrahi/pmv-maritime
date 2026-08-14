@@ -100,7 +100,13 @@ export default function AdminCareersPage() {
   }, []);
 
   useEffect(() => {
-    fetchCareers();
+    let ignore = false;
+    Promise.resolve().then(() => {
+      if (!ignore) fetchCareers();
+    });
+    return () => {
+      ignore = true;
+    };
   }, [fetchCareers]);
 
   // ─── Form Reset ───────────────────────────────────────────

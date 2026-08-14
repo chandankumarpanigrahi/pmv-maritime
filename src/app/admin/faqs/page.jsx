@@ -193,10 +193,13 @@ export default function FAQsPage() {
   }, []);
 
   useEffect(() => {
-    const loadFaqs = async () => {
-      await fetchFaqs();
+    let ignore = false;
+    Promise.resolve().then(() => {
+      if (!ignore) void fetchFaqs();
+    });
+    return () => {
+      ignore = true;
     };
-    loadFaqs();
   }, [fetchFaqs]);
 
   // ─── Form Handlers ───────────────────────────────────────
@@ -395,7 +398,7 @@ export default function FAQsPage() {
         type="button"
         onClick={handleStartTour}
         title="Start Page Tour"
-        className="hidden sm:inline-block fixed top-4 right-12 sm:right-52 z-31 text-primary hover:text-secondary-dark cursor-pointer"
+        className="hidden fixed top-4 right-12 sm:right-52 z-31 text-primary hover:text-secondary-dark cursor-pointer"
       >
         <LiaStreetViewSolid className="text-3xl" />
       </button>

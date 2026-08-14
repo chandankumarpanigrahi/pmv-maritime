@@ -55,7 +55,13 @@ export default function AdminServicesPage() {
   }, []);
 
   useEffect(() => {
-    fetchServices();
+    let ignore = false;
+    Promise.resolve().then(() => {
+      if (!ignore) fetchServices();
+    });
+    return () => {
+      ignore = true;
+    };
   }, [fetchServices]);
 
   // ── Archive / Restore ────────────────────────────────────────────────────

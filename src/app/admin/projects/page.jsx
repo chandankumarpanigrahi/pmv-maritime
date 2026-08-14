@@ -58,7 +58,13 @@ export default function AdminProjectsPage() {
   }, []);
 
   useEffect(() => {
-    fetchProjects();
+    let ignore = false;
+    Promise.resolve().then(() => {
+      if (!ignore) fetchProjects();
+    });
+    return () => {
+      ignore = true;
+    };
   }, [fetchProjects]);
 
   // ── Archive / Restore ────────────────────────────────────────────────────

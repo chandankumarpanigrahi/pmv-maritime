@@ -171,9 +171,9 @@ export default function DataTable({
   return (
     <div className="w-full space-y-4">
       {/* Top Filter & Action Bar */}
-      <div className="bg-white border border-gray-200 p-4 shadow-xs flex flex-col 2xl:flex-row gap-3 2xl:gap-4 justify-between items-stretch 2xl:items-center">
+      <div className="bg-white border border-gray-200 p-4 shadow-xs flex flex-col md:flex-row md:flex-wrap gap-3 md:gap-4 justify-between items-stretch md:items-center">
         {/* Search & Filter Controls */}
-        <div className="flex flex-col sm:flex-row gap-2.5 items-center w-full 2xl:w-auto">
+        <div className="flex flex-col sm:flex-row gap-2.5 items-center w-full md:w-auto">
           {/* Search Bar */}
           <div className="relative w-full sm:w-60">
             <input
@@ -217,7 +217,7 @@ export default function DataTable({
         </div>
 
         {/* Action Controls: Show Entries -> Rearrange -> Refresh -> CSV Export */}
-        <div id="datatable-top-controls" className="flex flex-wrap items-center gap-2.5 w-full 2xl:w-auto justify-center sm:justify-end">
+        <div id="datatable-top-controls" className="md:ms-auto flex flex-wrap items-center gap-2.5 w-full md:w-auto justify-center sm:justify-end">
           {/* Rows selector */}
           {!isReorderMode && (
             <div id="datatable-page-size" className="flex items-center gap-2 text-xs text-gray-500 font-bold">

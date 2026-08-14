@@ -78,7 +78,13 @@ export default function MasterPage() {
   }, []);
 
   useEffect(() => {
-    fetchMasterRecords();
+    let ignore = false;
+    Promise.resolve().then(() => {
+      if (!ignore) void fetchMasterRecords();
+    });
+    return () => {
+      ignore = true;
+    };
   }, [fetchMasterRecords]);
 
   // Reset Form

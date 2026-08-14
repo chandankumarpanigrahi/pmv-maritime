@@ -35,9 +35,15 @@ export default function NotificationsPage() {
   }, []);
 
   useEffect(() => {
-    fetchNotifications();
+    let ignore = false;
+    Promise.resolve().then(() => {
+      if (!ignore) void fetchNotifications();
+    });
     const interval = setInterval(fetchNotifications, 10000);
-    return () => clearInterval(interval);
+    return () => {
+      ignore = true;
+      clearInterval(interval);
+    };
   }, [fetchNotifications]);
 
   const markAsRead = async (id) => {

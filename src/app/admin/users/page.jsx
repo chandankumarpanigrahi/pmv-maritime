@@ -94,7 +94,13 @@ export default function UsersPage() {
   }, []);
 
   useEffect(() => {
-    fetchUsersData();
+    let ignore = false;
+    Promise.resolve().then(() => {
+      if (!ignore) void fetchUsersData();
+    });
+    return () => {
+      ignore = true;
+    };
   }, [fetchUsersData]);
 
   // Form helpers
