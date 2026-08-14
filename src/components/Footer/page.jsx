@@ -202,22 +202,22 @@ export default function Footer() {
                   ) : (
                     <>
                       <li className="">
-                        <Link href="/services/consultancy" className="text-sm font-semibold text-secondary-dark w-full block hover:text-primary-hover transition-colors duration-200">
+                        <Link href="/services/marine-consultancy" className="text-sm font-semibold text-secondary-dark w-full block hover:text-primary-hover transition-colors duration-200">
                           <ComesInGoesOutUnderline direction="left">Maritime Consultancy</ComesInGoesOutUnderline>
                         </Link>
                       </li>
                       <li className="">
-                        <Link href="/services/training" className="text-sm font-semibold text-secondary-dark w-full block hover:text-primary-hover transition-colors duration-200">
+                        <Link href="/services/maritime-training" className="text-sm font-semibold text-secondary-dark w-full block hover:text-primary-hover transition-colors duration-200">
                           <ComesInGoesOutUnderline direction="left">Maritime Training</ComesInGoesOutUnderline>
                         </Link>
                       </li>
                       <li className="">
-                        <Link href="/services/fleet" className="text-sm font-semibold text-secondary-dark w-full block hover:text-primary-hover transition-colors duration-200">
+                        <Link href="/services/fleet-management" className="text-sm font-semibold text-secondary-dark w-full block hover:text-primary-hover transition-colors duration-200">
                           <ComesInGoesOutUnderline direction="left">Fleet Management</ComesInGoesOutUnderline>
                         </Link>
                       </li>
                       <li className="">
-                        <Link href="/services/crew" className="text-sm font-semibold text-secondary-dark w-full block hover:text-primary-hover transition-colors duration-200">
+                        <Link href="/services/crew-management" className="text-sm font-semibold text-secondary-dark w-full block hover:text-primary-hover transition-colors duration-200">
                           <ComesInGoesOutUnderline direction="left">Crew Management</ComesInGoesOutUnderline>
                         </Link>
                       </li>
@@ -227,7 +227,7 @@ export default function Footer() {
                         </Link>
                       </li>
                       <li className="">
-                        <Link href="/services/shipbuilding" className="text-sm font-semibold text-secondary-dark w-full block hover:text-primary-hover transition-colors duration-200">
+                        <Link href="/services/ship-building" className="text-sm font-semibold text-secondary-dark w-full block hover:text-primary-hover transition-colors duration-200">
                           <ComesInGoesOutUnderline direction="left">Shipbuilding</ComesInGoesOutUnderline>
                         </Link>
                       </li>

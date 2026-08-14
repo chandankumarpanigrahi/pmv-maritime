@@ -10,6 +10,35 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/services/consultancy',
+        destination: '/services/marine-consultancy',
+        permanent: true,
+      },
+      {
+        source: '/services/training',
+        destination: '/services/maritime-training',
+        permanent: true,
+      },
+      {
+        source: '/services/fleet',
+        destination: '/services/fleet-management',
+        permanent: true,
+      },
+      {
+        source: '/services/crew',
+        destination: '/services/crew-management',
+        permanent: true,
+      },
+      {
+        source: '/services/shipbuilding',
+        destination: '/services/ship-building',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
