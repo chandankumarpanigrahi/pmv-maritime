@@ -18,9 +18,10 @@ const oswald = Oswald({
 });
 
 export const metadata = {
+  metadataBase: new URL("https://pmvmaritime.com"),
   title: {
-    default: "Home - PMV Maritime Solutions",
-    template: "%s - PMV Maritime Solutions",
+    default: "PMV Maritime Solutions | Integrated Marine & Vessel Services",
+    template: "%s | PMV Maritime Solutions",
   },
   description: "Delivering integrated solutions across vessel management, crewing, marine consultancy, shipbuilding, port operations, and technical management.",
   keywords: [
@@ -38,11 +39,23 @@ export const metadata = {
     'Pre-purchase Vessel Assessments'
   ],
   authors: [{ name: "PMV Maritime Solutions" }],
+  publisher: "PMV Maritime Solutions",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
+  alternates: {
+    canonical: "https://pmvmaritime.com/",
+  },
   openGraph: {
-    title: "PMV Maritime | Integrated Maritime Solutions",
+    title: "PMV Maritime Solutions | Integrated Marine & Vessel Services",
     description: "Delivering integrated solutions across vessel management, crewing, marine consultancy, shipbuilding, port operations, and technical management.",
-    url: "https://www.pmvmaritime.com",
-    siteName: "PMV Maritime",
+    url: "https://pmvmaritime.com",
+    siteName: "PMV Maritime Solutions",
     locale: "en_US",
     type: "website",
   },
