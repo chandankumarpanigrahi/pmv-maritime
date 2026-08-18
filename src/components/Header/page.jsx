@@ -134,12 +134,14 @@ export default function Header({ transparent = false }) {
       >
         <div className="container max-w-7xl mx-auto px-4 md:px-0 flex flex-row justify-between items-center">
           {/* Logo Toggle */}
-          <Link href="/">
+          <Link href="/" className="flex flex-row justify-center items-center">
             <Image
               src={isTransparentMode ? logoLight : logoDark}
-              alt="logo"
+              alt="PMV Maritime Solutions Logo"
+              priority
               className="w-[40px] md:w-[70px] transition-all duration-300"
             />
+            {/* <p className={`ps-2 text-3xl font-bold ${isTransparentMode ? "text-white" : "text-[#0f387b]"}`}>PMV Maritime <br /> Solutions</p> */}
           </Link>
 
           {/* Desktop Navigation */}
@@ -241,15 +243,16 @@ export default function Header({ transparent = false }) {
             </button>
           </div>
         </div>
-      </header>
+      </header >
 
       {/* Top-down Animated Mega Menu Overlay (Desktop only) */}
-      <div
+      < div
         ref={menuRef}
         className={`hidden md:block fixed left-0 w-full text-white transition-all duration-500 ease-in-out transform md:z-100000 ${menuOpen
           ? "translate-y-0 opacity-100 pointer-events-auto"
           : "-translate-y-full opacity-0 pointer-events-none"
-          } ${scrolled ? "top-[111px]" : ""}`}
+          } ${scrolled ? "top-[111px]" : ""}`
+        }
       >
         <div className="container max-w-7xl mx-auto grid grid-cols-3 border-b shadow-2xl border-white/15 backdrop-blur-xl bg-slate-950/90">
           {/* Column 1: Services Directory */}
@@ -369,16 +372,16 @@ export default function Header({ transparent = false }) {
             </div>
           </div>
         </div>
-      </div>
+      </div >
 
       {/* Mobile Drawer (Slides from Right, Full Screen, Scrollable, Mobile only) */}
-      <div
+      < div
         ref={mobileMenuRef}
         className={`fixed top-0 right-0 w-full h-screen bg-slate-950/98 backdrop-blur-2xl z-[100] flex flex-col transition-all duration-500 ease-in-out md:hidden ${menuOpen ? "translate-x-0 opacity-100" : "translate-x-full opacity-0 pointer-events-none"
           }`}
       >
         {/* Mobile Drawer Header */}
-        <div className="flex justify-between items-center px-6 py-5 border-b border-white/10">
+        < div className="flex justify-between items-center px-6 py-5 border-b border-white/10" >
           <Image src={logoLight} alt="logo" className="w-[60px]" />
           <button
             onClick={() => setMenuOpen(false)}
@@ -387,12 +390,12 @@ export default function Header({ transparent = false }) {
           >
             <LuX className="text-2xl" />
           </button>
-        </div>
+        </div >
 
         {/* Mobile Drawer Content (Scrollable) */}
-        <div className="flex-1 overflow-y-auto px-6 py-8 flex flex-col gap-8">
+        < div className="flex-1 overflow-y-auto px-6 py-8 flex flex-col gap-8" >
           {/* Section 1: Quick Links */}
-          <div className="flex flex-col gap-4">
+          < div className="flex flex-col gap-4" >
             <h3 className="font-oswald text-rose-500 text-xs uppercase tracking-widest font-semibold border-b border-white/10 pb-2">
               Quick Links
             </h3>
@@ -426,10 +429,10 @@ export default function Header({ transparent = false }) {
                 );
               })}
             </div>
-          </div>
+          </div >
 
           {/* Section 2: Maritime Services */}
-          <div className="flex flex-col gap-4">
+          < div className="flex flex-col gap-4" >
             <h3 className="font-oswald text-rose-500 text-xs uppercase tracking-widest font-semibold border-b border-white/10 pb-2">
               Maritime Services
             </h3>
@@ -456,10 +459,10 @@ export default function Header({ transparent = false }) {
                 );
               })}
             </div>
-          </div>
+          </div >
 
           {/* Section 3: Contact */}
-          <div className="flex flex-col gap-4 mt-auto border-t border-white/10 pt-6">
+          < div className="flex flex-col gap-4 mt-auto border-t border-white/10 pt-6" >
             <h3 className="font-oswald text-rose-500 text-xs uppercase tracking-widest font-semibold pb-1">
               Contact Desk
             </h3>
@@ -501,9 +504,9 @@ export default function Header({ transparent = false }) {
                 Our Services
               </Link>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
+          </div >
+        </div >
+      </div >
+    </div >
   );
 }

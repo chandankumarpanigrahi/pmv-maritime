@@ -28,21 +28,40 @@ export default function Maintenance() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  const handlePasswordSubmit = (e) => {
+  const handlePasswordSubmit = async (e) => {
     e.preventDefault();
-    if (password === "itspmv@2026") {
-      // Bypass maintenance mode for 20 minutes
-      const expiry = Date.now() + 20 * 60 * 1000;
+    setError("");
+
+    let matchedMinutes = 0;
+
+    // First try fetching dynamic bypass passwords from API
+    try {
+      const res = await fetch("/api/settings/maintenance");
+      if (res.ok) {
+        const data = await res.json();
+        const bypasses = data.bypassPasswords || [];
+        const match = bypasses.find((item) => item.password === password);
+        if (match) {
+          matchedMinutes = parseInt(match.durationMinutes, 10) || 20;
+        }
+      }
+    } catch (err) {
+      console.error("Error fetching dynamic maintenance bypass:", err);
+    }
+
+    // Fallback preset checks if not matched dynamically
+    if (!matchedMinutes) {
+      if (password === "itspmv@2026") {
+        matchedMinutes = 20; // 20 minutes
+      } else if (password === "samir@2026" || password === "chandan@2026") {
+        matchedMinutes = 1200; // 20 hours
+      }
+    }
+
+    if (matchedMinutes > 0) {
+      const expiry = Date.now() + matchedMinutes * 60 * 1000;
       localStorage.setItem("maintenance_bypass_expiry", expiry.toString());
       setShowModal(false);
-      // Reload page to reflect state changes and render normal website
-      window.location.reload();
-    } else if (password === "samir@2026" || password === "chandan@2026") {
-      // Bypass maintenance mode for 20 hours
-      const expiry = Date.now() + 20 * 60 * 60 * 1000;
-      localStorage.setItem("maintenance_bypass_expiry", expiry.toString());
-      setShowModal(false);
-      // Reload page to reflect state changes and render normal website
       window.location.reload();
     } else {
       setError("Incorrect password. Please try again.");

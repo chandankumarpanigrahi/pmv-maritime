@@ -29,13 +29,13 @@ import locationPin from "../../../public/assets/images/location-pin.png";
 import bannerBg from "../../../public/assets/images/map-bg.png";
 
 // City
-import cityImage0 from "../../../public/assets/city/city-photo-0.png";
-import cityImage1 from "../../../public/assets/city/city-photo-1.png";
-import cityImage2 from "../../../public/assets/city/city-photo-2.png";
-import cityImage3 from "../../../public/assets/city/city-photo-3.png";
-import cityImage4 from "../../../public/assets/city/city-photo-4.png";
-import cityImage5 from "../../../public/assets/city/city-photo-5.png";
-import cityImage6 from "../../../public/assets/city/city-photo-6.png";
+import dubai from "../../../public/assets/city/dubai.png";
+import lagos from "../../../public/assets/city/lagos.png";
+import bbsr from "../../../public/assets/city/bbsr.png";
+import london from "../../../public/assets/city/london.png";
+import rotterdam from "../../../public/assets/city/rotterdam.png";
+import toronto from "../../../public/assets/city/toronto.png";
+import melbourne from "../../../public/assets/city/melbourne.png";
 
 const offices = [
   {
@@ -44,7 +44,7 @@ const offices = [
     address: "IFZA Properties, Dubai Silicon Oasis, UAE",
     phone: "+971 50 534 2726",
     email: "info@pmvmaritime.com",
-    image: cityImage4,
+    image: dubai,
     isHQ: true,
   },
   {
@@ -53,7 +53,7 @@ const offices = [
     address: "Plot 1649, Olosa Street, Victoria Island, Lagos",
     phone: "+234 1 461 4100",
     email: "africa@pmvmaritime.com",
-    image: cityImage3,
+    image: lagos,
   },
   {
     city: "Bhubaneswar",
@@ -61,7 +61,7 @@ const offices = [
     address: "The Maritime Hub, Sai Vihar, Bhubaneswar, Odisha 751007",
     phone: "+91 674 254 3000",
     email: "india@pmvmaritime.com",
-    image: cityImage2,
+    image: bbsr,
   },
   {
     city: "London",
@@ -69,7 +69,7 @@ const offices = [
     address: "30 St Mary Axe, London EC3A 8BF",
     phone: "+44 20 722 7000",
     email: "uk@pmvmaritime.com",
-    image: cityImage1,
+    image: london,
   },
   {
     city: "Rotterdam",
@@ -77,7 +77,7 @@ const offices = [
     address: "Wilhelminakade 123, 3072 AP Rotterdam",
     phone: "+31 10 441 5678",
     email: "netherlands@pmvmaritime.com",
-    image: cityImage5,
+    image: rotterdam,
   },
   {
     city: "Toronto",
@@ -85,15 +85,15 @@ const offices = [
     address: "100 King Street West, Toronto, ON M5X 1B1",
     phone: "+1 416 862 7000",
     email: "canada@pmvmaritime.com",
-    image: cityImage0,
+    image: toronto,
   },
   {
-    city: "Malvern",
+    city: "Melbourne",
     country: "AUSTRALIA",
-    address: "Level 15, 60 Margaret St, Malvern, NSW 2000",
-    phone: "+61 2 9056 4070",
+    address: "Level 15, 120 Collins Street, Melbourne, VIC 3000",
+    phone: "+61 3 9090 8900",
     email: "australia@pmvmaritime.com",
-    image: cityImage6,
+    image: melbourne,
   },
 ];
 
@@ -278,13 +278,13 @@ export default function Contact() {
 
                   {/* Pins & Tooltips */}
                   {[
-                    { id: "canada", city: "Toronto", country: "Canada", top: "20%", left: "13%", image: cityImage0 },
-                    { id: "uk", city: "London", country: "UK", top: "25%", left: "46.2%", image: cityImage1 },
-                    { id: "india", city: "Bhubaneswar", country: "India", top: "46%", left: "69%", image: cityImage2 },
-                    { id: "lagos", city: "Lagos", country: "Africa (Nigeria)", top: "52%", left: "47%", image: cityImage3 },
-                    { id: "uae", city: "Dubai", country: "UAE", top: "40%", left: "61%", image: cityImage4, isHQ: true },
-                    { id: "netherlands", city: "Rotterdam", country: "Netherlands", top: "30%", left: "52.5%", image: cityImage5 },
-                    { id: "australia", city: "Malvern", country: "Australia", top: "71%", left: "86%", image: cityImage6 }
+                    { id: "canada", city: "Toronto", country: "Canada", top: "20%", left: "13%", image: toronto },
+                    { id: "uk", city: "London", country: "UK", top: "25%", left: "46.2%", image: london },
+                    { id: "india", city: "Bhubaneswar", country: "India", top: "46%", left: "69%", image: bbsr },
+                    { id: "lagos", city: "Lagos", country: "Africa (Nigeria)", top: "52%", left: "47%", image: lagos },
+                    { id: "uae", city: "Dubai", country: "UAE", top: "40%", left: "61%", image: dubai, isHQ: true },
+                    { id: "netherlands", city: "Rotterdam", country: "Netherlands", top: "30%", left: "52.5%", image: rotterdam },
+                    { id: "australia", city: "Melbourne", country: "Australia", top: "71%", left: "86%", image: melbourne }
                   ].map((loc) => (
                     <div
                       key={loc.id}

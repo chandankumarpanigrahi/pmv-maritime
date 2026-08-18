@@ -24,7 +24,6 @@ import brandLogo15 from "../../../public/assets/brands/brand_15.png"
 import brandLogo16 from "../../../public/assets/brands/brand_16.png"
 import brandLogo17 from "../../../public/assets/brands/brand_17.png"
 import brandLogo18 from "../../../public/assets/brands/brand_18.png"
-import ContactUs from "../Contact Us/page";
 
 const brandLogos = [
   brandLogo1, brandLogo2, brandLogo3, brandLogo4, brandLogo5, brandLogo6,
@@ -95,7 +94,6 @@ export default function Accreditation() {
           </div>
         </div>
       </div>
-      <ContactUs />
     </>
   );
 }

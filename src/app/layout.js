@@ -1,20 +1,22 @@
 import { Nunito_Sans, Oswald } from "next/font/google";
 import "./globals.css";
 import ClientLayout from "../components/ClientLayout";
+import { getMaintenanceStatus } from "@/lib/maintenance";
 
-export const MAINTENANCE_MODE = false;
-export const SHOW_LOADER = true;
+export const SHOW_LOADER = false;
 
 const nunitoSans = Nunito_Sans({
   variable: "--font-nunito-sans",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "800"],
+  display: "swap",
 });
 
 const oswald = Oswald({
   variable: "--font-oswald",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
 });
 
 export const metadata = {
@@ -96,7 +98,10 @@ const jsonLd = {
   ]
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const maintenanceData = await getMaintenanceStatus();
+  const maintenanceMode = Boolean(maintenanceData?.isEnabled);
+
   return (
     <html
       lang="en"
@@ -109,7 +114,7 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body className="flex flex-col relative">
-        <ClientLayout maintenanceMode={MAINTENANCE_MODE} showLoader={SHOW_LOADER}>
+        <ClientLayout maintenanceMode={maintenanceMode} showLoader={SHOW_LOADER}>
           {children}
         </ClientLayout>
       </body>

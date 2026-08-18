@@ -15,6 +15,7 @@ import {
   LuX,
   LuPlus,
   LuCheck,
+  LuWrench,
 } from "react-icons/lu";
 
 export default function MasterPage() {
@@ -27,6 +28,195 @@ export default function MasterPage() {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  // Dynamic Maintenance Mode state for Master Settings page
+  const [maintenanceModeLive, setMaintenanceModeLive] = useState(false);
+  const [bypassPasswordsList, setBypassPasswordsList] = useState([]);
+  const [isSavingMaintenance, setIsSavingMaintenance] = useState(false);
+  const [maintenanceFetchLoading, setMaintenanceFetchLoading] = useState(false);
+
+  // Bypass Password Form State (Left Panel)
+  const [bypassFormLabel, setBypassFormLabel] = useState("");
+  const [bypassFormPassword, setBypassFormPassword] = useState("");
+  const [bypassFormDuration, setBypassFormDuration] = useState("20");
+  const [editingBypassIndex, setEditingBypassIndex] = useState(null);
+
+  const fetchMaintenanceSystemInfo = useCallback(async () => {
+    setMaintenanceFetchLoading(true);
+    try {
+      const res = await fetch("/api/settings/maintenance", { cache: "no-store" });
+      if (res.ok) {
+        const data = await res.json();
+        setMaintenanceModeLive(Boolean(data.isEnabled));
+        if (Array.isArray(data.bypassPasswords)) {
+          setBypassPasswordsList(data.bypassPasswords);
+        }
+      }
+    } catch (err) {
+      console.error("Error fetching system maintenance info:", err);
+      toast.error("Failed to load maintenance mode configuration.");
+    } finally {
+      setMaintenanceFetchLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (activeTab === "system") {
+      void fetchMaintenanceSystemInfo();
+    }
+  }, [activeTab, fetchMaintenanceSystemInfo]);
+
+  const handleToggleLiveMaintenance = async (targetState) => {
+    setIsSavingMaintenance(true);
+    try {
+      const res = await fetch("/api/settings/maintenance", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          isEnabled: targetState,
+          bypassPasswords: bypassPasswordsList,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to update maintenance mode.");
+      }
+
+      setMaintenanceModeLive(targetState);
+      if (targetState) {
+        toast.error("Maintenance Mode turned ON");
+      } else {
+        toast.success("Maintenance Mode turned OFF");
+      }
+    } catch (err) {
+      toast.error(err.message || "Failed to update maintenance mode.");
+    } finally {
+      setIsSavingMaintenance(false);
+    }
+  };
+
+  const handleSaveBypassPasswords = async () => {
+    setIsSavingMaintenance(true);
+    try {
+      const res = await fetch("/api/settings/maintenance", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          isEnabled: maintenanceModeLive,
+          bypassPasswords: bypassPasswordsList,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to save bypass configuration.");
+      }
+
+      toast.success("Bypass passwords and session settings saved successfully!");
+    } catch (err) {
+      toast.error(err.message || "Failed to save settings.");
+    } finally {
+      setIsSavingMaintenance(false);
+    }
+  };
+
+  const handleBypassPasswordChange = (index, field, value) => {
+    const updated = [...bypassPasswordsList];
+    updated[index] = { ...updated[index], [field]: value };
+    setBypassPasswordsList(updated);
+  };
+
+  const resetBypassForm = () => {
+    setBypassFormLabel("");
+    setBypassFormPassword("");
+    setBypassFormDuration("20");
+    setEditingBypassIndex(null);
+  };
+
+  const handleSaveBypassPasswordSubmit = async (e) => {
+    e.preventDefault();
+    if (!bypassFormLabel.trim() || !bypassFormPassword.trim()) {
+      toast.error("Label and Password fields are required.");
+      return;
+    }
+
+    const durationNum = parseInt(bypassFormDuration, 10) || 20;
+    const newEntry = {
+      label: bypassFormLabel.trim(),
+      password: bypassFormPassword.trim(),
+      durationMinutes: durationNum,
+    };
+
+    let updatedList = [...bypassPasswordsList];
+    if (editingBypassIndex !== null && editingBypassIndex >= 0) {
+      updatedList[editingBypassIndex] = newEntry;
+    } else {
+      updatedList.push(newEntry);
+    }
+
+    setIsSavingMaintenance(true);
+    try {
+      const res = await fetch("/api/settings/maintenance", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          isEnabled: maintenanceModeLive,
+          bypassPasswords: updatedList,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to save bypass password.");
+      }
+
+      setBypassPasswordsList(updatedList);
+      toast.success(editingBypassIndex !== null ? "Bypass password updated!" : "New bypass password added!");
+      resetBypassForm();
+    } catch (err) {
+      toast.error(err.message || "Failed to save bypass password.");
+    } finally {
+      setIsSavingMaintenance(false);
+    }
+  };
+
+  const handleEditBypassItem = (item, index) => {
+    setBypassFormLabel(item.label || "");
+    setBypassFormPassword(item.password || "");
+    setBypassFormDuration(item.durationMinutes ? item.durationMinutes.toString() : "20");
+    setEditingBypassIndex(index);
+  };
+
+  const handleDeleteBypassItem = async (indexToDelete) => {
+    const updatedList = bypassPasswordsList.filter((_, idx) => idx !== indexToDelete);
+    setIsSavingMaintenance(true);
+    try {
+      const res = await fetch("/api/settings/maintenance", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          isEnabled: maintenanceModeLive,
+          bypassPasswords: updatedList,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to delete bypass password.");
+      }
+
+      setBypassPasswordsList(updatedList);
+      toast.success("Bypass password deleted successfully.");
+      if (editingBypassIndex === indexToDelete) {
+        resetBypassForm();
+      }
+    } catch (err) {
+      toast.error(err.message || "Failed to delete bypass password.");
+    } finally {
+      setIsSavingMaintenance(false);
+    }
+  };
 
   // Form State: Name & Status
   const [name, setName] = useState("");
@@ -268,6 +458,7 @@ export default function MasterPage() {
     { key: "projects", label: "Projects Master", icon: LuFolderOpen },
     { key: "contact", label: "Contact Form Master", icon: LuMail },
     { key: "careers", label: "Careers Master", icon: LuBriefcaseBusiness },
+    { key: "system", label: "System Maintenance", icon: LuWrench },
   ];
 
   // ── DataTable Columns ────────────────────────────────────────────────────
@@ -347,110 +538,317 @@ export default function MasterPage() {
         </div>
       </div>
 
-      {/* ═══════════════════════════════════════════════════
-          MAIN CONTENT GRID (Form Left + DataTable Right)
-         ═══════════════════════════════════════════════════ */}
-      <div className="flex flex-col xl:flex-row gap-5">
-        {/* ─── LEFT PANEL: Add / Edit Form (Only Name & Status) ─── */}
-        <div className="w-full xl:w-[360px] xl:min-w-[360px] flex-shrink-0">
-          <div className="bg-white border border-gray-200 shadow-xs">
-            <div className="px-5 py-4 border-b border-gray-200 bg-slate-50 flex items-center justify-between">
-              <h2 className="font-oswald text-lg font-bold text-secondary uppercase tracking-wide">
-                {editingId ? "Edit Record" : "Add Record"}
-                <span className="text-primary">.</span>
-              </h2>
-              {editingId && (
-                <button
-                  onClick={resetForm}
-                  className="p-1.5 text-gray-400 hover:text-primary transition-colors cursor-pointer"
-                  title="Cancel Edit"
-                >
-                  <LuX className="text-lg" />
-                </button>
-              )}
+
+      {activeTab === "system" ? (
+        <div className="space-y-5">
+          {/* Top Status Toggle Card */}
+          <div className="bg-white border border-gray-200 shadow-xs p-3 flex items-center justify-between">
+            <div className="space-y-0">
+              <div className="flex items-center gap-2">
+                <span className={`w-2 h-2 rounded-full ${maintenanceModeLive ? "bg-amber-500 animate-pulse" : "bg-green-500"}`}></span>
+                <h3 className="text-xs font-bold text-gray-900 uppercase tracking-wider">
+                  Site Status:
+                </h3>
+              </div>
+              <p className="text-md font-bold">
+                {maintenanceModeLive ? (<span className="text-amber-600">UNDER MAINTENANCE</span>) : (<span className="text-green-500">LIVE & ONLINE</span>)}
+              </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="p-5 space-y-4">
-              {/* Name Field */}
-              <div>
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-1.5">
-                  Name <span className="text-primary">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Enter name..."
-                  className="w-full bg-slate-50 border border-gray-200 focus:border-secondary focus:ring-1 focus:ring-secondary outline-none px-4 py-2.5 text-sm text-gray-900 font-medium placeholder-gray-400"
-                  required
-                />
-              </div>
+            <button
+              type="button"
+              disabled={isSavingMaintenance || maintenanceFetchLoading}
+              onClick={() => handleToggleLiveMaintenance(!maintenanceModeLive)}
+              className={`relative inline-flex h-8 w-18 shrink-0 cursor-pointer border-4 border-transparent transition-colors duration-200 ease-in-out focus:outline-none disabled:opacity-50 ${maintenanceModeLive ? "bg-amber-500" : "bg-green-500"
+                }`}
+            >
+              <span
+                className={`pointer-events-none inline-block h-6 w-6 transform bg-white shadow ring-0 transition duration-200 ease-in-out ${maintenanceModeLive ? "translate-x-10" : "translate-x-0"
+                  }`}
+              />
+            </button>
+          </div>
 
-              {/* Status Selector */}
-              <div>
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-1.5">
-                  Status
-                </label>
-                <select
-                  value={status}
-                  onChange={(e) => setStatus(e.target.value)}
-                  className="w-full bg-slate-50 border border-gray-200 focus:border-secondary outline-none px-4 py-2.5 text-sm text-gray-900 font-medium cursor-pointer"
-                >
-                  <option value="Active">Active</option>
-                  <option value="Inactive">Inactive</option>
-                </select>
-              </div>
+          {/* 2-Column Section: Left Form + Right Table */}
+          <div className="flex flex-col xl:flex-row gap-5">
+            {/* ─── LEFT PANEL: Add / Edit Bypass Password Form ─── */}
+            <div className="w-full xl:w-[360px] xl:min-w-[360px] flex-shrink-0">
+              <div className="bg-white border border-gray-200 shadow-xs">
+                <div className="px-5 py-4 border-b border-gray-200 bg-slate-50 flex items-center justify-between">
+                  <h2 className="font-oswald text-lg font-bold text-secondary uppercase tracking-wide">
+                    {editingBypassIndex !== null ? "Edit Password" : "Add Password"}
+                    <span className="text-primary">.</span>
+                  </h2>
+                  {editingBypassIndex !== null && (
+                    <button
+                      onClick={resetBypassForm}
+                      className="p-1.5 text-gray-400 hover:text-primary transition-colors cursor-pointer"
+                      title="Cancel Edit"
+                    >
+                      <LuX className="text-lg" />
+                    </button>
+                  )}
+                </div>
 
-              {/* Submit / Clear Buttons */}
-              <div className="flex items-center gap-3 pt-2">
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="flex-1 px-4 py-2.5 bg-primary hover:bg-primary-hover text-white font-bold text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50"
-                >
-                  <LuPlus className="text-sm" />
-                  <span>
-                    {isSubmitting
-                      ? editingId
-                        ? "Updating..."
-                        : "Adding..."
-                      : editingId
-                        ? "Update Record"
-                        : "Add Record"}
+                <form onSubmit={handleSaveBypassPasswordSubmit} className="p-5 space-y-4">
+                  {/* Label Field */}
+                  <div>
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-1.5">
+                      Role / Description <span className="text-primary">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={bypassFormLabel}
+                      onChange={(e) => setBypassFormLabel(e.target.value)}
+                      placeholder="e.g. Samir Admin Access"
+                      className="w-full bg-slate-50 border border-gray-200 focus:border-secondary focus:ring-1 focus:ring-secondary outline-none px-4 py-2.5 text-sm text-gray-900 font-medium placeholder-gray-400"
+                      required
+                    />
+                  </div>
+
+                  {/* Password Field */}
+                  <div>
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-1.5">
+                      Bypass Password <span className="text-primary">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={bypassFormPassword}
+                      onChange={(e) => setBypassFormPassword(e.target.value)}
+                      placeholder="e.g. samir@2026"
+                      className="w-full bg-slate-50 border border-gray-200 focus:border-secondary focus:ring-1 focus:ring-secondary outline-none px-4 py-2.5 text-sm font-mono font-bold text-gray-900 placeholder-gray-400"
+                      required
+                    />
+                  </div>
+
+                  {/* Duration Field */}
+                  <div>
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-1.5">
+                      Bypass Duration (Minutes) <span className="text-primary">*</span>
+                    </label>
+                    <input
+                      type="number"
+                      value={bypassFormDuration}
+                      onChange={(e) => setBypassFormDuration(e.target.value)}
+                      placeholder="e.g. 20 for 20 mins, 1200 for 20 hrs"
+                      className="w-full bg-slate-50 border border-gray-200 focus:border-secondary focus:ring-1 focus:ring-secondary outline-none px-4 py-2.5 text-sm text-gray-900 font-medium placeholder-gray-400"
+                      required
+                      min="1"
+                    />
+                    <p className="text-[11px] text-gray-400 mt-1 font-mono">
+                      {parseInt(bypassFormDuration || 0, 10) >= 60
+                        ? `(~${(parseInt(bypassFormDuration || 0, 10) / 60).toFixed(1)} Hours)`
+                        : `(${bypassFormDuration || 0} Minutes)`}
+                    </p>
+                  </div>
+
+                  {/* Submit / Clear Buttons */}
+                  <div className="flex items-center gap-3 pt-2">
+                    <button
+                      type="submit"
+                      disabled={isSavingMaintenance}
+                      className="flex-1 px-4 py-2.5 bg-primary hover:bg-primary-hover text-white font-bold text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50"
+                    >
+                      <LuPlus className="text-sm" />
+                      <span>
+                        {isSavingMaintenance
+                          ? editingBypassIndex !== null
+                            ? "Updating..."
+                            : "Adding..."
+                          : editingBypassIndex !== null
+                            ? "Update Password"
+                            : "Add Password"}
+                      </span>
+                    </button>
+                    {bypassFormLabel && (
+                      <button
+                        type="button"
+                        onClick={resetBypassForm}
+                        disabled={isSavingMaintenance}
+                        className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-gray-600 font-bold text-xs uppercase tracking-wider transition-all cursor-pointer disabled:opacity-50"
+                      >
+                        Clear
+                      </button>
+                    )}
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            {/* ─── RIGHT PANEL: Tabular Form of Configured Bypass Passwords ─── */}
+            <div className="flex-1 min-w-0">
+              <div className="bg-white border border-gray-200 shadow-xs">
+                <div className="px-5 py-4 border-b border-gray-200 bg-slate-50 flex items-center justify-between">
+                  <h3 className="font-oswald text-lg font-bold text-secondary uppercase tracking-wide">
+                    Configured Bypass Passwords<span className="text-primary">.</span>
+                  </h3>
+                  <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                    Total: {bypassPasswordsList.length} Entries
                   </span>
-                </button>
-                {name && (
+                </div>
+
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr className="bg-slate-100/70 border-b border-gray-200 text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+                        <th className="px-4 py-3">Role / Label</th>
+                        <th className="px-4 py-3">Password</th>
+                        <th className="px-4 py-3">Session Duration</th>
+                        <th className="px-4 py-3 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100 text-xs">
+                      {bypassPasswordsList.length === 0 ? (
+                        <tr>
+                          <td colSpan="4" className="px-4 py-8 text-center text-gray-400 font-medium">
+                            No custom bypass passwords configured.
+                          </td>
+                        </tr>
+                      ) : (
+                        bypassPasswordsList.map((item, idx) => {
+                          const mins = parseInt(item.durationMinutes, 10) || 20;
+                          const durationText = mins >= 60 ? `${(mins / 60).toFixed(1)} Hours (${mins} mins)` : `${mins} Mins`;
+                          return (
+                            <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                              <td className="px-4 py-3 font-bold text-gray-900">{item.label || "Bypass Access"}</td>
+                              <td className="px-4 py-3 font-mono font-bold text-secondary">{item.password}</td>
+                              <td className="px-4 py-3 font-mono text-gray-600">
+                                <span className="inline-block px-2 py-0.5 bg-slate-100 border border-slate-200 rounded font-semibold text-[11px]">
+                                  {durationText}
+                                </span>
+                              </td>
+                              <td className="px-4 py-3 text-right">
+                                <div className="flex items-center justify-end gap-2">
+                                  <button
+                                    onClick={() => handleEditBypassItem(item, idx)}
+                                    className="p-1.5 bg-slate-100 hover:bg-secondary hover:text-white text-secondary-dark border border-secondary transition-colors cursor-pointer"
+                                    title="Edit Password"
+                                  >
+                                    <LuPencil className="text-sm" />
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeleteBypassItem(idx)}
+                                    className="p-1.5 bg-slate-100 hover:bg-primary hover:text-white text-primary border border-primary transition-colors cursor-pointer"
+                                    title="Delete Password"
+                                  >
+                                    <LuTrash2 className="text-sm" />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="flex flex-col xl:flex-row gap-5">
+          {/* ─── LEFT PANEL: Add / Edit Form (Only Name & Status) ─── */}
+          <div className="w-full xl:w-[360px] xl:min-w-[360px] flex-shrink-0">
+            <div className="bg-white border border-gray-200 shadow-xs">
+              <div className="px-5 py-4 border-b border-gray-200 bg-slate-50 flex items-center justify-between">
+                <h2 className="font-oswald text-lg font-bold text-secondary uppercase tracking-wide">
+                  {editingId ? "Edit Record" : "Add Record"}
+                  <span className="text-primary">.</span>
+                </h2>
+                {editingId && (
                   <button
-                    type="button"
                     onClick={resetForm}
-                    disabled={isSubmitting}
-                    className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-gray-600 font-bold text-xs uppercase tracking-wider transition-all cursor-pointer disabled:opacity-50"
+                    className="p-1.5 text-gray-400 hover:text-primary transition-colors cursor-pointer"
+                    title="Cancel Edit"
                   >
-                    Clear
+                    <LuX className="text-lg" />
                   </button>
                 )}
               </div>
-            </form>
+
+              <form onSubmit={handleSubmit} className="p-5 space-y-4">
+                {/* Name Field */}
+                <div>
+                  <label className="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-1.5">
+                    Name <span className="text-primary">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Enter name..."
+                    className="w-full bg-slate-50 border border-gray-200 focus:border-secondary focus:ring-1 focus:ring-secondary outline-none px-4 py-2.5 text-sm text-gray-900 font-medium placeholder-gray-400"
+                    required
+                  />
+                </div>
+
+                {/* Status Selector */}
+                <div>
+                  <label className="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-1.5">
+                    Status
+                  </label>
+                  <select
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+                    className="w-full bg-slate-50 border border-gray-200 focus:border-secondary outline-none px-4 py-2.5 text-sm text-gray-900 font-medium cursor-pointer"
+                  >
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                  </select>
+                </div>
+
+                {/* Submit / Clear Buttons */}
+                <div className="flex items-center gap-3 pt-2">
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="flex-1 px-4 py-2.5 bg-primary hover:bg-primary-hover text-white font-bold text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50"
+                  >
+                    <LuPlus className="text-sm" />
+                    <span>
+                      {isSubmitting
+                        ? editingId
+                          ? "Updating..."
+                          : "Adding..."
+                        : editingId
+                          ? "Update Record"
+                          : "Add Record"}
+                    </span>
+                  </button>
+                  {name && (
+                    <button
+                      type="button"
+                      onClick={resetForm}
+                      disabled={isSubmitting}
+                      className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-gray-600 font-bold text-xs uppercase tracking-wider transition-all cursor-pointer disabled:opacity-50"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
+              </form>
+            </div>
+          </div>
+
+          {/* ─── RIGHT PANEL: DataTable with Drag & Drop Reordering ─── */}
+          <div className="flex-1 min-w-0">
+            <DataTable
+              data={items}
+              loading={loading}
+              error={error}
+              onRefresh={fetchMasterRecords}
+              columns={columns}
+              reorderable={true}
+              onSaveOrder={handleSaveOrder}
+              onReorder={handleSaveOrder}
+              title={`${tabConfig.find((t) => t.key === activeTab)?.label || "Master Records"}`}
+              searchPlaceholder="Search records by name..."
+              exportFilename={`${activeTab}_master_export.csv`}
+            />
           </div>
         </div>
-
-        {/* ─── RIGHT PANEL: DataTable with Drag & Drop Reordering ─── */}
-        <div className="flex-1 min-w-0">
-          <DataTable
-            data={items}
-            loading={loading}
-            error={error}
-            onRefresh={fetchMasterRecords}
-            columns={columns}
-            reorderable={true}
-            onSaveOrder={handleSaveOrder}
-            onReorder={handleSaveOrder}
-            title={`${tabConfig.find((t) => t.key === activeTab)?.label || "Master Records"}`}
-            searchPlaceholder="Search records by name..."
-            exportFilename={`${activeTab}_master_export.csv`}
-          />
-        </div>
-      </div>
+      )}
 
       {/* ═══════════════════════════════════════════════════
           DELETE CONFIRMATION MODAL

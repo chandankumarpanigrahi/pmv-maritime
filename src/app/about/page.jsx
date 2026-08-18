@@ -28,6 +28,8 @@ import { MdOutlineEmail } from "react-icons/md";
 import { FaXTwitter } from "react-icons/fa6";
 import { FaArrowRight } from "react-icons/fa";
 import Accreditation from "@/components/Accreditation/page";
+import GallerySection from "@/components/GallerySection/page";
+import ContactUs from "@/components/Contact Us/page";
 
 const teamMembers = [
   {
@@ -251,6 +253,8 @@ export default function About() {
         </div>
       </div>
       <Accreditation />
+      <GallerySection />
+      <ContactUs />
     </>
   );
 }

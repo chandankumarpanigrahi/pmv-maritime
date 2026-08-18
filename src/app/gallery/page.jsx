@@ -27,76 +27,104 @@ import portImg from "../../../public/assets/images/project-about-port.png";
 const GALLERY_ITEMS = [
   {
     id: "g1",
-    title: "Offshore Supply Vessel Inspection",
     category: "Fleet & Vessels",
     image: img1,
   },
   {
     id: "g2",
-    title: "Deep Sea Tanker Pre-Purchase Survey",
     category: "Surveys & Audits",
     image: img2,
   },
   {
     id: "g3",
-    title: "Container Port Logistics & Surveying",
     category: "Offshore Operations",
     image: portImg,
   },
   {
     id: "g4",
-    title: "Crew Safety & Firefighting Drill",
     category: "Crew & Training",
     image: img3,
   },
   {
     id: "g5",
-    title: "Commercial Tugboat Towing Assessment",
     category: "Fleet & Vessels",
-    image: "https://i.pinimg.com/1200x/86/d1/b1/86d1b126d7a0d1d57f5982d460cbeb74.jpg",
+    image: "https://i.pinimg.com/1200x/c0/65/c6/c065c6ae77303abbe213ecf53c20d278.jpg",
   },
   {
     id: "g6",
-    title: "Sunset Offshore Rig Escort Operation",
     category: "Offshore Operations",
-    image: "https://i.pinimg.com/1200x/ac/d7/4e/acd74e42938c80132479aa4bf4f943d2.jpg",
+    image: "https://i.pinimg.com/736x/b0/83/5e/b0835ebe5da894e329f3a198996a9277.jpg",
   },
   {
     id: "g7",
-    title: "Ultrasonic Hull Thickness Measurement",
     category: "Surveys & Audits",
     image: "https://i.pinimg.com/736x/b4/d5/0b/b4d50baf33c5133d0c6803d258f5236c.jpg",
   },
   {
     id: "g8",
-    title: "Dynamic Positioning System Calibration",
     category: "Fleet & Vessels",
     image: "https://i.pinimg.com/1200x/17/1d/7d/171d7d88c50dce3d9aeb959ed752d08c.jpg",
   },
   {
     id: "g9",
-    title: "Global Maritime Executive Summit",
     category: "Events & Milestones",
     image: "https://i.pinimg.com/1200x/14/26/e4/1426e4c969cc6440e562ccc2f98a84d7.jpg",
   },
   {
-    id: "g10",
-    title: "Harbor Crane & Deck Machinery Audit",
+    id: "g20",
+    category: "Crew & Training",
+    image: "https://images.unsplash.com/photo-1784913109497-dbcbae7c0825?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    id: "g14",
+    category: "Crew & Training",
+    image: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    id: "g19",
+    category: "Offshore Operations",
+    image: "https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    id: "g22",
     category: "Surveys & Audits",
-    image: "https://i.pinimg.com/736x/b0/83/5e/b0835ebe5da894e329f3a198996a9277.jpg",
+    image: "https://images.unsplash.com/photo-1524522173746-f628baad3644?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    id: "g10",
+    category: "Fleet & Vessels",
+    image: "https://images.unsplash.com/photo-1691591765923-3bd6f12f4209?auto=format&fit=crop&w=1200&q=80",
   },
   {
     id: "g11",
-    title: "Coastal Patrol Vessel Trial",
     category: "Fleet & Vessels",
-    image: "https://i.pinimg.com/1200x/1e/c9/67/1ec967036a45d27172ec3faa3bd5c912.jpg",
+    image: "https://images.unsplash.com/photo-1784910626462-1fb9e128e5b3?auto=format&fit=crop&w=1200&q=80",
   },
   {
-    id: "g12",
-    title: "Annual PMV Excellence Award Ceremony",
-    category: "Events & Milestones",
-    image: "https://i.pinimg.com/1200x/c0/65/c6/c065c6ae77303abbe213ecf53c20d278.jpg",
+    id: "g15",
+    category: "Fleet & Vessels",
+    image: "https://images.unsplash.com/photo-1783102691138-144bf626aa42?auto=format&fit=crop&w=1200&q=80",
   },
+  {
+    id: "g16",
+    category: "Offshore Operations",
+    image: "https://images.unsplash.com/photo-1784915471714-ac9741adfc2b?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    id: "g17",
+    category: "Surveys & Audits",
+    image: "https://images.unsplash.com/photo-1784910627599-c3541792138a?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    id: "g18",
+    category: "Events & Milestones",
+    image: "https://images.unsplash.com/photo-1687276740103-660a6a34bb67?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    id: "g21",
+    category: "Fleet & Vessels",
+    image: "https://plus.unsplash.com/premium_photo-1661962356926-f08d78f8b127?auto=format&fit=crop&w=1200&q=80",
+  }
 ];
 
 const CATEGORIES = [
@@ -240,7 +268,7 @@ export default function GalleryPage() {
       </section>
 
       {/* MAIN GALLERY VIEW AREA (ONLY IMAGES) */}
-      <main className="bg-slate-100 py-4 md:py-6 px-4 md:px-6 border-x border-b border-gray-200 container max-w-7xl mx-auto min-h-[500px]">
+      <main className="bg-slate-100 py-4 md:py-6 px-4 md:px-6 border-x border-b border-gray-200 container max-w-7xl mx-auto">
         {filteredItems.length === 0 ? (
           <div className="flex flex-col items-center justify-center p-12 text-center bg-white border border-dashed border-gray-300 mx-4 md:mx-8">
             <h3 className="font-oswald text-2xl font-bold text-secondary uppercase">No Images Found</h3>

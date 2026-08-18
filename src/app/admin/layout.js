@@ -140,6 +140,8 @@ export default function AdminLayout({ children }) {
   const [remoteTerminatedModal, setRemoteTerminatedModal] = useState(false);
   const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
 
+
+
   // Live clock
   const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -604,8 +606,10 @@ export default function AdminLayout({ children }) {
             </h1>
           </div>
 
-          {/* Header Controls: Change Password Trigger */}
+          {/* Header Controls: Maintenance Mode & Change Password Trigger */}
           <div className="flex items-center gap-3">
+
+
             <button
               onClick={() => setShowPassModal(true)}
               className=" cursor-pointer"
