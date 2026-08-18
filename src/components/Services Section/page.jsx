@@ -178,11 +178,15 @@ export default function Services() {
                   <button
                     key={dotIdx}
                     onClick={() => setCurrentImageIdx(dotIdx)}
-                    className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
-                      currentImageIdx === dotIdx ? "w-6 bg-primary" : "w-2 bg-white/70 hover:bg-white"
-                    }`}
+                    className="p-1.5 cursor-pointer flex items-center justify-center"
                     aria-label={`Go to slide ${dotIdx + 1}`}
-                  />
+                  >
+                    <span
+                      className={`h-2 rounded-full transition-all duration-300 block ${
+                        currentImageIdx === dotIdx ? "w-6 bg-primary" : "w-2 bg-white/70 hover:bg-white"
+                      }`}
+                    />
+                  </button>
                 ))}
               </div>
             </div>

@@ -139,15 +139,14 @@ export default function Hero() {
           {statsData.map((stat, index) => (
             <div key={index} className="w-full flex flex-col items-center text-center md:items-start md:text-left gap-0 md:gap-2 px-2 md:px-8 last:col-span-2 md:last:col-span-1">
               {stat.icon}
-              <div className="text-5xl md:text-6xl font-oswald text-white mt-3 md:mt-0">
+              <div className="text-5xl md:text-6xl font-oswald text-white mt-3 md:mt-0 inline-flex items-baseline tabular-nums min-w-[2.2em]">
                 <NumberTicker
                   from={0}
                   target={stat.number}
                   autoStart={true}
                   transition={{ duration: 3.5, type: "tween", ease: "easeInOut" }}
                 />
-                {/* {stat.number} */}
-                <span className="text-primary pl-1">{stat.suffix}</span>
+                <span className="text-primary pl-0.5">{stat.suffix}</span>
               </div>
               <p className="text-white/60 uppercase tracking-wide max-w-[90%] md:max-w-none text-[12px] md:text-sm font-semibold mt-2 md:mt-0">
                 {stat.label}

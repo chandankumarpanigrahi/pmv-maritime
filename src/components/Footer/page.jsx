@@ -123,16 +123,16 @@ export default function Footer() {
 
               {/* Social Media Links */}
               <div className="flex items-center gap-3 mt-4">
-                <a href="#" className="w-8 h-8 rounded-full border border-gray-300 text-gray-500 hover:text-primary hover:border-primary flex items-center justify-center transition-all duration-300">
+                <a href="#" aria-label="Facebook" className="w-8 h-8 rounded-full border border-gray-300 text-gray-500 hover:text-primary hover:border-primary flex items-center justify-center transition-all duration-300">
                   <LuFacebook className="text-sm" />
                 </a>
-                <a href="#" className="w-8 h-8 rounded-full border border-gray-300 text-gray-500 hover:text-primary hover:border-primary flex items-center justify-center transition-all duration-300">
+                <a href="#" aria-label="Instagram" className="w-8 h-8 rounded-full border border-gray-300 text-gray-500 hover:text-primary hover:border-primary flex items-center justify-center transition-all duration-300">
                   <LuInstagram className="text-sm" />
                 </a>
-                <a href="#" className="w-8 h-8 rounded-full border border-gray-300 text-gray-500 hover:text-primary hover:border-primary flex items-center justify-center transition-all duration-300">
+                <a href="#" aria-label="X (Twitter)" className="w-8 h-8 rounded-full border border-gray-300 text-gray-500 hover:text-primary hover:border-primary flex items-center justify-center transition-all duration-300">
                   <FaXTwitter className="text-sm" />
                 </a>
-                <a href="#" className="w-8 h-8 rounded-full border border-gray-300 text-gray-500 hover:text-primary hover:border-primary flex items-center justify-center transition-all duration-300">
+                <a href="#" aria-label="LinkedIn" className="w-8 h-8 rounded-full border border-gray-300 text-gray-500 hover:text-primary hover:border-primary flex items-center justify-center transition-all duration-300">
                   <LuLinkedin className="text-sm" />
                 </a>
               </div>

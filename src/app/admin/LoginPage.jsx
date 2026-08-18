@@ -30,8 +30,6 @@ export default function LoginPage({
   minsLeft,
   loginError,
   handleLogin,
-  attempts,
-  maxAttempts,
   sliderIndex,
   setSliderIndex,
 }) {
@@ -155,14 +153,6 @@ export default function LoginPage({
               )}
             </button>
           </form>
-
-          {/* Footer Details */}
-          <div className="mt-8 pt-6 border-t border-gray-200 flex items-center justify-center md:justify-between text-[10px] text-gray-500 font-bold uppercase">
-            <span className="hidden md:flex items-center text-[12px] gap-1.5 font-bold">
-              <LuCompass className="text-sm text-gray-400 animate-spin-slow" /> Admin Authentication
-            </span>
-            <span className="font-bold text-[14px] md:text-[12px]">Attempts: {attempts} / {maxAttempts}</span>
-          </div>
 
         </div>
 

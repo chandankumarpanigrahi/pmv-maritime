@@ -434,8 +434,6 @@ export default function AdminLayout({ children }) {
         minsLeft={minsLeft}
         loginError={loginError}
         handleLogin={handleLogin}
-        attempts={attempts}
-        maxAttempts={MAX_ATTEMPTS}
         sliderIndex={sliderIndex}
         setSliderIndex={setSliderIndex}
       />
