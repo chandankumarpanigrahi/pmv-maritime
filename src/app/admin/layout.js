@@ -698,16 +698,16 @@ export default function AdminLayout({ children }) {
               </div>
             </div>
 
-            <div className="mt-8 flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
+            <div className="mt-3 sm:mt-8 flex flex-col-reverse sm:flex-row items-center justify-end gap-1 sm:gap-3 pt-4 border-t border-gray-100">
               <button
                 onClick={() => setShowLogoutModal(false)}
-                className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-gray-700 font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer"
+                className="w-full sm:w-fit px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-gray-700 font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 onClick={confirmLogout}
-                className="px-5 py-2.5 bg-primary hover:bg-primary-hover text-white font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer flex items-center gap-2"
+                className="w-full sm:w-fit px-5 py-2.5 bg-primary hover:bg-primary-hover text-white font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer flex justify-center sm:justify-start items-center gap-2"
               >
                 <LuLogOut className="text-sm" />
                 <span>Yes, Logout</span>

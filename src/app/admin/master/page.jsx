@@ -525,7 +525,7 @@ export default function MasterPage() {
               <button
                 key={tab.key}
                 onClick={() => handleTabChange(tab.key)}
-                className={`flex items-center gap-2 px-4 py-2.5 font-bold text-xs md:text-sm uppercase tracking-wider transition-all cursor-pointer ${isActive
+                className={`w-full md:w-fit flex items-center gap-2 px-4 py-2.5 font-bold text-xs md:text-sm uppercase tracking-wider transition-all cursor-pointer ${isActive
                   ? "border border-primary bg-primary text-white shadow-xs"
                   : "border border-gray-200 bg-slate-50 text-secondary-dark hover:bg-slate-100"
                   }`}
@@ -678,9 +678,9 @@ export default function MasterPage() {
             {/* ─── RIGHT PANEL: Tabular Form of Configured Bypass Passwords ─── */}
             <div className="flex-1 min-w-0">
               <div className="bg-white border border-gray-200 shadow-xs">
-                <div className="px-5 py-4 border-b border-gray-200 bg-slate-50 flex items-center justify-between">
+                <div className="px-5 py-4 border-b border-gray-200 bg-slate-50 flex flex-col sm:flex-row items-center justify-between">
                   <h3 className="font-oswald text-lg font-bold text-secondary uppercase tracking-wide">
-                    Configured Bypass Passwords<span className="text-primary">.</span>
+                    Configured Passwords<span className="text-primary">.</span>
                   </h3>
                   <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">
                     Total: {bypassPasswordsList.length} Entries
@@ -710,10 +710,10 @@ export default function MasterPage() {
                           const durationText = mins >= 60 ? `${(mins / 60).toFixed(1)} Hours (${mins} mins)` : `${mins} Mins`;
                           return (
                             <tr key={idx} className="hover:bg-slate-50 transition-colors">
-                              <td className="px-4 py-3 font-bold text-gray-900">{item.label || "Bypass Access"}</td>
-                              <td className="px-4 py-3 font-mono font-bold text-secondary">{item.password}</td>
+                              <td className="px-4 py-3 font-bold text-gray-900 whitespace-nowrap">{item.label || "Bypass Access"}</td>
+                              <td className="px-4 py-3 font-mono font-bold text-secondary whitespace-nowrap">{item.password}</td>
                               <td className="px-4 py-3 font-mono text-gray-600">
-                                <span className="inline-block px-2 py-0.5 bg-slate-100 border border-slate-200 rounded font-semibold text-[11px]">
+                                <span className="inline-block px-2 py-0.5 bg-slate-100 border border-slate-200 rounded font-semibold text-[11px] whitespace-nowrap">
                                   {durationText}
                                 </span>
                               </td>
