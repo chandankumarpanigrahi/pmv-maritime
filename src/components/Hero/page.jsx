@@ -111,7 +111,7 @@ export default function Hero() {
 
           {/* Subtitle */}
           <p className="text-[14px] text-center md:text-left sm:text-md md:text-lg text-slate-200/95 leading-relaxed mb-3 md:mb-8 max-w-xl">
-            At <span className="font-semibold">PMV Maritime Solutions Limited</span>, we deliver trusted maritime solutions through expertise, innovation, and reliable service. Our integrated capabilities strengthen vessel operations, enhance safety, and create lasting value across every maritime journey.
+            At <span className="font-semibold">Pinnacle Marine Ventures (PMV)</span>, operating as <span className="font-semibold">PMV Maritime Solutions Limited</span>, we deliver trusted maritime solutions through expertise, innovation, and reliable service. Our integrated capabilities strengthen vessel operations, enhance safety, and create lasting value across every maritime journey.
           </p>
 
           {/* CTA Buttons */}
