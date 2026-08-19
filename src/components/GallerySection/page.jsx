@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import SubHeading from "@/design/sub-heading/page";
@@ -23,8 +23,8 @@ const PREVIEW_GALLERY = [
   { id: "p6", image: "https://i.pinimg.com/736x/b0/83/5e/b0835ebe5da894e329f3a198996a9277.jpg", alt: "Maritime image 6" },
   { id: "p7", image: "https://i.pinimg.com/736x/b4/d5/0b/b4d50baf33c5133d0c6803d258f5236c.jpg", alt: "Maritime image 7" },
   { id: "p8", image: "https://i.pinimg.com/1200x/17/1d/7d/171d7d88c50dce3d9aeb959ed752d08c.jpg", alt: "Maritime image 8" },
-  { id: "p9", image: "https://i.pinimg.com/1200x/14/26/e4/1426e4c969cc6440e562ccc2f98a84d7.jpg", alt: "Maritime image 9" },
-  { id: "p10", image: "https://i.pinimg.com/1200x/1e/c9/67/1ec967036a45d27172ec3faa3bd5c912.jpg", alt: "Maritime image 10" },
+  // { id: "p9", image: "https://i.pinimg.com/1200x/14/26/e4/1426e4c969cc6440e562ccc2f98a84d7.jpg", alt: "Maritime image 9" },
+  // { id: "p10", image: "https://i.pinimg.com/1200x/1e/c9/67/1ec967036a45d27172ec3faa3bd5c912.jpg", alt: "Maritime image 10" },
 ];
 
 export default function GallerySection() {
@@ -34,14 +34,33 @@ export default function GallerySection() {
   const closeLightbox = () => setSelectedIndex(null);
 
   const prevImage = (e) => {
-    e.stopPropagation();
+    if (e && e.stopPropagation) e.stopPropagation();
     setSelectedIndex((prev) => (prev === 0 ? PREVIEW_GALLERY.length - 1 : prev - 1));
   };
 
   const nextImage = (e) => {
-    e.stopPropagation();
+    if (e && e.stopPropagation) e.stopPropagation();
     setSelectedIndex((prev) => (prev === PREVIEW_GALLERY.length - 1 ? 0 : prev + 1));
   };
+
+  // Keyboard navigation & lock body scroll when lightbox modal is open
+  useEffect(() => {
+    if (selectedIndex === null) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") closeLightbox();
+      if (e.key === "ArrowRight") setSelectedIndex((prev) => (prev === PREVIEW_GALLERY.length - 1 ? 0 : prev + 1));
+      if (e.key === "ArrowLeft") setSelectedIndex((prev) => (prev === 0 ? PREVIEW_GALLERY.length - 1 : prev - 1));
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selectedIndex]);
 
   return (
     <>
@@ -69,7 +88,7 @@ export default function GallerySection() {
         <div className="w-full border border-slate-200 ">
 
           {/* Clean Pure Image Grid (No Text) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-0.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0.5">
             {PREVIEW_GALLERY.map((item, index) => (
               <div
                 key={item.id}
