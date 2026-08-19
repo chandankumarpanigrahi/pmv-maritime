@@ -124,21 +124,18 @@ export default function DashboardPage() {
       {/* ── Executive Welcome Banner ────────────────────────────────────────────── */}
       <div className="bg-gradient-to-r from-[#002B49] via-[#004B75] to-[#AD1D41] text-white p-6 shadow-md border border-slate-700/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-cyan-300 text-xs font-bold uppercase tracking-widest mb-1">
-            <LuSparkles className="text-sm" /> Executive Overview & Operations Control
+          <div className="text-center sm:text-left flex items-center gap-2 text-cyan-300 text-xs font-bold uppercase tracking-widest mb-1">
+            Executive Overview & Operations Control
           </div>
-          <h1 className="font-oswald text-2xl md:text-3xl font-bold tracking-wide uppercase">
+          <h1 className="text-center sm:text-left font-oswald text-2xl md:text-3xl font-bold tracking-wide uppercase">
             PMV Maritime Management Hub
           </h1>
-          <p className="text-slate-200 text-xs md:text-sm font-medium mt-1 max-w-2xl">
-            Real-time operational analytics dashboard for managing maritime services, portfolio projects, talent recruitment, and customer inquiries.
-          </p>
         </div>
-        <div className="flex items-center gap-3 shrink-0">
+        <div className="flex w-full sm:w-fit flex-col sm:flex-row items-center gap-3 shrink-0">
           <Link
             href="/"
             target="_blank"
-            className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2"
+            className="w-full sm:w-fit px-4 py-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 text-xs font-bold uppercase tracking-wider transition-all flex justify-center sm:justify-start items-center gap-2"
           >
             <span>Live Site</span>
             <LuExternalLink className="text-sm" />
@@ -146,7 +143,7 @@ export default function DashboardPage() {
           {canViewSubmissions && (
             <Link
               href="/admin/contact"
-              className="px-4 py-2 bg-secondary hover:bg-secondary-dark text-white text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 shadow-sm"
+              className="w-full sm:w-fit px-4 py-2 bg-secondary hover:bg-secondary-dark text-white text-xs font-bold uppercase tracking-wider transition-all flex justify-center sm:justify-start items-center gap-2 shadow-sm"
             >
               <LuMail className="text-sm" />
               <span>Inbox ({submissions.length})</span>
@@ -158,7 +155,7 @@ export default function DashboardPage() {
       {/* ── 1. Top KPI Stat Cards Grid (4 Permission-Controlled Cards) ────────────── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {/* Card 1: Services Engine */}
-        <div className="bg-gradient-to-br from-[#003853] via-[#005978] to-[#007BA7] text-white p-4 transition-all duration-200 relative overflow-hidden flex flex-col justify-between group border border-white/15">
+        <div className="bg-gradient-to-br from-[#003853] via-[#005978] to-[#007BA7] text-white p-4 pb-2 transition-all duration-200 relative overflow-hidden flex flex-col justify-between group border border-white/15">
           <div>
             <div className="flex items-start justify-between">
               <span className="text-[11px] font-black uppercase tracking-widest text-cyan-200">
@@ -171,7 +168,7 @@ export default function DashboardPage() {
 
             <Link
               href="/admin/services"
-              className="font-oswald text-5xl font-black text-white hover:text-cyan-200 transition-colors inline-block tracking-tight mt-2"
+              className="font-oswald text-5xl sm:text-6xl font-black text-white hover:text-cyan-200 transition-colors inline-block tracking-tight -mt-2"
             >
               {loading ? "..." : services.length}
             </Link>
@@ -209,7 +206,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Card 2: Projects Hub */}
-        <div className="bg-gradient-to-br from-[#4a0817] via-[#85132f] to-[#AD1D41] text-white p-4 transition-all duration-200 relative overflow-hidden flex flex-col justify-between group border border-white/15">
+        <div className="bg-gradient-to-br from-[#4a0817] via-[#85132f] to-[#AD1D41] text-white p-4 pb-2 transition-all duration-200 relative overflow-hidden flex flex-col justify-between group border border-white/15">
           <div>
             <div className="flex items-start justify-between">
               <span className="text-[11px] font-black uppercase tracking-widest text-rose-200">
@@ -222,7 +219,7 @@ export default function DashboardPage() {
 
             <Link
               href="/admin/projects"
-              className="font-oswald text-5xl font-black text-white hover:text-rose-200 transition-colors inline-block tracking-tight mt-2"
+              className="font-oswald text-5xl sm:text-6xl font-black text-white hover:text-rose-200 transition-colors inline-block tracking-tight -mt-2"
             >
               {loading ? "..." : projects.length}
             </Link>
@@ -260,7 +257,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Card 3: Talent Pipeline */}
-        <div className="bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#334155] text-white p-4 transition-all duration-200 relative overflow-hidden flex flex-col justify-between group border border-white/15">
+        <div className="bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#334155] text-white p-4 pb-2 transition-all duration-200 relative overflow-hidden flex flex-col justify-between group border border-white/15">
           <div>
             <div className="flex items-start justify-between">
               <span className="text-[11px] font-black uppercase tracking-widest text-slate-300">
@@ -273,7 +270,7 @@ export default function DashboardPage() {
 
             <Link
               href="/admin/careers"
-              className="font-oswald text-5xl font-black text-white hover:text-slate-200 transition-colors inline-block tracking-tight mt-2"
+              className="font-oswald text-5xl sm:text-6xl font-black text-white hover:text-slate-200 transition-colors inline-block tracking-tight -mt-2"
             >
               {loading ? "..." : careers.length}
             </Link>
@@ -308,7 +305,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Card 4: Knowledge Base */}
-        <div className="bg-gradient-to-br from-[#044e54] via-[#0d6e6e] to-[#0f766e] text-white p-4 transition-all duration-200 relative overflow-hidden flex flex-col justify-between group border border-white/15">
+        <div className="bg-gradient-to-br from-[#044e54] via-[#0d6e6e] to-[#0f766e] text-white p-4 pb-2 transition-all duration-200 relative overflow-hidden flex flex-col justify-between group border border-white/15">
           <div>
             <div className="flex items-start justify-between">
               <span className="text-[11px] font-black uppercase tracking-widest text-teal-200">
@@ -321,7 +318,7 @@ export default function DashboardPage() {
 
             <Link
               href="/admin/faqs"
-              className="font-oswald text-5xl font-black text-white hover:text-teal-200 transition-colors inline-block tracking-tight mt-2"
+              className="font-oswald text-5xl sm:text-6xl font-black text-white hover:text-teal-200 transition-colors inline-block tracking-tight -mt-2"
             >
               {loading ? "..." : faqs.length}
             </Link>

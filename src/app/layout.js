@@ -19,6 +19,12 @@ const oswald = Oswald({
   display: "swap",
 });
 
+export const viewport = {
+  themeColor: "#007BA7",
+  width: "device-width",
+  initialScale: 1,
+};
+
 export const metadata = {
   metadataBase: new URL("https://pmvmaritime.com"),
   title: {
@@ -47,6 +53,21 @@ export const metadata = {
   ],
   authors: [{ name: "Pinnacle Marine Ventures (PMV)" }],
   publisher: "Pinnacle Marine Ventures (PMV)",
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "PMV Maritime",
+  },
+  icons: {
+    icon: [
+      { url: "/icons/icon-192x192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icons/icon-512x512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
   robots: {
     index: true,
     follow: true,

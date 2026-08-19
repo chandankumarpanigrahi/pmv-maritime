@@ -7,6 +7,7 @@ import Footer from "@/components/Footer/page";
 import Maintenance from "@/components/Maintenance/page";
 import SmoothScroll from "@/components/SmoothScroll";
 import { Toaster } from "react-hot-toast";
+import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 
 export default function ClientLayout({ children, maintenanceMode, showLoader }) {
   const [liveMaintenanceMode, setLiveMaintenanceMode] = useState(maintenanceMode);
@@ -138,6 +139,7 @@ export default function ClientLayout({ children, maintenanceMode, showLoader }) 
 
   return (
     <>
+      <ServiceWorkerRegister />
       <Toaster position="top-right" containerStyle={{ zIndex: 9999999 }} />
       {/* {!isAdmin && <SmoothScroll />} */}
       {loading && (
