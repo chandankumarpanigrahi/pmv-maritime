@@ -1,5 +1,4 @@
 import { Nunito_Sans, Oswald } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 import ClientLayout from "../components/ClientLayout";
 import { getMaintenanceStatus } from "@/lib/maintenance";
@@ -130,31 +129,12 @@ export default async function RootLayout({ children }) {
       className={`${nunitoSans.variable} ${oswald.variable} h-full antialiased`}
     >
       <head>
-        <Script
-          id="google-tag-manager"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-T5ZXFHR4');`,
-          }}
-        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
       <body className="flex flex-col relative">
-        <noscript>
-          <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-T5ZXFHR4"
-            height="0"
-            width="0"
-            style={{ display: "none", visibility: "hidden" }}
-          />
-        </noscript>
         <ClientLayout maintenanceMode={maintenanceMode} showLoader={SHOW_LOADER}>
           {children}
         </ClientLayout>
