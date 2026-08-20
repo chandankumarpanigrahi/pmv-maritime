@@ -38,7 +38,12 @@ export default function ClientLayout({ children, maintenanceMode, showLoader }) 
         if (res.ok) {
           const data = await res.json();
           if (!ignore) {
-            setLiveMaintenanceMode(Boolean(data.isEnabled));
+            const isEnabled = Boolean(data.isEnabled);
+            setLiveMaintenanceMode(isEnabled);
+            if (!isEnabled) {
+              setShowMaintenance(false);
+              setTimeLeft("");
+            }
           }
         }
       } catch (err) {
@@ -93,11 +98,7 @@ export default function ClientLayout({ children, maintenanceMode, showLoader }) 
   }, [pathname, showLoader]);
 
   useEffect(() => {
-    if (!liveMaintenanceMode) {
-      setShowMaintenance(false);
-      setTimeLeft("");
-      return;
-    }
+    if (!liveMaintenanceMode) return;
 
     const checkBypass = () => {
       const bypassExpiry = localStorage.getItem("maintenance_bypass_expiry");
@@ -147,7 +148,7 @@ export default function ClientLayout({ children, maintenanceMode, showLoader }) 
           <img src="/loader.gif" alt="Loading..." className="w-30 h-30 object-contain bg-white/60 p-2 rounded-full" />
         </div>
       )}
-      {showMaintenance && !isAdmin ? (
+      {liveMaintenanceMode && showMaintenance && !isAdmin ? (
         <Maintenance />
       ) : (
         <>
