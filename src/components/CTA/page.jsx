@@ -46,7 +46,7 @@ export default function CTA() {
             <div className="flex flex-col sm:flex-row gap-3 md:gap-4 w-full sm:w-auto">
               {/* Get a Quote Button */}
               <Link
-                href="/contact?type=quote"
+                href="/contact"
                 className="group/btn inline-flex items-center justify-center gap-3 bg-primary hover:bg-primary-hover text-white font-bold text-[14px] px-6 py-3 uppercase tracking-wider transition-all duration-300 shadow-lg cursor-pointer w-full sm:w-auto"
               >
                 Get a Quote
