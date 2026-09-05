@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import Link from "next/link";
 import {
   LuShip,
@@ -14,12 +14,60 @@ import {
   LuSparkles,
   LuExternalLink,
   LuChartBar,
+  LuTrendingUp,
+  LuCalendar,
+  LuFilter,
+  LuRefreshCw,
+  LuChevronDown,
 } from "react-icons/lu";
 import { hasPermission, canViewPage } from "@/lib/permissions";
 
+const BAR_CATEGORIES = [
+  { key: "fleet", label: "Fleet", fullLabel: "Fleet Management", color: "#007BA7" },
+  { key: "general", label: "General", fullLabel: "General Inquiry", color: "#00A3FF" },
+  { key: "training", label: "Training", fullLabel: "Maritime Training", color: "#FEB019" },
+  { key: "consultancy", label: "Consultancy", fullLabel: "Technical Consultancy", color: "#FF4560" },
+  { key: "crew", label: "Crewing", fullLabel: "Crew Management", color: "#775DD0" },
+  { key: "digital", label: "Digital", fullLabel: "Digital Solutions", color: "#c084fc" },
+  { key: "others", label: "Others", fullLabel: "Other Inquiries", color: "#64748B" },
+];
+
+const ANNUAL_CONTACT_TYPES = [
+  { key: "fleet", label: "Fleet Management", shortLabel: "Fleet", color: "#007BA7", dotShape: "circle" },
+  { key: "general", label: "General Inquiries", shortLabel: "General", color: "#0284C7", dotShape: "diamond" },
+  { key: "training", label: "Maritime Training", shortLabel: "Training", color: "#D97706", dotShape: "square" },
+  { key: "consultancy", label: "Technical Consultancy", shortLabel: "Consultancy", color: "#DC2626", dotShape: "triangle" },
+  { key: "crew", label: "Crew Management", shortLabel: "Crew", color: "#7C3AED", dotShape: "circle" },
+  { key: "digital", label: "Digital Solutions", shortLabel: "Digital", color: "#DB2777", dotShape: "diamond" },
+  { key: "others", label: "Other Inquiries", shortLabel: "Others", color: "#64748B", dotShape: "square" },
+];
+
+function resolveContactType(query) {
+  const q = (query || "general").toLowerCase();
+  for (const t of ANNUAL_CONTACT_TYPES) {
+    if (t.key !== "others" && q.includes(t.key)) {
+      return t.key;
+    }
+  }
+  return "others";
+}
+
+const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
 export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
-  const [activeChartTab, setActiveChartTab] = useState("categories");
+  const [activeChartTab, setActiveChartTab] = useState("bar"); // "bar" | "trend"
+
+  // Date Filter State for Tab 1 (Bar Chart)
+  const [datePreset, setDatePreset] = useState("all"); // "all" | "7days" | "30days" | "last3Months" | "custom"
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [hoveredBarIndex, setHoveredBarIndex] = useState(null);
+
+  // Year Dropdown & Contact Type Filter State for Tab 2 (Annual Trend Graph)
+  const [selectedYear, setSelectedYear] = useState(() => new Date().getFullYear().toString());
+  const [selectedTypeFilter, setSelectedTypeFilter] = useState("all"); // "all" | contact type key
+  const [hoveredMonthIndex, setHoveredMonthIndex] = useState(null);
 
   // Permission States (evaluates on mount)
   const [canViewSubmissions] = useState(() => canViewPage(null, "contact"));
@@ -93,30 +141,157 @@ export default function DashboardPage() {
   const seaJobsCount = careers.filter((c) => c.category === "sea").length;
   const shoreJobsCount = careers.filter((c) => c.category === "shore").length;
 
-  // Compute Category Breakdown for Chart
-  const categoryCounts = submissions.reduce(
-    (acc, sub) => {
-      const q = (sub.query || "General").toUpperCase();
-      if (q.includes("FLEET")) acc.fleet += 1;
-      else if (q.includes("CREW")) acc.crew += 1;
-      else if (q.includes("TRAIN")) acc.training += 1;
-      else if (q.includes("DIGITAL")) acc.digital += 1;
-      else acc.general += 1;
-      return acc;
-    },
-    { fleet: 0, crew: 0, training: 0, digital: 0, general: 0 }
+  // Compute available years from submissions
+  const availableYears = useMemo(() => {
+    const years = new Set(
+      submissions
+        .map((s) => new Date(s.createdAt).getFullYear())
+        .filter((y) => !isNaN(y) && y > 2000)
+    );
+    const curr = new Date().getFullYear();
+    years.add(curr);
+    return Array.from(years).sort((a, b) => b - a);
+  }, [submissions]);
+
+  // Tab 1: Filter submissions by selected date range
+  const filteredSubmissions = useMemo(() => {
+    if (datePreset === "all") return submissions;
+
+    const now = new Date();
+    let from = null;
+    let to = null;
+
+    if (datePreset === "7days") {
+      from = new Date();
+      from.setDate(now.getDate() - 7);
+      from.setHours(0, 0, 0, 0);
+    } else if (datePreset === "30days") {
+      from = new Date();
+      from.setDate(now.getDate() - 30);
+      from.setHours(0, 0, 0, 0);
+    } else if (datePreset === "last3Months" || datePreset === "thisMonth") {
+      from = new Date();
+      from.setMonth(now.getMonth() - 3);
+      from.setHours(0, 0, 0, 0);
+    } else if (datePreset === "custom") {
+      if (startDate) {
+        from = new Date(startDate);
+        from.setHours(0, 0, 0, 0);
+      }
+      if (endDate) {
+        to = new Date(endDate);
+        to.setHours(23, 59, 59, 999);
+      }
+    }
+
+    return submissions.filter((s) => {
+      const d = new Date(s.createdAt);
+      if (isNaN(d.getTime())) return true;
+      if (from && d < from) return false;
+      if (to && d > to) return false;
+      return true;
+    });
+  }, [submissions, datePreset, startDate, endDate]);
+
+  // Tab 1: Category counts for the Bar Chart
+  const barChartData = useMemo(() => {
+    const counts = {};
+    BAR_CATEGORIES.forEach((c) => {
+      counts[c.key] = 0;
+    });
+
+    filteredSubmissions.forEach((sub) => {
+      const q = (sub.query || "general").toLowerCase();
+      let matched = false;
+      for (const cat of BAR_CATEGORIES) {
+        if (cat.key !== "others" && q.includes(cat.key)) {
+          counts[cat.key] += 1;
+          matched = true;
+          break;
+        }
+      }
+      if (!matched) {
+        counts.others += 1;
+      }
+    });
+
+    const total = filteredSubmissions.length || 1;
+    return BAR_CATEGORIES.map((cat) => ({
+      ...cat,
+      count: counts[cat.key] || 0,
+      pct: Math.round(((counts[cat.key] || 0) / total) * 100),
+    }));
+  }, [filteredSubmissions]);
+
+  const maxBarCount = Math.max(...barChartData.map((b) => b.count), 1);
+
+  // Tab 2: 12-month Annual Aggregation of Contact Types Reached per Month
+  const annualMonthlyTypeData = useMemo(() => {
+    const targetYr = Number(selectedYear);
+    const months = MONTH_NAMES.map((name, idx) => {
+      const byType = {};
+      ANNUAL_CONTACT_TYPES.forEach((t) => {
+        byType[t.key] = 0;
+      });
+      return {
+        month: name,
+        monthIndex: idx,
+        total: 0,
+        byType,
+      };
+    });
+
+    submissions.forEach((s) => {
+      const d = new Date(s.createdAt);
+      if (!isNaN(d.getTime()) && d.getFullYear() === targetYr) {
+        const mIdx = d.getMonth();
+        if (months[mIdx]) {
+          const typeKey = resolveContactType(s.query);
+          months[mIdx].byType[typeKey] = (months[mIdx].byType[typeKey] || 0) + 1;
+          months[mIdx].total += 1;
+        }
+      }
+    });
+
+    return months;
+  }, [submissions, selectedYear]);
+
+  const yearlyTotalsByType = useMemo(() => {
+    const totals = {};
+    ANNUAL_CONTACT_TYPES.forEach((t) => {
+      totals[t.key] = 0;
+    });
+    annualMonthlyTypeData.forEach((m) => {
+      ANNUAL_CONTACT_TYPES.forEach((t) => {
+        totals[t.key] += m.byType[t.key] || 0;
+      });
+    });
+    return totals;
+  }, [annualMonthlyTypeData]);
+
+  const totalYearContacts = useMemo(
+    () => Object.values(yearlyTotalsByType).reduce((acc, c) => acc + c, 0),
+    [yearlyTotalsByType]
   );
 
-  const totalInquiries = submissions.length || 1;
-  const categoriesData = [
-    { label: "General Inquiries", count: categoryCounts.general, color: "bg-[#005978]" },
-    { label: "Fleet Management", count: categoryCounts.fleet, color: "bg-[#007BA7]" },
-    { label: "Crewing & Manning", count: categoryCounts.crew, color: "bg-amber-600" },
-    { label: "Maritime Training", count: categoryCounts.training, color: "bg-indigo-600" },
-    { label: "Digital Solutions", count: categoryCounts.digital, color: "bg-purple-600" },
-  ];
+  const maxTrendVal = useMemo(() => {
+    const allCounts = annualMonthlyTypeData.flatMap((m) =>
+      ANNUAL_CONTACT_TYPES.map((t) => m.byType[t.key] || 0)
+    );
+    const maxVal = Math.max(...allCounts, 1);
+    if (maxVal <= 5) return 5;
+    if (maxVal <= 10) return 10;
+    return Math.ceil((maxVal + 2) / 5) * 5;
+  }, [annualMonthlyTypeData]);
 
-  const maxCategoryCount = Math.max(...categoriesData.map((c) => c.count), 1);
+  const peakMonth = useMemo(() => {
+    return (
+      [...annualMonthlyTypeData].sort((a, b) => b.total - a.total)[0] || {
+        month: "N/A",
+        total: 0,
+      }
+    );
+  }, [annualMonthlyTypeData]);
 
   return (
     <div className="p-3 md:p-6 space-y-6">
@@ -355,6 +530,588 @@ export default function DashboardPage() {
       {canViewSubmissions && (
         <div className="space-y-6">
 
+
+          {/* Analytics Chart Container: 2 Distinct Visual Tabs with Filters & Responsive H-Scroll */}
+          <div className="bg-white border border-gray-200 p-5 shadow-xs space-y-4">
+            {/* Header with 2 Tabs */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-gray-100 gap-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-sm bg-secondary/10 border border-secondary/20 text-secondary flex items-center justify-center shrink-0">
+                  {activeChartTab === "bar" ? (
+                    <LuChartBar className="text-base" />
+                  ) : (
+                    <LuTrendingUp className="text-base" />
+                  )}
+                </div>
+                <div>
+                  <h3 className="font-oswald text-base font-bold text-secondary-dark uppercase tracking-wider">
+                    {activeChartTab === "bar"
+                      ? "Inquiry Category Breakdown"
+                      : "Annual Monthly Reach"}
+                  </h3>
+                  <p className="text-[11px] text-gray-400 font-medium">
+                    {activeChartTab === "bar"
+                      ? "Filter by custom date range to analyze category lead volume"
+                      : "12-month timeline analysis of contact types reached per month across the entire year"}
+                  </p>
+                </div>
+              </div>
+
+              {/* Working 2-Tab Navigation */}
+              <div className="flex items-center gap-1 bg-slate-100 p-1 border border-gray-200 text-xs font-bold shrink-0 self-start sm:self-auto">
+                <button
+                  type="button"
+                  onClick={() => setActiveChartTab("bar")}
+                  className={`px-3 py-1.5 transition-all flex items-center gap-1.5 cursor-pointer ${activeChartTab === "bar"
+                    ? "bg-white text-secondary shadow-xs font-black"
+                    : "text-gray-600 hover:text-gray-900"
+                    }`}
+                >
+                  <LuChartBar className="text-sm" />
+                  <span>Category Bar Chart</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveChartTab("trend")}
+                  className={`px-3 py-1.5 transition-all flex items-center gap-1.5 cursor-pointer ${activeChartTab === "trend"
+                    ? "bg-white text-secondary shadow-xs font-black"
+                    : "text-gray-600 hover:text-gray-900"
+                    }`}
+                >
+                  <LuTrendingUp className="text-sm" />
+                  <span>Annual Contact Types</span>
+                </button>
+              </div>
+            </div>
+
+            {/* ════════════════════════════════════════════════════════════════════════════
+                TAB 1: BAR CHART (IMAGE 1 STYLE) WITH DATE FILTER
+               ════════════════════════════════════════════════════════════════════════════ */}
+            {activeChartTab === "bar" && (
+              <div className="space-y-4">
+                {/* Date Selection Filter Bar */}
+                <div className="flex flex-wrap items-center justify-between gap-3 p-3 bg-slate-50 border border-gray-200 text-xs">
+                  {/* Preset Pills */}
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <span className="font-bold text-gray-600 flex items-center gap-1 mr-1">
+                      <LuFilter className="text-xs text-secondary" /> Date Filter:
+                    </span>
+                    {[
+                      { key: "all", label: "All Time" },
+                      { key: "7days", label: "Last 7 Days" },
+                      { key: "30days", label: "Last 30 Days" },
+                      { key: "last3Months", label: "Last 3 Months" },
+                      { key: "custom", label: "Custom Range" },
+                    ].map((p) => (
+                      <button
+                        key={p.key}
+                        type="button"
+                        onClick={() => setDatePreset(p.key)}
+                        className={`px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider transition-colors cursor-pointer border ${datePreset === p.key
+                          ? "bg-secondary text-white border-secondary shadow-xs"
+                          : "bg-white text-gray-600 border-gray-200 hover:bg-gray-100"
+                          }`}
+                      >
+                        {p.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Custom Date Inputs */}
+                  {datePreset === "custom" && (
+                    <div className="flex flex-wrap items-center gap-2 animate-in fade-in duration-200">
+                      <div className="flex items-center gap-1">
+                        <span className="text-[10px] font-bold text-gray-500 uppercase">From:</span>
+                        <input
+                          type="date"
+                          value={startDate}
+                          onChange={(e) => setStartDate(e.target.value)}
+                          className="px-2 py-1 bg-white border border-gray-300 text-xs font-semibold text-gray-700 focus:outline-none focus:border-secondary"
+                        />
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span className="text-[10px] font-bold text-gray-500 uppercase">To:</span>
+                        <input
+                          type="date"
+                          value={endDate}
+                          onChange={(e) => setEndDate(e.target.value)}
+                          className="px-2 py-1 bg-white border border-gray-300 text-xs font-semibold text-gray-700 focus:outline-none focus:border-secondary"
+                        />
+                      </div>
+                      {(startDate || endDate) && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setStartDate("");
+                            setEndDate("");
+                          }}
+                          className="p-1 text-gray-400 hover:text-red-600 cursor-pointer"
+                          title="Clear Dates"
+                        >
+                          <LuRefreshCw className="text-xs" />
+                        </button>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Active Count Readout */}
+                  <div className="text-[11px] font-bold text-gray-500 font-mono ml-auto">
+                    Active Results: <span className="text-secondary-dark font-black">{filteredSubmissions.length} Inquiries</span>
+                  </div>
+                </div>
+
+                {/* White Chart Canvas Matching Image 1 (Responsive H-Scroll on Mobile) */}
+                <div className="w-full overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-gray-300">
+                  <div className="min-w-[680px] bg-white border border-gray-200 p-4 rounded-sm shadow-sm relative">
+                    {/* Header info inside white canvas */}
+                    <div className="flex items-center justify-between text-[11px] font-bold text-gray-500 mb-6 pb-2 border-b border-gray-100">
+                      <span className="uppercase tracking-wider flex items-center gap-2 text-secondary-dark font-black">
+                        <span className="w-2.5 h-2.5 rounded-full bg-secondary inline-block" />
+                        Category Distribution Spectrum
+                      </span>
+                      <span className="font-mono text-gray-500">
+                        Peak Category: <span className="text-secondary-dark font-black">{maxBarCount} inq</span>
+                      </span>
+                    </div>
+
+                    {/* Chart Body with Horizontal Grid Lines */}
+                    <div className="relative h-64 w-full flex items-end pt-6 pb-0">
+                      {/* Horizontal Grid Lines */}
+                      <div className="absolute inset-0 top-6 bottom-10 flex flex-col justify-between pointer-events-none">
+                        <div className="border-b border-gray-100 w-full text-[9px] font-mono text-gray-400 pr-1 text-right">
+                          {maxBarCount}
+                        </div>
+                        <div className="border-b border-gray-100 w-full text-[9px] font-mono text-gray-400 pr-1 text-right">
+                          {Math.round(maxBarCount * 0.75)}
+                        </div>
+                        <div className="border-b border-gray-100 w-full text-[9px] font-mono text-gray-400 pr-1 text-right">
+                          {Math.round(maxBarCount * 0.5)}
+                        </div>
+                        <div className="border-b border-gray-100 w-full text-[9px] font-mono text-gray-400 pr-1 text-right">
+                          {Math.round(maxBarCount * 0.25)}
+                        </div>
+                        <div className="border-b border-gray-200 w-full text-[9px] font-mono text-gray-400 pr-1 text-right">
+                          0
+                        </div>
+                      </div>
+
+                      {/* Bars Matching Reference Image 1 */}
+                      <div className="relative z-10 w-full h-full flex items-end justify-between px-2 gap-2 sm:gap-3">
+                        {barChartData.map((item, idx) => {
+                          const heightPct = Math.max(
+                            Math.round((item.count / maxBarCount) * 100),
+                            item.count > 0 ? 8 : 2
+                          );
+                          const isHovered = hoveredBarIndex === idx;
+
+                          return (
+                            <div
+                              key={item.key}
+                              onMouseEnter={() => setHoveredBarIndex(idx)}
+                              onMouseLeave={() => setHoveredBarIndex(null)}
+                              className="flex-1 flex flex-col items-center h-full justify-end group cursor-pointer relative"
+                            >
+                              {/* Hover Floating Tooltip */}
+                              <div
+                                className={`absolute -top-11 transition-all duration-150 pointer-events-none z-30 ${isHovered ? "opacity-100 scale-100 -translate-y-1" : "opacity-0 scale-95"
+                                  }`}
+                              >
+                                <div className="bg-slate-900 text-white text-[11px] font-bold px-2.5 py-1.5 rounded shadow-xl border border-slate-700 whitespace-nowrap text-center">
+                                  <div className="text-gray-200">{item.fullLabel}</div>
+                                  <div className="text-cyan-300 font-mono font-black">
+                                    {item.count} Inquiries ({item.pct}%)
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Vertical Colored Bar (Image 1 style with rounded top) */}
+                              <div className="w-full max-w-[42px] h-full flex items-end justify-center">
+                                <div
+                                  className={`w-full rounded-t-sm transition-all duration-500 ease-out ${isHovered ? "brightness-95 shadow-md scale-x-105" : "hover:brightness-95"
+                                    }`}
+                                  style={{
+                                    height: `${heightPct}%`,
+                                    backgroundColor: item.color,
+                                  }}
+                                />
+                              </div>
+
+                              {/* Bottom Labels */}
+                              <div className="mt-2.5 text-center flex flex-col items-center">
+                                <span className="font-mono text-[10px] font-black text-gray-900">
+                                  {item.count}
+                                </span>
+                                <span
+                                  className="text-[10px] font-bold text-gray-600 truncate max-w-[50px] sm:max-w-[65px] transition-colors group-hover:text-secondary-dark"
+                                  title={item.fullLabel}
+                                >
+                                  {item.label}
+                                </span>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ════════════════════════════════════════════════════════════════════════════
+                TAB 2: ANNUAL MONTHLY REACH BY CONTACT TYPE (WHITE BG, YEAR DROPDOWN)
+               ════════════════════════════════════════════════════════════════════════════ */}
+            {activeChartTab === "trend" && (
+              <div className="space-y-4">
+                {/* Controls & Metrics Header */}
+                <div className="flex flex-wrap items-center justify-between gap-3 p-3 bg-slate-50 border border-gray-200 text-xs">
+                  {/* Year Dropdown */}
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-gray-700 flex items-center gap-1.5 uppercase tracking-wider text-[11px]">
+                      <LuCalendar className="text-secondary" /> Year:
+                    </span>
+                    <select
+                      value={selectedYear}
+                      onChange={(e) => setSelectedYear(e.target.value)}
+                      className="px-3 py-1.5 bg-white border border-gray-300 text-xs font-black text-secondary-dark rounded-sm focus:outline-none focus:border-secondary cursor-pointer shadow-xs"
+                    >
+                      {availableYears.map((yr) => (
+                        <option key={yr} value={yr}>
+                          Year {yr}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Contact Type Filter Pills (Legend) */}
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedTypeFilter("all")}
+                      className={`px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider transition-all cursor-pointer border ${selectedTypeFilter === "all"
+                        ? "bg-secondary-dark text-white border-secondary-dark shadow-xs"
+                        : "bg-white text-gray-600 border-gray-200 hover:bg-gray-100"
+                        }`}
+                    >
+                      All Types ({totalYearContacts})
+                    </button>
+                    {ANNUAL_CONTACT_TYPES.map((t) => {
+                      const isSelected = selectedTypeFilter === t.key;
+                      const count = yearlyTotalsByType[t.key] || 0;
+                      return (
+                        <button
+                          key={t.key}
+                          type="button"
+                          onClick={() => setSelectedTypeFilter(isSelected ? "all" : t.key)}
+                          className={`px-2.5 py-1 text-[11px] font-bold transition-all flex items-center gap-1.5 cursor-pointer border ${isSelected
+                            ? "text-white shadow-xs border-transparent font-black"
+                            : "bg-white text-gray-700 border-gray-200 hover:border-gray-300"
+                            }`}
+                          style={{
+                            backgroundColor: isSelected ? t.color : undefined,
+                          }}
+                        >
+                          <span
+                            className="w-2.5 h-2.5 inline-block shrink-0 rounded-xs"
+                            style={{ backgroundColor: isSelected ? "#ffffff" : t.color }}
+                          />
+                          <span>{t.shortLabel}</span>
+                          <span className={`font-mono text-[10px] ${isSelected ? "text-white/90" : "text-gray-400 font-bold"}`}>
+                            ({count})
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Peak Month Readout */}
+                  <div className="text-[11px] text-gray-500 font-mono hidden xl:block ml-auto">
+                    Peak Month: <span className="font-bold text-gray-900">{peakMonth.month} ({peakMonth.total} contacts)</span>
+                  </div>
+                </div>
+
+                {/* White Canvas (Responsive H-Scroll on Mobile) */}
+                <div className="w-full overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-gray-300">
+                  <div className="min-w-[680px] bg-white border border-gray-200 p-4 rounded-sm shadow-sm relative">
+                    {/* SVG Line Chart */}
+                    <div className="relative w-full">
+                      <svg viewBox="0 0 900 280" className="w-full h-auto overflow-visible select-none">
+                        {/* Horizontal Grid Lines */}
+                        {[0, 0.25, 0.5, 0.75, 1].map((pct, idx) => {
+                          const y = 30 + (1 - pct) * 200;
+                          const val = Math.round(pct * maxTrendVal);
+                          return (
+                            <g key={idx}>
+                              <line
+                                x1="45"
+                                y1={y}
+                                x2="865"
+                                y2={y}
+                                stroke="#e2e8f0"
+                                strokeWidth="1"
+                                strokeDasharray={pct > 0 && pct < 1 ? "4 4" : "0"}
+                              />
+                              {/* Left & Right Y Axis Labels */}
+                              <text
+                                x="35"
+                                y={y + 4}
+                                fill="#94a3b8"
+                                fontSize="11"
+                                fontFamily="monospace"
+                                textAnchor="end"
+                              >
+                                {val}
+                              </text>
+                              <text
+                                x="875"
+                                y={y + 4}
+                                fill="#94a3b8"
+                                fontSize="11"
+                                fontFamily="monospace"
+                                textAnchor="start"
+                              >
+                                {val}
+                              </text>
+                            </g>
+                          );
+                        })}
+
+                        {/* Vertical Grid Lines for the 12 Months */}
+                        {annualMonthlyTypeData.map((item, i) => {
+                          const x = 55 + (i / 11) * 800;
+                          const isHovered = hoveredMonthIndex === i;
+                          return (
+                            <g key={i}>
+                              <line
+                                x1={x}
+                                y1="30"
+                                x2={x}
+                                y2="230"
+                                stroke={isHovered ? "#cbd5e1" : "#f1f5f9"}
+                                strokeWidth="1"
+                                strokeDasharray="3 3"
+                              />
+                              {/* Month Labels on X Axis */}
+                              <text
+                                x={x}
+                                y="255"
+                                fill={isHovered ? "#007BA7" : "#64748b"}
+                                fontSize="11"
+                                fontWeight={isHovered ? "bold" : "600"}
+                                textAnchor="middle"
+                              >
+                                {item.month}
+                              </text>
+                            </g>
+                          );
+                        })}
+
+                        {/* Trend Lines & Markers for Contact Types */}
+                        {ANNUAL_CONTACT_TYPES.filter(
+                          (t) => selectedTypeFilter === "all" || selectedTypeFilter === t.key
+                        ).map((type) => {
+                          const points = annualMonthlyTypeData.map((item, i) => {
+                            const x = 55 + (i / 11) * 800;
+                            const count = item.byType[type.key] || 0;
+                            const y = 30 + (1 - count / maxTrendVal) * 200;
+                            return { x, y, val: count };
+                          });
+
+                          const pathD = points
+                            .map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`)
+                            .join(" ");
+
+                          const isSingleFocused = selectedTypeFilter === type.key;
+
+                          return (
+                            <g key={type.key}>
+                              {/* Path Line */}
+                              <path
+                                d={pathD}
+                                fill="none"
+                                stroke={type.color}
+                                strokeWidth={isSingleFocused ? "3.5" : "2.5"}
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="transition-all duration-300"
+                              />
+
+                              {/* Point Markers */}
+                              {points.map((p, i) => {
+                                const isMonthHovered = hoveredMonthIndex === i;
+                                return (
+                                  <g key={`pt-${type.key}-${i}`} className="pointer-events-none">
+                                    {type.dotShape === "circle" && (
+                                      <circle
+                                        cx={p.x}
+                                        cy={p.y}
+                                        r={isMonthHovered ? 6 : 4.5}
+                                        fill={type.color}
+                                        stroke="#ffffff"
+                                        strokeWidth="2"
+                                      />
+                                    )}
+                                    {type.dotShape === "diamond" && (
+                                      <polygon
+                                        points={`${p.x},${p.y - (isMonthHovered ? 6 : 4.5)} ${p.x + (isMonthHovered ? 6 : 4.5)},${p.y} ${p.x},${p.y + (isMonthHovered ? 6 : 4.5)} ${p.x - (isMonthHovered ? 6 : 4.5)},${p.y}`}
+                                        fill={type.color}
+                                        stroke="#ffffff"
+                                        strokeWidth="2"
+                                      />
+                                    )}
+                                    {type.dotShape === "square" && (
+                                      <rect
+                                        x={p.x - (isMonthHovered ? 5 : 4)}
+                                        y={p.y - (isMonthHovered ? 5 : 4)}
+                                        width={isMonthHovered ? 10 : 8}
+                                        height={isMonthHovered ? 10 : 8}
+                                        fill={type.color}
+                                        stroke="#ffffff"
+                                        strokeWidth="2"
+                                        rx="1"
+                                      />
+                                    )}
+                                    {type.dotShape === "triangle" && (
+                                      <polygon
+                                        points={`${p.x},${p.y - (isMonthHovered ? 6 : 4.5)} ${p.x + (isMonthHovered ? 5.5 : 4)},${p.y + (isMonthHovered ? 4.5 : 3.5)} ${p.x - (isMonthHovered ? 5.5 : 4)},${p.y + (isMonthHovered ? 4.5 : 3.5)}`}
+                                        fill={type.color}
+                                        stroke="#ffffff"
+                                        strokeWidth="2"
+                                      />
+                                    )}
+
+                                    {/* Number readout if type is isolated and count > 0 */}
+                                    {isSingleFocused && p.val > 0 && (
+                                      <text
+                                        x={p.x}
+                                        y={p.y - 8}
+                                        fill={type.color}
+                                        fontSize="10"
+                                        fontFamily="monospace"
+                                        fontWeight="bold"
+                                        textAnchor="middle"
+                                      >
+                                        {p.val}
+                                      </text>
+                                    )}
+                                  </g>
+                                );
+                              })}
+                            </g>
+                          );
+                        })}
+
+                        {/* Interactive Vertical Guide Line on Hover */}
+                        {hoveredMonthIndex !== null && (
+                          <g pointerEvents="none">
+                            <line
+                              x1={55 + (hoveredMonthIndex / 11) * 800}
+                              y1="30"
+                              x2={55 + (hoveredMonthIndex / 11) * 800}
+                              y2="230"
+                              stroke="#007BA7"
+                              strokeWidth="1.5"
+                              strokeDasharray="3 3"
+                            />
+                          </g>
+                        )}
+
+                        {/* Transparent Month Hitbox Columns for Seamless Interaction */}
+                        {annualMonthlyTypeData.map((item, i) => {
+                          const colWidth = 800 / 11;
+                          const x = 55 + (i / 11) * 800 - colWidth / 2;
+                          return (
+                            <rect
+                              key={`hitbox-${i}`}
+                              x={Math.max(40, x)}
+                              y="20"
+                              width={colWidth}
+                              height="220"
+                              fill="transparent"
+                              className="cursor-pointer"
+                              onMouseEnter={() => setHoveredMonthIndex(i)}
+                              onMouseLeave={() => setHoveredMonthIndex(null)}
+                            />
+                          );
+                        })}
+                      </svg>
+
+                      {/* Interactive Float Readout for Hovered Month */}
+                      {hoveredMonthIndex !== null && (
+                        <div className="absolute top-2 right-4 bg-white/95 border border-gray-200 p-3 rounded-sm shadow-xl text-xs space-y-2 backdrop-blur-xs min-w-[210px] z-20 animate-in fade-in duration-150">
+                          <div className="border-b border-gray-100 pb-1.5 flex items-center justify-between">
+                            <span className="font-bold text-gray-900">
+                              {annualMonthlyTypeData[hoveredMonthIndex].month} {selectedYear}
+                            </span>
+                            <span className="font-mono font-black text-secondary-dark text-[11px]">
+                              {annualMonthlyTypeData[hoveredMonthIndex].total} Reached
+                            </span>
+                          </div>
+                          <div className="space-y-1">
+                            {ANNUAL_CONTACT_TYPES.map((t) => {
+                              const count = annualMonthlyTypeData[hoveredMonthIndex].byType[t.key] || 0;
+                              return (
+                                <div
+                                  key={t.key}
+                                  className={`flex items-center justify-between text-[11px] ${count > 0 ? "font-bold text-gray-800" : "text-gray-400 font-normal"
+                                    }`}
+                                >
+                                  <div className="flex items-center gap-1.5">
+                                    <span
+                                      className="w-2 h-2 rounded-full inline-block shrink-0"
+                                      style={{ backgroundColor: t.color }}
+                                    />
+                                    <span>{t.label}</span>
+                                  </div>
+                                  <span className="font-mono">{count}</span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Annual Totals Breakdown by Contact Type */}
+                    <div className="mt-6 pt-4 border-t border-gray-100">
+                      <div className="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-2">
+                        Annual Contact Volume by Category ({selectedYear})
+                      </div>
+                      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2">
+                        {ANNUAL_CONTACT_TYPES.map((t) => {
+                          const count = yearlyTotalsByType[t.key] || 0;
+                          const pct = totalYearContacts > 0 ? Math.round((count / totalYearContacts) * 100) : 0;
+                          const isFiltered = selectedTypeFilter === t.key;
+                          return (
+                            <button
+                              type="button"
+                              key={t.key}
+                              onClick={() => setSelectedTypeFilter(isFiltered ? "all" : t.key)}
+                              className={`p-2 border transition-all cursor-pointer text-left ${isFiltered
+                                ? "bg-slate-50 border-secondary ring-1 ring-secondary shadow-xs"
+                                : "bg-white border-gray-200 hover:bg-slate-50"
+                                }`}
+                            >
+                              <div className="flex items-center gap-1.5 text-[10px] font-bold text-gray-600 truncate">
+                                <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: t.color }} />
+                                <span className="truncate">{t.shortLabel}</span>
+                              </div>
+                              <div className="mt-1 flex items-baseline justify-between">
+                                <span className="font-mono text-sm font-black text-gray-900">{count}</span>
+                                <span className="text-[10px] font-mono text-gray-400 font-bold">{pct}%</span>
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+
           {/* Table: Recent Customer & Vessel Inquiries Stream */}
           <div className="bg-white border border-gray-200 p-5 shadow-xs">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-gray-100 gap-3 mb-4">
@@ -364,7 +1121,7 @@ export default function DashboardPage() {
                 </div>
                 <div>
                   <h2 className="font-oswald text-lg font-bold text-secondary-dark uppercase tracking-wider">
-                    Recent Customer & Vessel Inquiries
+                    Recent Inquiries
                   </h2>
                 </div>
               </div>
@@ -453,61 +1210,7 @@ export default function DashboardPage() {
             )}
           </div>
 
-          {/* Analytics Chart: Customer Inquiry Categories Breakdown (Interactive Bar Chart) */}
-          <div className="bg-white border border-gray-200 p-5 shadow-xs space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-gray-100 gap-2">
-              <div className="flex items-center gap-2">
-                <LuChartBar className="text-secondary text-xl" />
-                <div>
-                  <h3 className="font-oswald text-base font-bold text-secondary-dark uppercase tracking-wider">
-                    Inquiry Category Analytics & Distribution
-                  </h3>
-                </div>
-              </div>
-              <div className="flex items-center gap-1 bg-slate-100 p-1 border border-gray-200 text-xs font-bold">
-                <button
-                  onClick={() => setActiveChartTab("categories")}
-                  className={`px-3 py-1 transition-all ${activeChartTab === "categories" ? "bg-white text-secondary shadow-xs" : "text-gray-600 hover:text-gray-900"}`}
-                >
-                  Categories
-                </button>
-                <button
-                  onClick={() => setActiveChartTab("volume")}
-                  className={`px-3 py-1 transition-all ${activeChartTab === "volume" ? "bg-white text-secondary shadow-xs" : "text-gray-600 hover:text-gray-900"}`}
-                >
-                  Relative Volume
-                </button>
-              </div>
-            </div>
 
-            <div className="space-y-4 pt-2">
-              {categoriesData.map((item, idx) => {
-                const pct = Math.round((item.count / totalInquiries) * 100);
-                const barWidthPct = Math.max(Math.round((item.count / maxCategoryCount) * 100), item.count > 0 ? 8 : 4);
-
-                return (
-                  <div key={idx} className="space-y-1.5">
-                    <div className="flex items-center justify-between text-xs font-bold">
-                      <span className="text-gray-800 flex items-center gap-2">
-                        <span className={`w-2.5 h-2.5 ${item.color}`}></span>
-                        {item.label}
-                      </span>
-                      <span className="text-gray-600 font-mono">
-                        {item.count} inquiries ({pct}%)
-                      </span>
-                    </div>
-
-                    <div className="w-full bg-slate-100 h-3 border border-gray-200 overflow-hidden relative">
-                      <div
-                        className={`h-full transition-all duration-500 ease-out ${item.color}`}
-                        style={{ width: `${barWidthPct}%` }}
-                      ></div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
 
         </div>
       )}

@@ -277,7 +277,7 @@ export function generatePasswordChangedEmailHTML({ fullName, username, newPasswo
                 <!-- Security & Date/Time Notice -->
                 <div style="background-color: #fffbeb; border: 1px solid #fef3c7; border-left: 4px solid #f59e0b; padding: 14px 16px; margin: 20px 0;">
                     <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #92400e; font-weight: 600;">
-                        Your password was changed on <strong>${dateTime}</strong>. If you did not make this change, please contact the administrator immediately.
+                        Your password was changed. If you did not make this change, please contact the administrator immediately.
                     </p>
                 </div>
 

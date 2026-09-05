@@ -107,7 +107,7 @@ export default function NotificationsPage() {
 
       {/* Tabs */}
       <div className="flex flex-col md:flex-row border-b items-center border-gray-200 bg-white">
-        <div className="flex flex-row">
+        <div className="w-full flex flex-row">
           <button
             onClick={() => setActiveTab("unread")}
             className={`w-full md:w-fit justify-center px-3 md:px-6 py-3 text-xs font-bold uppercase tracking-wider transition-colors border-b-2 flex items-center gap-2 ${activeTab === "unread"
@@ -131,7 +131,7 @@ export default function NotificationsPage() {
         {activeTab === "unread" && unreadList.length > 0 && (
           <button
             onClick={markAllAsRead}
-            className="w-full md:w-fit justify-center mt-3 md:mt-0 ms-auto px-2 py-1.5 h-fit bg-emerald-50 hover:bg-emerald-600 text-emerald-700 hover:text-white border border-emerald-200 hover:border-emerald-600 text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-1.5 cursor-pointer"
+            className="w-full md:w-fit justify-center mt-3 md:mt-0 ms-auto px-2 py-1.5 whitespace-nowrap h-fit bg-emerald-50 hover:bg-emerald-600 text-emerald-700 hover:text-white border border-emerald-200 hover:border-emerald-600 text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-1.5 cursor-pointer"
           >
             <LuCheck className="text-sm font-black" /> Mark All Read
           </button>
@@ -178,7 +178,7 @@ export default function NotificationsPage() {
 
                   <div>
                     <h3 className="text-xs font-bold text-gray-900 leading-snug">{item.title}</h3>
-                    <p className="text-xs text-gray-600 mt-0.5">{item.message}</p>
+                    <p className="text-xs text-gray-600 mt-0.5 break-all">{item.message}</p>
                     <span className="text-[11px] text-gray-400 flex items-center gap-1 mt-1 font-semibold">
                       <LuClock className="text-xs" />
                       {new Date(item.createdAt).toLocaleString()}
@@ -189,7 +189,7 @@ export default function NotificationsPage() {
                 {!item.isRead && (
                   <button
                     onClick={() => markAsRead(item._id)}
-                    className="w-full md:w-fit flex justify-center px-1.5 py-1 cursor-pointer bg-emerald-50 hover:bg-emerald-600 text-emerald-700 hover:text-white border border-emerald-200 hover:border-emerald-600 text-xs font-bold uppercase tracking-wider transition-colors items-center gap-1.5 flex-shrink-0 self-start sm:self-center"
+                    className="w-full md:w-fit hidden sm:flex justify-center px-1.5 py-1 cursor-pointer bg-emerald-50 hover:bg-emerald-600 text-emerald-700 hover:text-white border border-emerald-200 hover:border-emerald-600 text-xs font-bold uppercase tracking-wider transition-colors items-center gap-1.5 flex-shrink-0 self-start sm:self-center"
                     title="Mark as Read (Tick)"
                   >
                     <LuCheck className="text-sm font-black" />
