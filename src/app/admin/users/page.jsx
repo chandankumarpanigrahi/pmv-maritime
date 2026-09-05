@@ -76,6 +76,8 @@ export default function UsersPage() {
   const [newPassword, setNewPassword] = useState("");
   const [showPlainPassMap, setShowPlainPassMap] = useState({});
   const [copiedMap, setCopiedMap] = useState({});
+  const [sendingMailUserId, setSendingMailUserId] = useState(null);
+  const [sentMailMap, setSentMailMap] = useState({});
 
   const fetchUsersData = useCallback(async () => {
     try {
@@ -318,6 +320,43 @@ export default function UsersPage() {
       }, 2000);
     } catch (err) {
       console.error("Failed to copy password:", err);
+    }
+  };
+
+  // Send Credentials via Email using Nodemailer
+  const handleSendCredentialsEmail = async (user) => {
+    if (!user || !user._id) return;
+    if (!user.email) {
+      toast.error("This user account does not have a valid email address.");
+      return;
+    }
+
+    setSendingMailUserId(user._id);
+    const toastId = toast.loading(`Sending credentials to ${user.email}...`);
+
+    try {
+      const res = await fetch("/api/users/send-credentials", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: user._id }),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        toast.success(data.message || `Credentials sent to ${user.email}`, { id: toastId });
+        setSentMailMap((prev) => ({ ...prev, [user._id]: true }));
+        setTimeout(() => {
+          setSentMailMap((prev) => ({ ...prev, [user._id]: false }));
+        }, 3000);
+        fetchUsersData();
+      } else {
+        toast.error(data.error || "Failed to send credentials email.", { id: toastId });
+      }
+    } catch (err) {
+      console.error("Error sending credentials email:", err);
+      toast.error("Failed to connect to email service.", { id: toastId });
+    } finally {
+      setSendingMailUserId(null);
     }
   };
 
@@ -735,6 +774,25 @@ export default function UsersPage() {
                                 title="Reset Password"
                               >
                                 <LuRefreshCw className="text-[15px]" />
+                              </button>
+
+                              <button
+                                onClick={() => handleSendCredentialsEmail(u)}
+                                disabled={sendingMailUserId === u._id}
+                                className="text-indigo-600 hover:text-indigo-800 p-1 transition-colors cursor-pointer disabled:opacity-50"
+                                title={
+                                  sentMailMap[u._id]
+                                    ? `Credentials Sent to ${u.email}!`
+                                    : `Send Access Credentials to ${u.email}`
+                                }
+                              >
+                                {sendingMailUserId === u._id ? (
+                                  <LuRefreshCw className="text-[15px] animate-spin text-indigo-600" />
+                                ) : sentMailMap[u._id] ? (
+                                  <LuCheck className="text-[15px] text-emerald-600 font-bold animate-in zoom-in duration-100" />
+                                ) : (
+                                  <LuMail className="text-[15px]" />
+                                )}
                               </button>
 
                               <button

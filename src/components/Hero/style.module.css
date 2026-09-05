@@ -8,13 +8,14 @@
     z-index: 0;
 }
 
+.videoBgContainer {
+    background: linear-gradient(135deg, #007ba7 0%, #005978 50%, #ad1d41 100%);
+}
+
 .overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg,
-            rgba(26, 26, 46, 0.9) 0%,
-            rgba(26, 26, 46, 0.75) 50%,
-            rgba(0, 123, 167, 0.25) 100%);
+    background: linear-gradient(135deg, #041f33 0%, #1a1a2ebf 50%, #55001691 100%);
     z-index: 10;
 }
 

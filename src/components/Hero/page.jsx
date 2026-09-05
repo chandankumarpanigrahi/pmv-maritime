@@ -47,7 +47,7 @@ const statsData = [
 
 export default function Hero() {
   return (
-    <div className="relative w-full h-full md:h-screen overflow-hidden">
+    <div className={`${styles.videoBgContainer} relative w-full h-full md:h-screen overflow-hidden`}>
       {/* Background Video */}
       <video
         autoPlay

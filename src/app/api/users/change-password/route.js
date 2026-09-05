@@ -1,8 +1,51 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
+import nodemailer from "nodemailer";
+import { generatePasswordChangedEmailHTML } from "@/lib/emailTemplate";
 
 export const dynamic = "force-dynamic";
+
+async function sendPasswordChangedEmail({ user, newPassword }) {
+  if (!user || !user.email) return;
+
+  const smtpHost = process.env.SMTP_HOST;
+  const smtpPort = Number(process.env.SMTP_PORT) || 465;
+  const smtpUser = process.env.SMTP_USER;
+  const smtpPass = process.env.SMTP_PASS;
+
+  if (!smtpHost || !smtpUser || !smtpPass) return;
+
+  const transporter = nodemailer.createTransport({
+    host: smtpHost,
+    port: smtpPort,
+    secure: smtpPort === 465,
+    auth: {
+      user: smtpUser,
+      pass: smtpPass,
+    },
+  });
+
+  const changeDateTime = new Date().toLocaleString("en-GB", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+
+  const emailHtml = generatePasswordChangedEmailHTML({
+    fullName: user.fullName,
+    username: user.username,
+    newPassword: newPassword.trim(),
+    dateTime: changeDateTime,
+    loginUrl: "https://pmvmaritime.com/admin",
+  });
+
+  await transporter.sendMail({
+    from: `"PMV Maritime Solutions" <${smtpUser}>`,
+    to: user.email,
+    subject: "Your PMV Maritime Password Has Been Changed",
+    html: emailHtml,
+  });
+}
 
 export async function PUT(request) {
   try {
@@ -55,6 +98,13 @@ export async function PUT(request) {
         isRead: false,
         createdAt: new Date().toISOString(),
       });
+
+      // Automatically dispatch security notification email
+      try {
+        await sendPasswordChangedEmail({ user, newPassword });
+      } catch (mailErr) {
+        console.error("Failed to send admin reset email:", mailErr);
+      }
 
       return NextResponse.json({
         success: true,
@@ -109,6 +159,13 @@ export async function PUT(request) {
       createdAt: new Date().toISOString(),
     });
 
+    // Automatically dispatch security notification email
+    try {
+      await sendPasswordChangedEmail({ user: dbUser, newPassword });
+    } catch (mailErr) {
+      console.error("Failed to send password changed email:", mailErr);
+    }
+
     return NextResponse.json({
       success: true,
       message: "Password changed successfully.",
@@ -117,3 +174,4 @@ export async function PUT(request) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+

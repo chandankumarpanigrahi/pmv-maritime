@@ -8,6 +8,7 @@ import Maintenance from "@/components/Maintenance/page";
 import SmoothScroll from "@/components/SmoothScroll";
 import { Toaster } from "react-hot-toast";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
+import DraggableTimerBadge from "@/components/DraggableTimerBadge";
 
 export default function ClientLayout({ children, maintenanceMode, showLoader }) {
   const [liveMaintenanceMode, setLiveMaintenanceMode] = useState(maintenanceMode);
@@ -153,19 +154,7 @@ export default function ClientLayout({ children, maintenanceMode, showLoader }) 
       ) : (
         <>
           {hasBypass && !isAdmin && (
-            <div className="fixed bottom-8 right-4 z-99999 flex items-center gap-3 bg-slate-900/90 hover:bg-slate-900 border border-slate-700/80 backdrop-blur-md px-3 py-1.5 rounded-full shadow-lg transition-all duration-300">
-              <div className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span className="text-xs font-mono font-bold text-emerald-400">{timeLeft}</span>
-              </div>
-              <div className="w-px h-3 bg-slate-700"></div>
-              <button
-                onClick={handleLogout}
-                className="text-[10px] font-bold text-rose-400 hover:text-rose-300 transition-colors uppercase tracking-wider cursor-pointer"
-              >
-                Logout
-              </button>
-            </div>
+            <DraggableTimerBadge timeLeft={timeLeft} onLogout={handleLogout} />
           )}
           {!isAdmin && <Header />}
           {children}
