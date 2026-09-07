@@ -186,8 +186,8 @@ export default function SessionsPage() {
                   return (
                     <tr key={s._id} className="hover:bg-slate-50/80 transition-colors">
                       <td className="py-3.5 px-4">
-                        <div className="font-bold text-gray-900">{s.fullName || s.username}</div>
-                        <span className="text-[11px] text-gray-400">{s.email || `@${s.username}`}</span>
+                        <div className="font-bold text-gray-900">{s.fullName || s.email}</div>
+                        <span className="text-[11px] text-gray-400">{s.email}</span>
                       </td>
 
                       <td className="py-3.5 px-4">
@@ -294,7 +294,7 @@ export default function SessionsPage() {
               <p className="text-xs text-gray-700 leading-relaxed font-semibold">
                 Are you sure you want to force disconnect and terminate the active session for{" "}
                 <span className="font-bold text-gray-900">
-                  {terminatingTarget.fullName || terminatingTarget.username}
+                  {terminatingTarget.fullName || terminatingTarget.email}
                 </span>
                 ?
               </p>

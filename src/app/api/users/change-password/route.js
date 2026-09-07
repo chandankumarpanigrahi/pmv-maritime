@@ -1,60 +1,27 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
-import nodemailer from "nodemailer";
+import { verifyPassword, hashPassword, isBcryptHash } from "@/lib/authCrypto";
+import { getTransporter } from "@/lib/nodemailer";
 import { generatePasswordChangedEmailHTML } from "@/lib/emailTemplate";
 
 export const dynamic = "force-dynamic";
 
-async function sendPasswordChangedEmail({ user, newPassword }) {
-  if (!user || !user.email) return;
-
-  const smtpHost = process.env.SMTP_HOST;
-  const smtpPort = Number(process.env.SMTP_PORT) || 465;
-  const smtpUser = process.env.SMTP_USER;
-  const smtpPass = process.env.SMTP_PASS;
-
-  if (!smtpHost || !smtpUser || !smtpPass) return;
-
-  const transporter = nodemailer.createTransport({
-    host: smtpHost,
-    port: smtpPort,
-    secure: smtpPort === 465,
-    auth: {
-      user: smtpUser,
-      pass: smtpPass,
-    },
-  });
-
-  const changeDateTime = new Date().toLocaleString("en-GB", {
-    dateStyle: "medium",
-    timeStyle: "short",
-  });
-
-  const emailHtml = generatePasswordChangedEmailHTML({
-    fullName: user.fullName,
-    username: user.username,
-    newPassword: newPassword.trim(),
-    dateTime: changeDateTime,
-    loginUrl: "https://pmvmaritime.com/admin",
-  });
-
-  await transporter.sendMail({
-    from: `"PMV Maritime Solutions" <${smtpUser}>`,
-    to: user.email,
-    subject: "Your PMV Maritime Password Has Been Changed",
-    html: emailHtml,
-  });
-}
-
 export async function PUT(request) {
   try {
     const body = await request.json();
-    const { userId, username, currentPassword, newPassword, isSuperAdminReset, performedBy } = body;
+    const { userId, email, currentPassword, newPassword } = body;
 
-    if (!newPassword || newPassword.trim().length < 4) {
+    if (!newPassword || newPassword.trim().length < 6) {
       return NextResponse.json(
-        { error: "New password must be at least 4 characters long." },
+        { error: "New password must be at least 6 characters long." },
+        { status: 400 }
+      );
+    }
+
+    if (!currentPassword?.trim()) {
+      return NextResponse.json(
+        { error: "Current password is required." },
         { status: 400 }
       );
     }
@@ -62,80 +29,53 @@ export async function PUT(request) {
     const client = await clientPromise;
     const db = client.db("pmv_maritime");
 
-    // Case 1: Super Admin Direct Reset
-    if (isSuperAdminReset && userId) {
-      const user = await db.collection("users").findOne({ _id: new ObjectId(userId) });
-      if (!user) {
-        return NextResponse.json({ error: "User not found." }, { status: 404 });
-      }
-
-      await db.collection("users").updateOne(
-        { _id: new ObjectId(userId) },
-        {
-          $set: {
-            password: newPassword.trim(),
-            plainRef: newPassword.trim(),
-            updatedAt: new Date().toISOString(),
-          },
-        }
-      );
-
-      // Audit Log
-      await db.collection("audit_logs").insertOne({
-        action: "PASSWORD_RESET_BY_ADMIN",
-        performedBy: performedBy || "Super Admin",
-        targetUser: user.username,
-        details: `Super Admin reset password for ${user.username}`,
-        createdAt: new Date().toISOString(),
-      });
-
-      // Notification
-      await db.collection("notifications").insertOne({
-        title: "User Password Reset",
-        message: `Password for ${user.fullName} (${user.username}) was reset by ${performedBy || "Super Admin"}.`,
-        category: "CONTENT",
-        targetRole: "SUPER_ADMIN",
-        isRead: false,
-        createdAt: new Date().toISOString(),
-      });
-
-      // Automatically dispatch security notification email
+    // Locate user by userId or email
+    const query = {};
+    if (userId) {
       try {
-        await sendPasswordChangedEmail({ user, newPassword });
-      } catch (mailErr) {
-        console.error("Failed to send admin reset email:", mailErr);
+        query._id = new ObjectId(userId);
+      } catch {
+        query._id = userId;
       }
-
-      return NextResponse.json({
-        success: true,
-        message: `Password for ${user.username} reset successfully.`,
-      });
-    }
-
-    // Case 2: Self-Service Password Change
-    if (!username || !currentPassword) {
+    } else if (email) {
+      query.email = email.trim().toLowerCase();
+    } else {
       return NextResponse.json(
-        { error: "Current password and username are required." },
+        { error: "User identification (ID or Email) is required." },
         { status: 400 }
       );
     }
 
-    const dbUser = await db.collection("users").findOne({
-      username: username.trim(),
-      password: currentPassword.trim(),
-    });
-
+    const dbUser = await db.collection("users").findOne(query);
     if (!dbUser) {
+      return NextResponse.json({ error: "User account not found." }, { status: 404 });
+    }
+
+    // Verify current password
+    let isCurrentMatch = false;
+    if (isBcryptHash(dbUser.password)) {
+      isCurrentMatch = await verifyPassword(currentPassword, dbUser.password);
+    } else if (dbUser.password === currentPassword.trim()) {
+      isCurrentMatch = true;
+    }
+
+    if (!isCurrentMatch) {
       return NextResponse.json({ error: "Current password is incorrect." }, { status: 401 });
     }
+
+    // Hash new password
+    const hashedNewPass = await hashPassword(newPassword.trim());
 
     await db.collection("users").updateOne(
       { _id: dbUser._id },
       {
         $set: {
-          password: newPassword.trim(),
-          plainRef: newPassword.trim(),
+          password: hashedNewPass,
           updatedAt: new Date().toISOString(),
+        },
+        $unset: {
+          plainRef: "",
+          username: "",
         },
       }
     );
@@ -143,25 +83,44 @@ export async function PUT(request) {
     // Audit Log
     await db.collection("audit_logs").insertOne({
       action: "PASSWORD_CHANGED_BY_USER",
-      performedBy: dbUser.username,
-      targetUser: dbUser.username,
-      details: `${dbUser.username} updated their own password`,
+      performedBy: dbUser.fullName || dbUser.email,
+      targetUser: dbUser.email,
+      details: `${dbUser.fullName || dbUser.email} updated their account password`,
       createdAt: new Date().toISOString(),
     });
 
     // Notification
     await db.collection("notifications").insertOne({
       title: "Password Changed",
-      message: `${dbUser.fullName} (${dbUser.username}) changed their password.`,
-      category: "CONTENT",
+      message: `${dbUser.fullName || dbUser.email} updated their password.`,
+      category: "SECURITY",
       targetRole: "SUPER_ADMIN",
       isRead: false,
       createdAt: new Date().toISOString(),
     });
 
-    // Automatically dispatch security notification email
+    // Send confirmation security email (WITHOUT new password)
     try {
-      await sendPasswordChangedEmail({ user: dbUser, newPassword });
+      const transporter = getTransporter();
+      const changeDateTime = new Date().toLocaleString("en-GB", {
+        dateStyle: "medium",
+        timeStyle: "short",
+      });
+
+      const emailHtml = generatePasswordChangedEmailHTML({
+        fullName: dbUser.fullName,
+        email: dbUser.email,
+        dateTime: changeDateTime,
+        loginUrl: "https://pmvmaritime.com/admin",
+      });
+
+      const smtpUser = process.env.SMTP_USER;
+      await transporter.sendMail({
+        from: `"PMV Maritime Solutions" <${smtpUser}>`,
+        to: dbUser.email,
+        subject: "Your PMV Maritime Password Has Been Changed",
+        html: emailHtml,
+      });
     } catch (mailErr) {
       console.error("Failed to send password changed email:", mailErr);
     }
@@ -171,7 +130,7 @@ export async function PUT(request) {
       message: "Password changed successfully.",
     });
   } catch (error) {
+    console.error("Change password error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
-

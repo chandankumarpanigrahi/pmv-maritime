@@ -36,7 +36,11 @@ export async function DELETE(request, { params }) {
     // Forcibly terminate any active session logs for this user
     await db.collection("session_logs").updateMany(
       {
-        $or: [{ userId: id.toString() }, { username: targetUser.username }],
+        $or: [
+          { userId: id.toString() },
+          { email: targetUser.email },
+          ...(targetUser.username ? [{ username: targetUser.username }] : []),
+        ],
         isTerminated: false,
       },
       {
@@ -49,19 +53,21 @@ export async function DELETE(request, { params }) {
       }
     );
 
+    const displayName = targetUser.fullName || targetUser.email;
+
     // Audit Log Entry
     await db.collection("audit_logs").insertOne({
       action: "USER_ACCOUNT_DELETED",
       performedBy: "Super Admin",
-      targetUser: targetUser.username,
-      details: `Permanently deleted user account ${targetUser.username} (${targetUser.email})`,
+      targetUser: targetUser.email,
+      details: `Permanently deleted user account for ${displayName} (${targetUser.email})`,
       createdAt: new Date().toISOString(),
     });
 
     // Notification Entry
     await db.collection("notifications").insertOne({
       title: "User Account Deleted",
-      message: `User account for ${targetUser.fullName} (@${targetUser.username}) was permanently deleted by Super Admin.`,
+      message: `User account for ${displayName} (${targetUser.email}) was permanently deleted by Super Admin.`,
       category: "SECURITY",
       targetRole: "SUPER_ADMIN",
       isRead: false,
@@ -70,7 +76,7 @@ export async function DELETE(request, { params }) {
 
     return NextResponse.json({
       success: true,
-      message: `User account @${targetUser.username} permanently deleted.`,
+      message: `User account for ${displayName} permanently deleted.`,
     });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

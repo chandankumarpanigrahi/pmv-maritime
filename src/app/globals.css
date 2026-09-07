@@ -35,6 +35,12 @@ body {
   font-family: var(--font-oswald), sans-serif;
 }
 
+/* Hide native Edge / Chromium / Windows password reveal icon to prevent overlapping double eye icon */
+input::-ms-reveal,
+input::-ms-clear {
+  display: none !important;
+}
+
 .max-w-7xl {
   max-width: 1380px !important;
 }

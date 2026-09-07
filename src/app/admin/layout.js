@@ -318,7 +318,7 @@ export default function AdminLayout({ children }) {
     setLoginError("");
 
     if (!usernameInput.trim() || !passwordInput.trim()) {
-      setLoginError("Please enter both username and password.");
+      setLoginError("Please enter both email address and password.");
       return;
     }
 
@@ -327,6 +327,7 @@ export default function AdminLayout({ children }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          email: usernameInput.trim(),
           username: usernameInput.trim(),
           password: passwordInput.trim(),
         }),

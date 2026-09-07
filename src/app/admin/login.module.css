@@ -146,6 +146,47 @@
     cursor: not-allowed;
 }
 
+.inputField::-ms-reveal,
+.inputField::-ms-clear {
+    display: none !important;
+}
+
+/* 6-Field Segmented OTP Code Input */
+.otpContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.otpBox {
+    flex: 1;
+    min-width: 0;
+    height: 3.25rem;
+    background-color: #ffffff;
+    border: 1.5px solid #d1d5db;
+    color: #005978;
+    text-align: center;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 1.35rem;
+    font-weight: 700;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.otpBox:focus {
+    border-color: #007BA7;
+    box-shadow: 0 0 0 3px rgba(0, 123, 167, 0.2);
+    background-color: #ffffff;
+}
+
+.otpBox:disabled {
+    background-color: #f8fafc;
+    color: #94a3b8;
+    cursor: not-allowed;
+}
+
 /* Submit Button */
 .submitBtn {
     width: 100%;

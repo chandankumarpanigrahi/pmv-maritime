@@ -45,7 +45,11 @@ export async function PATCH(request, { params }) {
     if (!newStatus) {
       await db.collection("session_logs").updateMany(
         {
-          $or: [{ userId: id.toString() }, { username: targetUser.username }],
+          $or: [
+            { userId: id.toString() },
+            { email: targetUser.email },
+            ...(targetUser.username ? [{ username: targetUser.username }] : []),
+          ],
           isTerminated: false,
         },
         {
@@ -59,14 +63,16 @@ export async function PATCH(request, { params }) {
       );
     }
 
+    const displayName = targetUser.fullName || targetUser.email;
+
     // Audit Log Entry
     await db.collection("audit_logs").insertOne({
       action: newStatus ? "USER_ACCESS_RESTORED" : "USER_ACCESS_RESTRICTED",
       performedBy: performedBy || "Super Admin",
-      targetUser: targetUser.username,
+      targetUser: targetUser.email,
       details: newStatus
-        ? `Restored login access for user ${targetUser.username}`
-        : `Restricted login access (Access Denied) for user ${targetUser.username}`,
+        ? `Restored login access for user ${displayName} (${targetUser.email})`
+        : `Restricted login access (Access Denied) for user ${displayName} (${targetUser.email})`,
       createdAt: new Date().toISOString(),
     });
 
@@ -74,8 +80,8 @@ export async function PATCH(request, { params }) {
     await db.collection("notifications").insertOne({
       title: newStatus ? "User Access Restored" : "User Access Restricted",
       message: newStatus
-        ? `Login access for ${targetUser.fullName} (${targetUser.username}) was restored by ${performedBy || "Super Admin"}.`
-        : `Login access for ${targetUser.fullName} (${targetUser.username}) was restricted (Access Denied) by ${performedBy || "Super Admin"}.`,
+        ? `Login access for ${displayName} (${targetUser.email}) was restored by ${performedBy || "Super Admin"}.`
+        : `Login access for ${displayName} (${targetUser.email}) was restricted (Access Denied) by ${performedBy || "Super Admin"}.`,
       category: "SECURITY",
       targetRole: "SUPER_ADMIN",
       isRead: false,
@@ -86,8 +92,8 @@ export async function PATCH(request, { params }) {
       success: true,
       isActive: newStatus,
       message: newStatus
-        ? `Access restored for ${targetUser.username}.`
-        : `Login access restricted for ${targetUser.username}.`,
+        ? `Access restored for ${displayName}.`
+        : `Login access restricted for ${displayName}.`,
     });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

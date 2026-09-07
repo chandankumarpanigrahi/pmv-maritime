@@ -7,21 +7,12 @@ import {
   LuPlus,
   LuShieldCheck,
   LuClock,
-  LuKey,
   LuPhone,
   LuMail,
   LuCircleCheck,
-  LuXCircle,
-  LuUserX,
   LuPencil,
   LuX,
-  LuLock,
   LuHistory,
-  LuEye,
-  LuEyeOff,
-  LuChevronDown,
-  LuChevronUp,
-  LuCopy,
   LuRefreshCw,
   LuBan,
   LuShieldAlert,
@@ -48,9 +39,8 @@ export default function UsersPage() {
   // Inline Add User Card Toggle
   const [showAddForm, setShowAddForm] = useState(false);
 
-  // Inline Form Edit Mode & Modals (Pass Reset, Restrict Access, Delete User)
+  // Inline Form Edit Mode & Modals (Restrict Access, Delete User)
   const [editingUserId, setEditingUserId] = useState(null);
-  const [resettingPassUser, setResettingPassUser] = useState(null);
   const [restrictingUser, setRestrictingUser] = useState(null);
   const [isRestricting, setIsRestricting] = useState(false);
 
@@ -60,22 +50,17 @@ export default function UsersPage() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState("");
 
-  // New / Edit User Form State
+  // New / Edit User Form State (No username, No plain password)
   const [formData, setFormData] = useState({
     fullName: "",
-    username: "",
     email: "",
     mobileNumber: "",
-    password: "",
     role: SYSTEM_ROLES.ASSOCIATE,
     sessionDurationHours: 12,
     permissions: ["services:view", "projects:view", "careers:view", "faqs:view", "submissions:view"],
   });
 
-  // Pass Reset State
-  const [newPassword, setNewPassword] = useState("");
-  const [showPlainPassMap, setShowPlainPassMap] = useState({});
-  const [copiedMap, setCopiedMap] = useState({});
+  // Action states for Email sending
   const [sendingMailUserId, setSendingMailUserId] = useState(null);
   const [sentMailMap, setSentMailMap] = useState({});
 
@@ -133,10 +118,8 @@ export default function UsersPage() {
     setEditingUserId(user._id);
     setFormData({
       fullName: user.fullName || "",
-      username: user.username || "",
       email: user.email || "",
       mobileNumber: user.mobileNumber || "",
-      password: "",
       role: user.role || SYSTEM_ROLES.ASSOCIATE,
       sessionDurationHours: user.sessionDurationHours || 12,
       permissions: user.permissions || [],
@@ -151,10 +134,8 @@ export default function UsersPage() {
     setEditingUserId(null);
     setFormData({
       fullName: "",
-      username: "",
       email: "",
       mobileNumber: "",
-      password: "",
       role: SYSTEM_ROLES.ASSOCIATE,
       sessionDurationHours: 12,
       permissions: ["services:view", "projects:view", "careers:view", "faqs:view", "submissions:view"],
@@ -166,23 +147,16 @@ export default function UsersPage() {
     e.preventDefault();
 
     const targetEmail = formData.email.trim().toLowerCase();
-    const targetUsername = formData.username.trim();
 
     // Client-side uniqueness validation against loaded users list
     const duplicateUser = users.find((u) => {
       if (editingUserId && u._id === editingUserId) return false;
-      return u.email?.toLowerCase() === targetEmail || u.username === targetUsername;
+      return u.email?.toLowerCase() === targetEmail;
     });
 
     if (duplicateUser) {
-      if (duplicateUser.email?.toLowerCase() === targetEmail) {
-        toast.error("An account with this email address already exists.");
-        return;
-      }
-      if (duplicateUser.username === targetUsername) {
-        toast.error("An account with this username already exists.");
-        return;
-      }
+      toast.error("An account with this email address already exists.");
+      return;
     }
 
     if (editingUserId) {
@@ -194,10 +168,8 @@ export default function UsersPage() {
           body: JSON.stringify({
             id: editingUserId,
             fullName: formData.fullName,
-            username: formData.username,
             email: formData.email,
             mobileNumber: formData.mobileNumber,
-            password: formData.password || undefined,
             role: formData.role,
             sessionDurationHours: formData.sessionDurationHours,
             permissions: formData.permissions,
@@ -229,7 +201,7 @@ export default function UsersPage() {
         if (!res.ok) {
           toast.error(data.error || "Failed to create user.");
         } else {
-          toast.success(data.message);
+          toast.success(data.message || "User created successfully.");
           handleCancelForm();
           fetchUsersData();
         }
@@ -239,13 +211,42 @@ export default function UsersPage() {
     }
   };
 
-  // Delete User Double Confirmation Handlers
-  const handleStartDelete = (user) => {
-    if (!user || !user._id) return;
-    if (user.role === SYSTEM_ROLES.SUPER_ADMIN || user._id === "super-admin-root") {
-      toast.error("Super Administrator root accounts cannot be deleted.");
-      return;
+  // Restrict Login / Restore Access Handler
+  const handleToggleAccessDeny = (user) => {
+    setRestrictingUser(user);
+  };
+
+  const confirmToggleAccess = async () => {
+    if (!restrictingUser) return;
+    setIsRestricting(true);
+    const newStatus = restrictingUser.isActive === false; // Toggle
+    try {
+      const res = await fetch(`/api/users/${restrictingUser._id}/status`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          isActive: newStatus,
+          performedBy: "Super Admin",
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        toast.success(data.message);
+        setRestrictingUser(null);
+        fetchUsersData();
+      } else {
+        toast.error(data.error || "Failed to update user status.");
+      }
+    } catch (err) {
+      toast.error("Network error updating user status.");
+    } finally {
+      setIsRestricting(false);
     }
+  };
+
+  // Delete User Double Step Handlers
+  const handleStartDelete = (user) => {
     setDeletingUser(user);
     setDeleteStep(1);
     setDeleteConfirmText("");
@@ -265,7 +266,7 @@ export default function UsersPage() {
 
       const data = await res.json();
       if (res.ok) {
-        toast.success(data.message || `User ${deletingUser.username} deleted.`);
+        toast.success(data.message || `User ${deletingUser.fullName || deletingUser.email} deleted.`);
         setDeletingUser(null);
         setDeleteStep(1);
         setDeleteConfirmText("");
@@ -280,50 +281,7 @@ export default function UsersPage() {
     }
   };
 
-  // Super Admin Direct Reset Password
-  const handleSuperAdminResetPassword = async () => {
-    if (!resettingPassUser || !newPassword.trim()) return;
-    try {
-      const res = await fetch("/api/users/change-password", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: resettingPassUser._id,
-          newPassword,
-          isSuperAdminReset: true,
-          performedBy: "Super Admin",
-        }),
-      });
-
-      const data = await res.json();
-      if (res.ok) {
-        toast.success(data.message);
-        setResettingPassUser(null);
-        setNewPassword("");
-        fetchUsersData();
-      } else {
-        toast.error(data.error);
-      }
-    } catch (err) {
-      toast.error("Password reset failed.");
-    }
-  };
-
-  // Copy password to clipboard (Shows checkmark icon temporarily instead of toast)
-  const handleCopyPassword = (userId, pass) => {
-    if (!pass) return;
-    try {
-      navigator.clipboard.writeText(pass);
-      setCopiedMap((prev) => ({ ...prev, [userId]: true }));
-      setTimeout(() => {
-        setCopiedMap((prev) => ({ ...prev, [userId]: false }));
-      }, 2000);
-    } catch (err) {
-      console.error("Failed to copy password:", err);
-    }
-  };
-
-  // Send Credentials via Email using Nodemailer
+  // Send Access Instructions / Password Setup Email via Pooled Nodemailer
   const handleSendCredentialsEmail = async (user) => {
     if (!user || !user._id) return;
     if (!user.email) {
@@ -332,7 +290,7 @@ export default function UsersPage() {
     }
 
     setSendingMailUserId(user._id);
-    const toastId = toast.loading(`Sending credentials to ${user.email}...`);
+    const toastId = toast.loading(`Sending access instructions to ${user.email}...`);
 
     try {
       const res = await fetch("/api/users/send-credentials", {
@@ -343,90 +301,53 @@ export default function UsersPage() {
 
       const data = await res.json();
       if (res.ok && data.success) {
-        toast.success(data.message || `Credentials sent to ${user.email}`, { id: toastId });
+        toast.success(data.message || `Access email sent to ${user.email}`, { id: toastId });
         setSentMailMap((prev) => ({ ...prev, [user._id]: true }));
         setTimeout(() => {
           setSentMailMap((prev) => ({ ...prev, [user._id]: false }));
         }, 3000);
         fetchUsersData();
       } else {
-        toast.error(data.error || "Failed to send credentials email.", { id: toastId });
+        toast.error(data.error || "Failed to send access email.", { id: toastId });
       }
     } catch (err) {
-      console.error("Error sending credentials email:", err);
+      console.error("Error sending access email:", err);
       toast.error("Failed to connect to email service.", { id: toastId });
     } finally {
       setSendingMailUserId(null);
     }
   };
 
-  // Restrict Login / Access Denied Toggle Modal Trigger
-  const handleToggleAccessDeny = (user) => {
-    if (!user || !user._id) return;
-
-    if (user.role === SYSTEM_ROLES.SUPER_ADMIN || user._id === "super-admin-root") {
-      toast.error("Super Administrator accounts cannot be restricted.");
-      return;
-    }
-
-    setRestrictingUser(user);
-  };
-
-  // Confirm Access Toggle Handler
-  const confirmToggleAccess = async () => {
-    if (!restrictingUser) return;
-    const newStatus = restrictingUser.isActive === false ? true : false;
-    setIsRestricting(true);
-
-    try {
-      const res = await fetch(`/api/users/${restrictingUser._id}/status`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: restrictingUser._id,
-          isActive: newStatus,
-          performedBy: "Super Admin",
-        }),
-      });
-
-      const data = await res.json();
-      if (res.ok) {
-        toast.success(data.message || `User access ${newStatus ? "restored" : "restricted"}.`);
-        setRestrictingUser(null);
-        fetchUsersData();
-      } else {
-        toast.error(data.error || "Failed to update access status.");
-      }
-    } catch (err) {
-      toast.error("Error updating user status.");
-    } finally {
-      setIsRestricting(false);
-    }
-  };
-
   return (
-    <div className="p-4 md:p-6 space-y-6">
-      {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-gray-200 gap-4">
+    <div className="space-y-6">
+      {/* Header Banner */}
+      <div className="bg-white border border-gray-200 p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="font-oswald text-2xl font-bold text-secondary-dark uppercase tracking-wider flex items-center gap-2">
-            <LuUsers className="text-primary text-2xl" />
-            User & Role Permission Matrix
-          </h2>
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-sm bg-secondary/10 border border-secondary/20 text-secondary flex items-center justify-center">
+              <LuUsers className="text-base" />
+            </div>
+            <h2 className="font-oswald text-xl font-bold text-secondary-dark uppercase tracking-wider">
+              Staff & User Management
+            </h2>
+          </div>
+          <p className="text-xs text-gray-500 mt-1">
+            Create, manage, and configure role-based access for administrative staff and team members.
+          </p>
         </div>
 
+        {/* Action Toggle Button */}
         <button
           onClick={() => {
-            if (showAddForm && !editingUserId) {
-              setShowAddForm(false);
-            } else {
+            if (showAddForm) {
               handleCancelForm();
+            } else {
               setShowAddForm(true);
             }
           }}
-          className="px-4 py-2 bg-primary hover:bg-primary-hover text-white text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-1.5 self-start sm:self-center cursor-pointer"
+          className="px-4 py-2 bg-secondary hover:bg-secondary-dark text-white text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer shadow-xs self-start md:self-auto"
         >
-          {showAddForm && !editingUserId ? <LuChevronUp className="text-base" /> : <LuPlus className="text-base" />}
+          <LuPlus className="text-sm" />
           <span>{showAddForm && !editingUserId ? "Hide Add User Form" : "Add New User Account"}</span>
         </button>
       </div>
@@ -440,7 +361,7 @@ export default function UsersPage() {
                 {editingUserId ? <LuPencil /> : "+"}
               </div>
               <h3 className="font-oswald text-lg font-bold text-secondary-dark uppercase tracking-wider">
-                {editingUserId ? `Edit User Account: ${formData.fullName || formData.username}` : "Add New User Account"}
+                {editingUserId ? `Edit User Account: ${formData.fullName || formData.email}` : "Add New User Account"}
               </h3>
             </div>
             <button
@@ -469,21 +390,7 @@ export default function UsersPage() {
 
               <div>
                 <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
-                  Username
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formData.username}
-                  onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                  className="w-full px-3 py-2 bg-slate-50 border border-gray-200 text-xs font-semibold focus:outline-none focus:border-secondary"
-                  placeholder="e.g. john_doe"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
-                  Email Address
+                  Email Address (Login Identifier)
                 </label>
                 <input
                   type="email"
@@ -540,20 +447,14 @@ export default function UsersPage() {
                   ))}
                 </select>
               </div>
+            </div>
 
-              <div className="sm:col-span-2 lg:col-span-3">
-                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
-                  {editingUserId ? "New Password (Leave blank to keep current)" : "Initial Password"}
-                </label>
-                <input
-                  type="password"
-                  required={!editingUserId}
-                  value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className="w-full px-3 py-2 bg-slate-50 border border-gray-200 text-xs font-semibold focus:outline-none focus:border-secondary"
-                  placeholder={editingUserId ? "Leave blank to keep current password" : "Enter initial password"}
-                />
-              </div>
+            {/* Password Security Notice */}
+            <div className="p-3 bg-emerald-50/80 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-2">
+              <LuShieldCheck className="text-base text-emerald-600 shrink-0" />
+              <span>
+                Account passwords are protected with bcrypt encryption. New users can set their initial password securely via the <strong>&quot;Forgot Password?&quot;</strong> option on the login portal.
+              </span>
             </div>
 
             {/* PERMISSIONS MATRIX CHECKBOXES INLINE */}
@@ -578,7 +479,7 @@ export default function UsersPage() {
                             (newP) => setFormData({ ...formData, permissions: newP })
                           )
                         }
-                        className="text-[10px] font-bold text-secondary hover:underline uppercase cursor-pointer"
+                        className="text-[11px] font-bold text-secondary hover:text-secondary-dark"
                       >
                         Toggle All
                       </button>
@@ -586,15 +487,15 @@ export default function UsersPage() {
 
                     <div className="space-y-1.5">
                       {mod.actions.map((act) => {
-                        const checked = formData.permissions.includes(act.key);
+                        const isChecked = formData.permissions.includes(act.key);
                         return (
                           <label
                             key={act.key}
-                            className="flex items-center gap-2 cursor-pointer text-xs font-medium text-gray-700 hover:text-gray-900"
+                            className="flex items-center gap-2 cursor-pointer text-xs font-medium text-gray-700 select-none hover:text-gray-900"
                           >
                             <input
                               type="checkbox"
-                              checked={checked}
+                              checked={isChecked}
                               onChange={() =>
                                 handlePermissionToggle(
                                   act.key,
@@ -602,7 +503,7 @@ export default function UsersPage() {
                                   (newP) => setFormData({ ...formData, permissions: newP })
                                 )
                               }
-                              className="text-primary rounded-none focus:ring-0"
+                              className="accent-[#007BA7] rounded-sm"
                             />
                             <span>{act.label}</span>
                           </label>
@@ -614,49 +515,50 @@ export default function UsersPage() {
               </div>
             </div>
 
-            <div className="pt-4 flex justify-end gap-2 border-t border-gray-200">
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
               <button
                 type="button"
                 onClick={handleCancelForm}
-                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-gray-600 text-xs font-bold uppercase tracking-wider cursor-pointer"
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-gray-600 text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-6 py-2 bg-primary hover:bg-primary-hover text-white text-xs font-bold uppercase tracking-wider cursor-pointer"
+                className="px-6 py-2 bg-primary hover:bg-primary-hover text-white text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer shadow-xs"
               >
-                {editingUserId ? "Save User Changes" : "Save & Create Account"}
+                {editingUserId ? "Update User Account" : "Create User Account"}
               </button>
             </div>
           </form>
         </div>
       )}
 
-      {/* Tabs */}
-      <div className="flex border-b border-gray-200 bg-white">
+      {/* Navigation Tab Pills: Accounts vs Security Logs */}
+      <div className="flex border-b border-gray-200 gap-2">
         <button
           onClick={() => setActiveTab("users")}
-          className={`px-5 py-3 text-xs font-bold uppercase tracking-wider transition-colors border-b-2 flex items-center gap-2 ${activeTab === "users"
-            ? "border-secondary text-secondary font-extrabold bg-slate-50"
-            : "border-transparent text-gray-500 hover:text-gray-900"
-            }`}
+          className={`pb-3 px-4 font-oswald text-sm font-bold uppercase tracking-wider transition-colors border-b-2 cursor-pointer ${
+            activeTab === "users"
+              ? "border-primary text-primary"
+              : "border-transparent text-gray-500 hover:text-gray-900"
+          }`}
         >
-          <LuShieldCheck className="text-base" /> Users & Permissions ({users.length})
+          System Users Matrix ({users.length})
         </button>
-
         <button
           onClick={() => setActiveTab("logs")}
-          className={`px-5 py-3 text-xs font-bold uppercase tracking-wider transition-colors border-b-2 flex items-center gap-2 ${activeTab === "logs"
-            ? "border-secondary text-secondary font-extrabold bg-slate-50"
-            : "border-transparent text-gray-500 hover:text-gray-900"
-            }`}
+          className={`pb-3 px-4 font-oswald text-sm font-bold uppercase tracking-wider transition-colors border-b-2 cursor-pointer ${
+            activeTab === "logs"
+              ? "border-primary text-primary"
+              : "border-transparent text-gray-500 hover:text-gray-900"
+          }`}
         >
-          <LuHistory className="text-base" /> Security Audit Logs ({auditLogs.length})
+          Security Audit Logs ({auditLogs.length})
         </button>
       </div>
 
-      {/* TAB 1: USERS & PERMISSION MATRIX */}
+      {/* TAB 1: USERS TABLE */}
       {activeTab === "users" && (
         <div className="bg-white border border-gray-200">
           {loading ? (
@@ -677,7 +579,6 @@ export default function UsersPage() {
                     <th className="py-3 px-4 whitespace-nowrap">Contact & Mobile</th>
                     <th className="py-3 px-4 whitespace-nowrap">Session Duration</th>
                     <th className="py-3 px-4 whitespace-nowrap">Granted Permissions</th>
-                    <th className="py-3 px-4 whitespace-nowrap">Password Ref</th>
                     <th className="py-3 px-4 whitespace-nowrap">Actions</th>
                   </tr>
                 </thead>
@@ -686,17 +587,18 @@ export default function UsersPage() {
                     <tr key={u._id} className="hover:bg-slate-50/80 transition-colors">
                       <td className="py-3.5 px-4">
                         <div className="font-bold text-gray-900">{u.fullName}</div>
-                        <span className="text-[11px] text-gray-400">@{u.username}</span>
+                        <span className="text-[11px] text-gray-400">{u.email}</span>
                       </td>
 
                       <td className="flex items-center gap-1.5 py-3.5 px-4">
                         <span
-                          className={`px-2.5 py-1 text-[10px] font-black uppercase tracking-wider border ${u.role === SYSTEM_ROLES.SUPER_ADMIN
-                            ? "bg-purple-50 text-purple-800 border-purple-200"
-                            : u.role === SYSTEM_ROLES.ADMIN
+                          className={`px-2.5 py-1 text-[10px] font-black uppercase tracking-wider border ${
+                            u.role === SYSTEM_ROLES.SUPER_ADMIN
+                              ? "bg-purple-50 text-purple-800 border-purple-200"
+                              : u.role === SYSTEM_ROLES.ADMIN
                               ? "bg-sky-50 text-[#005978] border-sky-200"
                               : "bg-emerald-50 text-emerald-800 border-emerald-200"
-                            }`}
+                          }`}
                         >
                           {u.role}
                         </span>
@@ -733,100 +635,74 @@ export default function UsersPage() {
                         </span>
                       </td>
 
-                      <td className="py-3.5 px-4 font-mono text-[11px]">
-                        <div className="flex flex-col justify-start w-fit">
-                          <div className="flex flex-col items-center gap-0.5">
-                            <span className="w-full text-center">
-                              {showPlainPassMap[u._id] ? u.plainRef || "••••••" : "••••••••"}
-                            </span>
-                            <div className="flex items-center gap-0.5 pt-0.5">
-                              <button
-                                onClick={() =>
-                                  setShowPlainPassMap((prev) => ({
-                                    ...prev,
-                                    [u._id]: !prev[u._id],
-                                  }))
-                                }
-                                className="text-secondary p-1 transition-colors cursor-pointer"
-                                title="Toggle Password View"
-                              >
-                                {showPlainPassMap[u._id] ? <LuEyeOff className="text-[15px]" /> : <LuEye className="text-[15px]" />}
-                              </button>
-
-                              <button
-                                onClick={() => handleCopyPassword(u._id, u.plainRef || u.password)}
-                                className="text-sky-600 p-1 transition-colors cursor-pointer"
-                                title={copiedMap[u._id] ? "Copied!" : "Copy Password to Clipboard"}
-                              >
-                                {copiedMap[u._id] ? (
-                                  <LuCheck className="text-[15px] text-emerald-600 font-bold animate-in zoom-in duration-100" />
-                                ) : (
-                                  <LuCopy className="text-[15px]" />
-                                )}
-                              </button>
-
-                              <button
-                                onClick={() => {
-                                  setResettingPassUser(u);
-                                  setNewPassword("");
-                                }}
-                                className="text-amber-600 p-1 transition-colors cursor-pointer"
-                                title="Reset Password"
-                              >
-                                <LuRefreshCw className="text-[15px]" />
-                              </button>
-
-                              <button
-                                onClick={() => handleSendCredentialsEmail(u)}
-                                disabled={sendingMailUserId === u._id}
-                                className="text-indigo-600 hover:text-indigo-800 p-1 transition-colors cursor-pointer disabled:opacity-50"
-                                title={
-                                  sentMailMap[u._id]
-                                    ? `Credentials Sent to ${u.email}!`
-                                    : `Send Access Credentials to ${u.email}`
-                                }
-                              >
-                                {sendingMailUserId === u._id ? (
-                                  <LuRefreshCw className="text-[15px] animate-spin text-indigo-600" />
-                                ) : sentMailMap[u._id] ? (
-                                  <LuCheck className="text-[15px] text-emerald-600 font-bold animate-in zoom-in duration-100" />
-                                ) : (
-                                  <LuMail className="text-[15px]" />
-                                )}
-                              </button>
-
-                              <button
-                                onClick={() => handleToggleAccessDeny(u)}
-                                className={`p-1 transition-colors cursor-pointer ${u.isActive === false
-                                  ? "text-emerald-600"
-                                  : "text-red-600"
-                                  }`}
-                                title={u.isActive === false ? "Restore Access" : "Restrict Login Access (Access Denied)"}
-                              >
-                                {u.isActive === false ? <LuCircleCheck className="text-[15px] text-red-600" /> : <LuBan className="text-[15px]" />}
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-
-                      </td>
-
-                      <td className="py-3.5 px-4 flex whitespace-nowrap space-x-2">
-                        <button
-                          onClick={() => handleStartEdit(u)}
-                          className="ps-2 pe-2.5 py-1 bg-slate-100 hover:bg-primary text-gray-700 hover:text-white text-[11px] font-bold uppercase tracking-wider border border-gray-200 inline-flex items-center gap-1 cursor-pointer"
-                        >
-                          <LuPencil /> <span className="leading-3 pt-0.5">Edit</span>
-                        </button>
-                        {u.role !== SYSTEM_ROLES.SUPER_ADMIN && u._id !== "super-admin-root" && (
+                      {/* Consolidated React Icon-Only Actions */}
+                      <td className="py-3.5 px-4 whitespace-nowrap">
+                        <div className="flex items-center gap-1.5">
+                          {/* 1. Edit */}
                           <button
-                            onClick={() => handleStartDelete(u)}
-                            className="ps-2 pe-2.5 py-1 bg-red-50 hover:bg-red-600 text-red-600 hover:text-white text-[11px] font-bold uppercase tracking-wider border border-red-200 hover:border-red-600 inline-flex items-center gap-1 transition-colors cursor-pointer"
-                            title="Delete User Account (2-Step Confirmation)"
+                            type="button"
+                            onClick={() => handleStartEdit(u)}
+                            className="p-2 bg-slate-100 hover:bg-primary text-gray-600 hover:text-white border border-gray-200 transition-colors cursor-pointer"
+                            title={`Edit ${u.fullName}`}
                           >
-                            <LuTrash2 className="text-xs" /> <span className="leading-3 pt-0.5">Delete</span>
+                            <LuPencil className="text-sm" />
                           </button>
-                        )}
+
+                          {/* 2. Send Access Email */}
+                          <button
+                            type="button"
+                            onClick={() => handleSendCredentialsEmail(u)}
+                            disabled={sendingMailUserId === u._id}
+                            className="p-2 bg-indigo-50 hover:bg-indigo-600 text-indigo-600 hover:text-white border border-indigo-200 transition-colors cursor-pointer disabled:opacity-50"
+                            title={
+                              sentMailMap[u._id]
+                                ? `Access Instructions Sent to ${u.email}!`
+                                : `Send Access / Setup Email to ${u.email}`
+                            }
+                          >
+                            {sendingMailUserId === u._id ? (
+                              <LuRefreshCw className="text-sm animate-spin" />
+                            ) : sentMailMap[u._id] ? (
+                              <LuCheck className="text-sm text-emerald-600 font-bold" />
+                            ) : (
+                              <LuMail className="text-sm" />
+                            )}
+                          </button>
+
+                          {/* 3. Restrict / Restore Access */}
+                          <button
+                            type="button"
+                            onClick={() => handleToggleAccessDeny(u)}
+                            className={`p-2 border transition-colors cursor-pointer ${
+                              u.isActive === false
+                                ? "bg-emerald-50 hover:bg-emerald-600 text-emerald-600 hover:text-white border-emerald-200"
+                                : "bg-amber-50 hover:bg-amber-600 text-amber-600 hover:text-white border-amber-200"
+                            }`}
+                            title={
+                              u.isActive === false
+                                ? "Restore Login Access"
+                                : "Restrict Login Access (Access Denied)"
+                            }
+                          >
+                            {u.isActive === false ? (
+                              <LuCircleCheck className="text-sm" />
+                            ) : (
+                              <LuBan className="text-sm" />
+                            )}
+                          </button>
+
+                          {/* 4. Delete Account (Not for Super Admin) */}
+                          {u.role !== SYSTEM_ROLES.SUPER_ADMIN && u._id !== "super-admin-root" && (
+                            <button
+                              type="button"
+                              onClick={() => handleStartDelete(u)}
+                              className="p-2 bg-red-50 hover:bg-red-600 text-red-600 hover:text-white border border-red-200 transition-colors cursor-pointer"
+                              title={`Delete ${u.fullName} (2-Step Confirmation)`}
+                            >
+                              <LuTrash2 className="text-sm" />
+                            </button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -863,14 +739,14 @@ export default function UsersPage() {
         </div>
       )}
 
-      {/* MODAL: DELETE USER ACCOUNT (2-STEP CONFIRMATION) */}
+      {/* MODAL: DELETE USER WITH 2-STEP CONFIRMATION */}
       {deletingUser && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white border border-gray-200 w-full max-w-md shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-150">
             <div className="p-4 bg-red-600 text-white flex items-center justify-between">
               <h3 className="font-oswald text-base font-bold uppercase tracking-wider flex items-center gap-2">
                 <LuTrash2 className="text-lg" />
-                {deleteStep === 1 ? "Delete User Account (Step 1 of 2)" : "FINAL WARNING: Delete Account (Step 2 of 2)"}
+                {deleteStep === 1 ? "Confirm Delete User" : "Final Deletion Confirmation"}
               </h3>
               <button
                 onClick={() => {
@@ -889,7 +765,7 @@ export default function UsersPage() {
                 <>
                   <p className="text-xs text-gray-700 leading-relaxed font-semibold">
                     Are you sure you want to delete the user account for{" "}
-                    <span className="font-bold text-gray-900">{deletingUser.fullName}</span> (@{deletingUser.username})?
+                    <span className="font-bold text-gray-900">{deletingUser.fullName}</span> ({deletingUser.email})?
                   </p>
                   <div className="p-3 bg-amber-50 border border-amber-200 text-xs text-amber-800 font-semibold">
                     ⚠ Proceeding to Step 2 will ask for final confirmation before permanent removal.
@@ -919,7 +795,7 @@ export default function UsersPage() {
                 <>
                   <p className="text-xs text-gray-700 leading-relaxed font-semibold">
                     <span className="font-bold text-red-600 uppercase">PERMANENT DELETION WARNING:</span> Are you absolutely sure you want to permanently delete user{" "}
-                    <span className="font-bold text-gray-900">{deletingUser.fullName}</span> (@{deletingUser.username})?
+                    <span className="font-bold text-gray-900">{deletingUser.fullName}</span> ({deletingUser.email})?
                   </p>
                   <div className="p-3 bg-red-50 border border-red-200 text-xs text-red-700 font-bold space-y-1">
                     • Account details will be permanently removed from MongoDB.<br />
@@ -967,76 +843,14 @@ export default function UsersPage() {
         </div>
       )}
 
-      {/* MODAL: SUPER ADMIN DIRECT PASSWORD RESET */}
-      {resettingPassUser && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white border border-gray-200 w-full max-w-md shadow-2xl overflow-hidden">
-            <div className="p-4 bg-secondary-dark text-white flex items-center justify-between">
-              <h3 className="font-oswald text-lg font-bold uppercase tracking-wider">
-                Reset Password: {resettingPassUser.username}
-              </h3>
-              <button onClick={() => setResettingPassUser(null)} className="text-gray-300 hover:text-white">
-                <LuX className="text-lg" />
-              </button>
-            </div>
-
-            <div className="p-6 space-y-4">
-              <div>
-                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
-                  New Password for {resettingPassUser.fullName}
-                </label>
-                <div className="flex flex-col gap-2">
-                  <input
-                    type="text"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    className="flex-1 px-3 py-2 bg-slate-50 border border-gray-200 text-xs font-semibold focus:outline-none focus:border-secondary font-mono"
-                    placeholder="Type or generate random password"
-                  />
-                </div>
-              </div>
-
-              <div className="flex justify-end gap-2 pt-2">
-                <button
-                  onClick={() => setResettingPassUser(null)}
-                  className="px-3 py-1.5 bg-slate-100 text-gray-600 text-xs font-bold uppercase"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789#@!";
-                    let rand = "";
-                    for (let i = 0; i < 9; i++) {
-                      rand += chars.charAt(Math.floor(Math.random() * chars.length));
-                    }
-                    setNewPassword(rand);
-                  }}
-                  className="px-3 py-2 bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-bold uppercase tracking-wider border border-amber-200 flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
-                  title="Generate Random Password"
-                >
-                  <LuRefreshCw className="text-xs" /> Random
-                </button>
-                <button
-                  onClick={handleSuperAdminResetPassword}
-                  className="px-4 py-1.5 bg-primary text-white text-xs font-bold uppercase tracking-wider"
-                >
-                  Reset
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* MODAL: RESTRICT ACCESS / RESTORE ACCESS CONFIRMATION */}
       {restrictingUser && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white border border-gray-200 w-full max-w-md shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-150">
             <div
-              className={`p-4 text-white flex items-center justify-between ${restrictingUser.isActive === false ? "bg-emerald-600" : "bg-red-600"
-                }`}
+              className={`p-4 text-white flex items-center justify-between ${
+                restrictingUser.isActive === false ? "bg-emerald-600" : "bg-red-600"
+              }`}
             >
               <h3 className="font-oswald text-base font-bold uppercase tracking-wider flex items-center gap-2">
                 {restrictingUser.isActive === false ? (
@@ -1063,7 +877,7 @@ export default function UsersPage() {
                   Are you sure you want to{" "}
                   <span className="font-bold text-emerald-600">RESTORE LOGIN ACCESS</span> for{" "}
                   <span className="font-bold text-gray-900">
-                    {restrictingUser.fullName || restrictingUser.username}
+                    {restrictingUser.fullName || restrictingUser.email}
                   </span>
                   ?
                 </p>
@@ -1072,7 +886,7 @@ export default function UsersPage() {
                   Are you sure you want to{" "}
                   <span className="font-bold text-red-600">RESTRICT LOGIN (ACCESS DENIED)</span> for{" "}
                   <span className="font-bold text-gray-900">
-                    {restrictingUser.fullName || restrictingUser.username}
+                    {restrictingUser.fullName || restrictingUser.email}
                   </span>
                   ?
                 </p>
@@ -1084,8 +898,8 @@ export default function UsersPage() {
                   <span className="font-bold text-gray-900">{restrictingUser.fullName}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500 font-bold uppercase">Username:</span>
-                  <span className="font-mono text-gray-800">@{restrictingUser.username}</span>
+                  <span className="text-gray-500 font-bold uppercase">Email:</span>
+                  <span className="font-mono text-gray-800">{restrictingUser.email}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-500 font-bold uppercase">Role:</span>
@@ -1116,16 +930,17 @@ export default function UsersPage() {
                   type="button"
                   onClick={confirmToggleAccess}
                   disabled={isRestricting}
-                  className={`px-5 py-2 text-white text-xs font-bold uppercase tracking-wider transition-colors disabled:opacity-50 cursor-pointer ${restrictingUser.isActive === false
-                    ? "bg-emerald-600 hover:bg-emerald-700"
-                    : "bg-red-600 hover:bg-red-700"
-                    }`}
+                  className={`px-5 py-2 text-white text-xs font-bold uppercase tracking-wider transition-colors disabled:opacity-50 cursor-pointer ${
+                    restrictingUser.isActive === false
+                      ? "bg-emerald-600 hover:bg-emerald-700"
+                      : "bg-red-600 hover:bg-red-700"
+                  }`}
                 >
                   {isRestricting
                     ? "Updating..."
                     : restrictingUser.isActive === false
-                      ? "Yes, Restore Access"
-                      : "Yes, Restrict Access"}
+                    ? "Yes, Restore Access"
+                    : "Yes, Restrict Access"}
                 </button>
               </div>
             </div>

@@ -29,8 +29,8 @@ export default function PasswordModal({ isOpen, onClose, userSession }) {
       return;
     }
 
-    if (newPassword.length < 4) {
-      setError("New password must be at least 4 characters.");
+    if (newPassword.length < 6) {
+      setError("New password must be at least 6 characters.");
       return;
     }
 
@@ -40,7 +40,8 @@ export default function PasswordModal({ isOpen, onClose, userSession }) {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          username: userSession?.user?.username,
+          userId: userSession?.user?._id,
+          email: userSession?.user?.email,
           currentPassword,
           newPassword,
         }),

@@ -1,16 +1,21 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import { SYSTEM_ROLES } from "@/lib/permissions";
+import { verifyPassword, hashPassword, isBcryptHash } from "@/lib/authCrypto";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { username, password } = body;
+    const rawIdentifier = body.email || body.username;
+    const password = body.password;
 
-    if (!username?.trim() || !password?.trim()) {
-      return NextResponse.json({ error: "Username and password are required." }, { status: 400 });
+    if (!rawIdentifier?.trim() || !password?.trim()) {
+      return NextResponse.json(
+        { error: "Email address and password are required." },
+        { status: 400 }
+      );
     }
 
     const client = await clientPromise;
@@ -23,19 +28,20 @@ export async function POST(request) {
     const envSuperUser = process.env.NEXT_PUBLIC_ADMIN_USERNAME || "admin";
     const envSuperPass = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "admin123";
 
-    const input = username.trim();
+    const input = rawIdentifier.trim();
     const inputLower = input.toLowerCase();
 
     let userObj = null;
 
-    // Check if Super Admin login credentials match (by username or email)
+    // 1. Check if Super Admin login credentials match
     if (
-      (inputLower === envSuperUser.toLowerCase() || inputLower === "admin@pmvmaritime.com") &&
+      (inputLower === envSuperUser.toLowerCase() ||
+        inputLower === "admin@pmvmaritime.com" ||
+        inputLower === "admin") &&
       password.trim() === envSuperPass
     ) {
       userObj = {
         _id: "super-admin-root",
-        username: envSuperUser,
         fullName: "Super Administrator",
         email: "admin@pmvmaritime.com",
         role: SYSTEM_ROLES.SUPER_ADMIN,
@@ -43,19 +49,18 @@ export async function POST(request) {
         permissions: ["ALL"],
       };
     } else {
-      // Search in MongoDB users collection by username OR email
+      // 2. Search standard users collection by email (with backward-compatible username fallback)
       const dbUser = await db.collection("users").findOne({
         $or: [
+          { email: inputLower },
           { username: input },
           { username: inputLower },
-          { email: inputLower },
         ],
-        password: password.trim(),
       });
 
       if (!dbUser) {
         return NextResponse.json(
-          { error: "Invalid username/email or password." },
+          { error: "Invalid email address or password." },
           { status: 401 }
         );
       }
@@ -67,10 +72,39 @@ export async function POST(request) {
         );
       }
 
+      // 3. Verify password
+      let isMatch = false;
+      if (isBcryptHash(dbUser.password)) {
+        isMatch = await verifyPassword(password, dbUser.password);
+      } else if (dbUser.password) {
+        // Self-healing: if legacy plaintext, check match and auto-hash immediately
+        if (dbUser.password === password.trim()) {
+          isMatch = true;
+          try {
+            const newHash = await hashPassword(password.trim());
+            await db.collection("users").updateOne(
+              { _id: dbUser._id },
+              {
+                $set: { password: newHash, updatedAt: new Date().toISOString() },
+                $unset: { plainRef: "", username: "" },
+              }
+            );
+          } catch (migrateErr) {
+            console.error("Auto-hash migration error on login:", migrateErr);
+          }
+        }
+      }
+
+      if (!isMatch) {
+        return NextResponse.json(
+          { error: "Invalid email address or password." },
+          { status: 401 }
+        );
+      }
+
       userObj = {
         _id: dbUser._id.toString(),
-        username: dbUser.username,
-        fullName: dbUser.fullName || dbUser.username,
+        fullName: dbUser.fullName || dbUser.email,
         email: dbUser.email,
         mobileNumber: dbUser.mobileNumber || "",
         role: dbUser.role || SYSTEM_ROLES.ASSOCIATE,
@@ -89,7 +123,6 @@ export async function POST(request) {
     await db.collection("session_logs").insertOne({
       sessionToken,
       userId: userObj._id,
-      username: userObj.username,
       fullName: userObj.fullName,
       email: userObj.email,
       role: userObj.role,
@@ -121,6 +154,7 @@ export async function POST(request) {
       },
     });
   } catch (error) {
+    console.error("Login route error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
-import { ObjectId } from "mongodb";
 import { SYSTEM_ROLES } from "@/lib/permissions";
+import { hashPassword } from "@/lib/authCrypto";
+import crypto from "crypto";
+import { getTransporter } from "@/lib/nodemailer";
+import { generateUserCredentialsEmailHTML } from "@/lib/emailTemplate";
 
 export const dynamic = "force-dynamic";
 
@@ -24,8 +27,18 @@ export async function GET(request) {
       .limit(50)
       .toArray();
 
+    // Sanitize user records (remove password, plainRef, username)
+    const sanitizedUsers = users.map((u) => {
+      const { password, plainRef, username, ...safeUser } = u;
+      return {
+        ...safeUser,
+        _id: u._id.toString(),
+        hasPassword: Boolean(password),
+      };
+    });
+
     return NextResponse.json({
-      users: users.map((u) => ({ ...u, _id: u._id.toString() })),
+      users: sanitizedUsers,
       auditLogs: auditLogs.map((l) => ({ ...l, _id: l._id.toString() })),
     });
   } catch (error) {
@@ -39,19 +52,17 @@ export async function POST(request) {
     const body = await request.json();
     const {
       fullName,
-      username,
       email,
       mobileNumber,
-      password,
       role,
       sessionDurationHours,
       permissions,
       createdByName,
     } = body;
 
-    if (!username?.trim() || !email?.trim() || !password?.trim()) {
+    if (!fullName?.trim() || !email?.trim()) {
       return NextResponse.json(
-        { error: "Username, Email, and Password are required." },
+        { error: "Full Name and Email Address are required." },
         { status: 400 }
       );
     }
@@ -60,37 +71,27 @@ export async function POST(request) {
     const db = client.db("pmv_maritime");
 
     const normalizedEmail = email.trim().toLowerCase();
-    const normalizedUsername = username.trim();
 
-    // Check existing username or email case-insensitively
+    // Check existing email
     const existing = await db.collection("users").findOne({
-      $or: [
-        { username: normalizedUsername },
-        { email: normalizedEmail },
-        { email: email.trim() },
-      ],
+      email: normalizedEmail,
     });
 
     if (existing) {
-      if (existing.email.toLowerCase() === normalizedEmail) {
-        return NextResponse.json(
-          { error: "An account with this email address already exists." },
-          { status: 400 }
-        );
-      }
       return NextResponse.json(
-        { error: "An account with this username already exists." },
+        { error: "An account with this email address already exists." },
         { status: 400 }
       );
     }
 
+    // Set an unguessable placeholder hash so account cannot be accessed until password is set
+    const placeholderHash = await hashPassword(crypto.randomUUID() + Date.now());
+
     const newUser = {
-      fullName: fullName?.trim() || username.trim(),
-      username: username.trim(),
-      email: email.trim().toLowerCase(),
+      fullName: fullName.trim(),
+      email: normalizedEmail,
       mobileNumber: mobileNumber?.trim() || "",
-      password: password.trim(),
-      plainRef: password.trim(),
+      password: placeholderHash,
       role: role || SYSTEM_ROLES.ASSOCIATE,
       sessionDurationHours: Number(sessionDurationHours) || 12,
       permissions: Array.isArray(permissions) ? permissions : [],
@@ -103,7 +104,7 @@ export async function POST(request) {
     // Activity Notification
     await db.collection("notifications").insertOne({
       title: "New User Account Created",
-      message: `Account for ${newUser.fullName} (${newUser.role}) was created by ${createdByName || "Super Admin"}.`,
+      message: `Account for ${newUser.fullName} (${newUser.email}) was created by ${createdByName || "Super Admin"}.`,
       category: "CONTENT",
       targetRole: "SUPER_ADMIN",
       isRead: false,
@@ -114,14 +115,34 @@ export async function POST(request) {
     await db.collection("audit_logs").insertOne({
       action: "USER_CREATED",
       performedBy: createdByName || "Super Admin",
-      targetUser: newUser.username,
-      details: `Created account for ${newUser.username} with role ${newUser.role}`,
+      targetUser: newUser.email,
+      details: `Created account for ${newUser.fullName} (${newUser.email}) with role ${newUser.role}`,
       createdAt: new Date().toISOString(),
     });
 
+    // Automatically send welcome invitation email directing to set password
+    try {
+      const transporter = getTransporter();
+      const emailHtml = generateUserCredentialsEmailHTML({
+        fullName: newUser.fullName,
+        email: newUser.email,
+        loginUrl: "https://pmvmaritime.com/admin",
+      });
+
+      const smtpUser = process.env.SMTP_USER;
+      await transporter.sendMail({
+        from: `"PMV Maritime Solutions" <${smtpUser}>`,
+        to: newUser.email,
+        subject: "Welcome to PMV Maritime Solutions Admin Portal",
+        html: emailHtml,
+      });
+    } catch (mailErr) {
+      console.error("Welcome invitation email dispatch error:", mailErr);
+    }
+
     return NextResponse.json({
       success: true,
-      message: `User ${newUser.username} created successfully.`,
+      message: `User ${newUser.fullName} created successfully. An activation invitation was dispatched to ${newUser.email}.`,
       insertedId: result.insertedId.toString(),
     });
   } catch (error) {

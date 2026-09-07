@@ -34,72 +34,54 @@ export async function PUT(request, { params }) {
     }
 
     const normalizedEmail = email?.trim().toLowerCase();
-    const normalizedUsername = body.username?.trim();
 
-    // Check if email or username already belongs to ANOTHER user account
-    if (normalizedEmail || normalizedUsername) {
+    // Check if email already belongs to ANOTHER user account
+    if (normalizedEmail) {
       const existingConflict = await db.collection("users").findOne({
         _id: { $ne: new ObjectId(id) },
-        $or: [
-          ...(normalizedEmail ? [{ email: normalizedEmail }] : []),
-          ...(normalizedUsername ? [{ username: normalizedUsername }] : []),
-        ],
+        email: normalizedEmail,
       });
 
       if (existingConflict) {
-        if (normalizedEmail && existingConflict.email?.toLowerCase() === normalizedEmail) {
-          return NextResponse.json(
-            { error: "This email address is already assigned to another user account." },
-            { status: 400 }
-          );
-        }
-        if (normalizedUsername && existingConflict.username === normalizedUsername) {
-          return NextResponse.json(
-            { error: "This username is already assigned to another user account." },
-            { status: 400 }
-          );
-        }
+        return NextResponse.json(
+          { error: "This email address is already assigned to another user account." },
+          { status: 400 }
+        );
       }
     }
 
     const updateDoc = {
-      fullName: fullName?.trim(),
+      fullName: fullName?.trim() || targetUser.fullName,
       email: normalizedEmail || targetUser.email,
       mobileNumber: mobileNumber?.trim() || "",
-      role: role,
+      role: role || targetUser.role,
       sessionDurationHours: Number(sessionDurationHours) || 12,
       permissions: Array.isArray(permissions) ? permissions : [],
       isActive: isActive !== undefined ? !!isActive : true,
       updatedAt: new Date().toISOString(),
     };
 
-    if (normalizedUsername) {
-      updateDoc.username = normalizedUsername;
-    }
-
-    if (body.password && body.password.trim()) {
-      updateDoc.password = body.password.trim();
-      updateDoc.plainRef = body.password.trim();
-    }
-
     await db.collection("users").updateOne(
       { _id: new ObjectId(id) },
-      { $set: updateDoc }
+      {
+        $set: updateDoc,
+        $unset: { plainRef: "", username: "" },
+      }
     );
 
     // Audit Log Entry
     await db.collection("audit_logs").insertOne({
-      action: "PERMISSION_MATRIX_UPDATED",
+      action: "USER_UPDATED",
       performedBy: updatedByName || "Super Admin",
-      targetUser: targetUser.username,
-      details: `Updated permissions matrix & role for ${targetUser.username}`,
+      targetUser: updateDoc.email,
+      details: `Updated details and permissions matrix for ${updateDoc.fullName} (${updateDoc.email})`,
       createdAt: new Date().toISOString(),
     });
 
     // Activity Notification
     await db.collection("notifications").insertOne({
-      title: "Permissions Updated",
-      message: `Permissions for ${targetUser.fullName} (${targetUser.username}) were updated by ${updatedByName || "Super Admin"}.`,
+      title: "User Permissions Updated",
+      message: `Account settings for ${updateDoc.fullName} (${updateDoc.email}) were updated by ${updatedByName || "Super Admin"}.`,
       category: "CONTENT",
       targetRole: "SUPER_ADMIN",
       isRead: false,
@@ -108,7 +90,7 @@ export async function PUT(request, { params }) {
 
     return NextResponse.json({
       success: true,
-      message: `Permissions updated for ${targetUser.username}.`,
+      message: `Settings updated for ${updateDoc.fullName}.`,
     });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

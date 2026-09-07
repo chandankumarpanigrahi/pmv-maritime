@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
-import nodemailer from "nodemailer";
+import { getTransporter } from "@/lib/nodemailer";
 import { generateUserCredentialsEmailHTML } from "@/lib/emailTemplate";
 
 export const dynamic = "force-dynamic";
@@ -13,7 +13,7 @@ export async function POST(request) {
 
     if (!userId) {
       return NextResponse.json(
-        { error: "User ID is required to send credentials." },
+        { error: "User ID is required to send access instructions." },
         { status: 400 }
       );
     }
@@ -26,7 +26,6 @@ export async function POST(request) {
     try {
       user = await db.collection("users").findOne({ _id: new ObjectId(userId) });
     } catch {
-      // In case ID is a custom string
       user = await db.collection("users").findOne({ _id: userId });
     }
 
@@ -41,65 +40,35 @@ export async function POST(request) {
       );
     }
 
-    const passwordToSend = user.plainRef || user.password;
-    if (!passwordToSend) {
-      return NextResponse.json(
-        { error: "No password reference found for this user account." },
-        { status: 400 }
-      );
-    }
-
-    // SMTP Configuration
-    const smtpHost = process.env.SMTP_HOST;
-    const smtpPort = Number(process.env.SMTP_PORT) || 465;
-    const smtpUser = process.env.SMTP_USER;
-    const smtpPass = process.env.SMTP_PASS;
-
-    if (!smtpHost || !smtpUser || !smtpPass) {
-      return NextResponse.json(
-        { error: "SMTP credentials are not configured in environment variables." },
-        { status: 500 }
-      );
-    }
-
-    const transporter = nodemailer.createTransport({
-      host: smtpHost,
-      port: smtpPort,
-      secure: smtpPort === 465,
-      auth: {
-        user: smtpUser,
-        pass: smtpPass,
-      },
-    });
-
+    // Send access instructions email (NO raw passwords)
+    const transporter = getTransporter();
     const emailHtml = generateUserCredentialsEmailHTML({
-      fullName: user.fullName,
-      username: user.username,
+      fullName: user.fullName || "User",
       email: user.email,
-      password: passwordToSend,
       loginUrl: "https://pmvmaritime.com/admin",
     });
 
+    const smtpUser = process.env.SMTP_USER;
     await transporter.sendMail({
       from: `"PMV Maritime Solutions" <${smtpUser}>`,
       to: user.email,
-      subject: "Your PMV Maritime Admin Panel Credentials",
+      subject: "Your PMV Maritime Admin Panel Access Instructions",
       html: emailHtml,
     });
 
     // Security Audit Log Entry
     await db.collection("audit_logs").insertOne({
-      action: "CREDENTIALS_EMAIL_SENT",
+      action: "ACCESS_EMAIL_SENT",
       performedBy: "Super Admin",
-      targetUser: user.username,
-      details: `Sent admin access credentials to ${user.email}`,
+      targetUser: user.email,
+      details: `Sent admin access instructions to ${user.email}`,
       createdAt: new Date().toISOString(),
     });
 
     // Security Notification Entry
     await db.collection("notifications").insertOne({
-      title: "Credentials Email Sent",
-      message: `Admin access credentials for ${user.fullName} (@${user.username}) were sent to ${user.email}.`,
+      title: "Access Instructions Sent",
+      message: `Admin access instructions for ${user.fullName || user.email} were sent to ${user.email}.`,
       category: "SECURITY",
       targetRole: "SUPER_ADMIN",
       isRead: false,
@@ -108,12 +77,12 @@ export async function POST(request) {
 
     return NextResponse.json({
       success: true,
-      message: `Credentials successfully sent to ${user.email}`,
+      message: `Access instructions successfully sent to ${user.email}`,
     });
   } catch (error) {
-    console.error("Failed to send credentials email:", error);
+    console.error("Failed to send access email:", error);
     return NextResponse.json(
-      { error: error.message || "Failed to send credentials email." },
+      { error: error.message || "Failed to send access email." },
       { status: 500 }
     );
   }
