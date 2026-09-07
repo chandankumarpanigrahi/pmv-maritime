@@ -319,7 +319,7 @@ export default function UsersPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="p-4 md:p-6 space-y-6">
       {/* Header Banner */}
       <div className="bg-white border border-gray-200 p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -348,7 +348,7 @@ export default function UsersPage() {
           className="px-4 py-2 bg-secondary hover:bg-secondary-dark text-white text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer shadow-xs self-start md:self-auto"
         >
           <LuPlus className="text-sm" />
-          <span>{showAddForm && !editingUserId ? "Hide Add User Form" : "Add New User Account"}</span>
+          <span>{showAddForm && !editingUserId ? "Hide User Form" : "Add New User"}</span>
         </button>
       </div>
 
@@ -538,23 +538,21 @@ export default function UsersPage() {
       <div className="flex border-b border-gray-200 gap-2">
         <button
           onClick={() => setActiveTab("users")}
-          className={`pb-3 px-4 font-oswald text-sm font-bold uppercase tracking-wider transition-colors border-b-2 cursor-pointer ${
-            activeTab === "users"
-              ? "border-primary text-primary"
-              : "border-transparent text-gray-500 hover:text-gray-900"
-          }`}
+          className={`pb-3 px-4 font-oswald text-sm font-bold uppercase tracking-wider transition-colors border-b-2 cursor-pointer ${activeTab === "users"
+            ? "border-primary text-primary"
+            : "border-transparent text-gray-500 hover:text-gray-900"
+            }`}
         >
-          System Users Matrix ({users.length})
+          All Users ({users.length})
         </button>
         <button
           onClick={() => setActiveTab("logs")}
-          className={`pb-3 px-4 font-oswald text-sm font-bold uppercase tracking-wider transition-colors border-b-2 cursor-pointer ${
-            activeTab === "logs"
-              ? "border-primary text-primary"
-              : "border-transparent text-gray-500 hover:text-gray-900"
-          }`}
+          className={`pb-3 px-4 font-oswald text-sm font-bold uppercase tracking-wider transition-colors border-b-2 cursor-pointer ${activeTab === "logs"
+            ? "border-primary text-primary"
+            : "border-transparent text-gray-500 hover:text-gray-900"
+            }`}
         >
-          Security Audit Logs ({auditLogs.length})
+          Security Logs ({auditLogs.length})
         </button>
       </div>
 
@@ -592,13 +590,12 @@ export default function UsersPage() {
 
                       <td className="flex items-center gap-1.5 py-3.5 px-4">
                         <span
-                          className={`px-2.5 py-1 text-[10px] font-black uppercase tracking-wider border ${
-                            u.role === SYSTEM_ROLES.SUPER_ADMIN
-                              ? "bg-purple-50 text-purple-800 border-purple-200"
-                              : u.role === SYSTEM_ROLES.ADMIN
+                          className={`px-2.5 py-1 text-[10px] font-black uppercase tracking-wider border ${u.role === SYSTEM_ROLES.SUPER_ADMIN
+                            ? "bg-purple-50 text-purple-800 border-purple-200"
+                            : u.role === SYSTEM_ROLES.ADMIN
                               ? "bg-sky-50 text-[#005978] border-sky-200"
                               : "bg-emerald-50 text-emerald-800 border-emerald-200"
-                          }`}
+                            }`}
                         >
                           {u.role}
                         </span>
@@ -673,11 +670,10 @@ export default function UsersPage() {
                           <button
                             type="button"
                             onClick={() => handleToggleAccessDeny(u)}
-                            className={`p-2 border transition-colors cursor-pointer ${
-                              u.isActive === false
-                                ? "bg-emerald-50 hover:bg-emerald-600 text-emerald-600 hover:text-white border-emerald-200"
-                                : "bg-amber-50 hover:bg-amber-600 text-amber-600 hover:text-white border-amber-200"
-                            }`}
+                            className={`p-2 border transition-colors cursor-pointer ${u.isActive === false
+                              ? "bg-emerald-50 hover:bg-emerald-600 text-emerald-600 hover:text-white border-emerald-200"
+                              : "bg-amber-50 hover:bg-amber-600 text-amber-600 hover:text-white border-amber-200"
+                              }`}
                             title={
                               u.isActive === false
                                 ? "Restore Login Access"
@@ -722,7 +718,7 @@ export default function UsersPage() {
 
           <div className="divide-y divide-gray-100 font-mono text-xs">
             {auditLogs.map((log) => (
-              <div key={log._id} className="py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div key={log._id} className="py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 break-all">
                 <div>
                   <span className="font-bold text-secondary uppercase tracking-wider mr-2">
                     [{log.action}]
@@ -848,9 +844,8 @@ export default function UsersPage() {
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white border border-gray-200 w-full max-w-md shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-150">
             <div
-              className={`p-4 text-white flex items-center justify-between ${
-                restrictingUser.isActive === false ? "bg-emerald-600" : "bg-red-600"
-              }`}
+              className={`p-4 text-white flex items-center justify-between ${restrictingUser.isActive === false ? "bg-emerald-600" : "bg-red-600"
+                }`}
             >
               <h3 className="font-oswald text-base font-bold uppercase tracking-wider flex items-center gap-2">
                 {restrictingUser.isActive === false ? (
@@ -930,17 +925,16 @@ export default function UsersPage() {
                   type="button"
                   onClick={confirmToggleAccess}
                   disabled={isRestricting}
-                  className={`px-5 py-2 text-white text-xs font-bold uppercase tracking-wider transition-colors disabled:opacity-50 cursor-pointer ${
-                    restrictingUser.isActive === false
-                      ? "bg-emerald-600 hover:bg-emerald-700"
-                      : "bg-red-600 hover:bg-red-700"
-                  }`}
+                  className={`px-5 py-2 text-white text-xs font-bold uppercase tracking-wider transition-colors disabled:opacity-50 cursor-pointer ${restrictingUser.isActive === false
+                    ? "bg-emerald-600 hover:bg-emerald-700"
+                    : "bg-red-600 hover:bg-red-700"
+                    }`}
                 >
                   {isRestricting
                     ? "Updating..."
                     : restrictingUser.isActive === false
-                    ? "Yes, Restore Access"
-                    : "Yes, Restrict Access"}
+                      ? "Yes, Restore Access"
+                      : "Yes, Restrict Access"}
                 </button>
               </div>
             </div>
