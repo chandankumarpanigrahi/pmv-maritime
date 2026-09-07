@@ -253,7 +253,7 @@ export function generatePasswordChangedEmailHTML({ fullName, email, dateTime, lo
                     Hello ${fullName || "User"},
                 </h2>
                 <p style="font-size: 14px; line-height: 1.6; color: #475569; margin: 0 0 16px 0;">
-                    The password for your PMV Maritime account (${email}) was successfully updated on <strong>${dateTime}</strong>.
+                    The password for your PMV Maritime account (${email}) was successfully updated.
                 </p>
 
                 <!-- Alert Notice -->

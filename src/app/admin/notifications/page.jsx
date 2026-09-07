@@ -139,7 +139,7 @@ export default function NotificationsPage() {
         {activeTab === "read" && readList.length > 0 && (
           <button
             onClick={clearAllRead}
-            className="w-full md:w-fit justify-center mt-3 md:mt-0 ms-auto px-2 py-1.5 h-fit bg-red-50 hover:bg-red-600 text-red-600 hover:text-white border border-red-200 text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-1.5 cursor-pointer"
+            className="w-full md:w-fit whitespace-nowrap justify-center mt-3 md:mt-0 ms-auto px-2 py-1.5 h-fit bg-red-50 hover:bg-red-600 text-red-600 hover:text-white border border-red-200 text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-1.5 cursor-pointer"
           >
             <LuTrash2 className="text-sm" /> Clear All
           </button>
