@@ -90,3 +90,10 @@ export async function setMaintenanceStatus(isEnabled, bypassPasswords, performed
     throw error;
   }
 }
+
+export function checkMaintenanceBypass(bypassCookie) {
+  if (!bypassCookie?.value) return false;
+  const expiry = parseInt(bypassCookie.value, 10);
+  return Number.isFinite(expiry) && Date.now() < expiry;
+}
+

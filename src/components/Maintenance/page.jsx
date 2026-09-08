@@ -61,6 +61,7 @@ export default function Maintenance() {
     if (matchedMinutes > 0) {
       const expiry = Date.now() + matchedMinutes * 60 * 1000;
       localStorage.setItem("maintenance_bypass_expiry", expiry.toString());
+      document.cookie = `maintenance_bypass_expiry=${expiry}; path=/; max-age=${matchedMinutes * 60}; SameSite=Lax`;
       setShowModal(false);
       window.location.reload();
     } else {

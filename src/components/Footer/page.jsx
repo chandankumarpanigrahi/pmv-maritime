@@ -35,7 +35,7 @@ export default function Footer() {
           setPopularServices(data.slice(0, 6));
         }
       } catch (err) {
-        console.error("Failed to load popular services in footer:", err);
+        console.warn("Failed to load popular services in footer:", err?.message || err);
       }
     }
     fetchPopularServices();

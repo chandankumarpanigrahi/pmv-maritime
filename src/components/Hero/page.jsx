@@ -54,7 +54,8 @@ export default function Hero() {
         loop
         muted
         playsInline
-        preload="metadata"
+        preload="auto"
+        poster="/video/hero-poster.webp"
         className={styles.videoBg}
       >
         <source src="/video/hero-video.mp4" type="video/mp4" />

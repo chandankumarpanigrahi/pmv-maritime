@@ -1,7 +1,8 @@
 import { Nunito_Sans, Oswald } from "next/font/google";
 import "./globals.css";
 import ClientLayout from "../components/ClientLayout";
-import { getMaintenanceStatus } from "@/lib/maintenance";
+import { getMaintenanceStatus, checkMaintenanceBypass } from "@/lib/maintenance";
+import { cookies } from "next/headers";
 
 export const SHOW_LOADER = false;
 
@@ -121,7 +122,19 @@ const jsonLd = {
 
 export default async function RootLayout({ children }) {
   const maintenanceData = await getMaintenanceStatus();
-  const maintenanceMode = Boolean(maintenanceData?.isEnabled);
+  let maintenanceMode = Boolean(maintenanceData?.isEnabled);
+
+  if (maintenanceMode) {
+    try {
+      const cookieStore = await cookies();
+      const bypassCookie = cookieStore.get("maintenance_bypass_expiry");
+      if (checkMaintenanceBypass(bypassCookie)) {
+        maintenanceMode = false;
+      }
+    } catch {
+      // Ignore if cookies cannot be accessed
+    }
+  }
 
   return (
     <html

@@ -35,7 +35,7 @@ export default function PopularServices() {
           setServices(data.slice(5, 9));
         }
       } catch (err) {
-        console.error(`Popular Services fetch attempt ${attempt} failed:`, err);
+        console.warn(`Popular Services fetch attempt ${attempt} failed:`, err?.message || err);
         if (!cancelled && attempt < 3) {
           setTimeout(() => fetchServices(attempt + 1), 1000 * attempt);
           return;

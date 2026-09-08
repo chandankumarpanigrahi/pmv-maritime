@@ -55,7 +55,7 @@ export default function ProjectsSection() {
 
         if (!cancelled) setCategories(finalCategories);
       } catch (err) {
-        console.error(`Projects Section fetch attempt ${attempt} failed:`, err);
+        console.warn(`Projects Section fetch attempt ${attempt} failed:`, err?.message || err);
         // Retry up to 3 times with exponential backoff (1s, 2s, 4s)
         if (!cancelled && attempt < 3) {
           setTimeout(() => fetchData(attempt + 1), 1000 * attempt);

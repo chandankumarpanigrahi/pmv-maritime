@@ -50,7 +50,7 @@ export default function Services() {
           setTabs(data.slice(0, 5));
         }
       } catch (err) {
-        console.error(`Services Section fetch attempt ${attempt} failed:`, err);
+        console.warn(`Services Section fetch attempt ${attempt} failed:`, err?.message || err);
         // Retry up to 3 times with exponential backoff (1s, 2s, 4s)
         if (!cancelled && attempt < 3) {
           setTimeout(() => fetchServices(attempt + 1), 1000 * attempt);

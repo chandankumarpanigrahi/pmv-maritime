@@ -12,19 +12,7 @@ import DraggableTimerBadge from "@/components/DraggableTimerBadge";
 
 export default function ClientLayout({ children, maintenanceMode, showLoader }) {
   const [liveMaintenanceMode, setLiveMaintenanceMode] = useState(maintenanceMode);
-  const [showMaintenance, setShowMaintenance] = useState(() => {
-    if (!maintenanceMode) return false;
-    if (typeof window !== "undefined") {
-      const bypassExpiry = localStorage.getItem("maintenance_bypass_expiry");
-      if (bypassExpiry) {
-        const expiryTime = parseInt(bypassExpiry, 10);
-        if (Date.now() < expiryTime) {
-          return false;
-        }
-      }
-    }
-    return true;
-  });
+  const [showMaintenance, setShowMaintenance] = useState(Boolean(maintenanceMode));
   const [timeLeft, setTimeLeft] = useState("");
   const [loading, setLoading] = useState(showLoader);
   const pathname = usePathname();
@@ -48,7 +36,10 @@ export default function ClientLayout({ children, maintenanceMode, showLoader }) 
           }
         }
       } catch (err) {
-        console.error("Error polling maintenance mode:", err);
+        // Suppress overlay popup during dev-server hot reloads or temporary offline
+        if (process.env.NODE_ENV === "development") {
+          console.warn("Could not poll maintenance mode (server may be restarting)");
+        }
       }
     };
 
@@ -108,6 +99,8 @@ export default function ClientLayout({ children, maintenanceMode, showLoader }) 
         const difference = expiryTime - Date.now();
         if (difference > 0) {
           setShowMaintenance(false);
+          // Sync cookie so server SSR matches client bypass on reload
+          document.cookie = `maintenance_bypass_expiry=${expiryTime}; path=/; max-age=${Math.max(0, Math.floor(difference / 1000))}; SameSite=Lax`;
           const hours = Math.floor(difference / (1000 * 60 * 60));
           const mins = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
           const secs = Math.floor((difference % (1000 * 60)) / 1000);
@@ -119,6 +112,7 @@ export default function ClientLayout({ children, maintenanceMode, showLoader }) 
           return;
         } else {
           localStorage.removeItem("maintenance_bypass_expiry");
+          document.cookie = "maintenance_bypass_expiry=; path=/; max-age=0";
         }
       }
       setShowMaintenance(true);
@@ -132,7 +126,9 @@ export default function ClientLayout({ children, maintenanceMode, showLoader }) 
 
   const handleLogout = () => {
     localStorage.removeItem("maintenance_bypass_expiry");
+    document.cookie = "maintenance_bypass_expiry=; path=/; max-age=0";
     setShowMaintenance(true);
+    setTimeLeft("");
   };
 
   const hasBypass = liveMaintenanceMode && !showMaintenance && timeLeft;
