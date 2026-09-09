@@ -13,10 +13,10 @@ import { ImArrowUp } from "react-icons/im";
 
 // Assets
 import logo from "../../../public/assets/images/logo.png";
-import iso1 from "../../../public/assets/images/iso-1.png";
-import iso2 from "../../../public/assets/images/iso-2.png";
-import iso3 from "../../../public/assets/images/iso-3.png";
-import ism from "../../../public/assets/images/ism.png";
+import abs from "../../../public/assets/images/abs.png";
+import nimasa from "../../../public/assets/images/nimasa.png";
+import dgshipping from "../../../public/assets/images/dgshipping.png";
+import imarest from "../../../public/assets/images/imarest.png";
 import Copyright from "../Copyright/page";
 import footerBg from "../../../public/assets/images/footer-bg.png";
 
@@ -289,14 +289,14 @@ export default function Footer() {
               <div className="w-px h-10 bg-gray-200 hidden lg:block mx-4"></div>
 
               <div className="flex flex-wrap items-center gap-6 justify-center lg:justify-end">
-                <div className="flex flex-wrap items-center gap-4 sm:gap-6 justify-center lg:justify-end">
-                  <Image src={iso1} alt="ISO 9001:2015" className="h-9 sm:h-11 w-auto object-contain" />
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3 justify-center lg:justify-end">
+                  <Image src={abs} alt="ABS" className="h-9 sm:h-11 w-auto object-contain" title="American Bureau of Shipping" />
                   <div className="w-px h-8 bg-gray-200 hidden sm:block"></div>
-                  <Image src={iso2} alt="ISO 14001:2015" className="h-9 sm:h-11 w-auto object-contain" />
+                  <Image src={nimasa} alt="NIMASA" className="h-9 sm:h-11 w-auto object-contain" title="Nigerian Maritime Administration and Safety Agency" />
                   <div className="w-px h-8 bg-gray-200 hidden sm:block"></div>
-                  <Image src={iso3} alt="ISO 45001:2018" className="h-9 sm:h-11 w-auto object-contain" />
+                  <Image src={dgshipping} alt="DG Shipping" className="h-9 sm:h-11 w-auto object-contain" title="Directorate General of Shipping" />
                   <div className="w-px h-8 bg-gray-200 hidden sm:block"></div>
-                  <Image src={ism} alt="ISM Code Compliant" className="h-9 sm:h-11 w-auto object-contain" />
+                  <Image src={imarest} alt="IMAREST" className="h-9 sm:h-11 w-auto object-contain" title="Institute of Marine Engineering, Science and Technology" />
                 </div>
               </div>
             </div>

@@ -56,20 +56,22 @@ const offices = [
     image: dubai,
   },
   {
-    city: "Lagos",
-    country: "AFRICA (NIGERIA)",
+    city: "Lagos (Nigeria)",
+    country: "AFRICA",
     address: "Plot 1649, Olosa Street, Victoria Island, Lagos",
     phone: "+234 1 461 4100",
     email: "africa@pmvmaritime.com",
     image: lagos,
+    status: "Nimasha Approved",
   },
   {
     city: "Bhubaneswar",
     country: "INDIA",
-    address: "The Maritime Hub, Sai Vihar, Bhubaneswar, Odisha 751007",
+    address: "75/2, Bharatpur, Bhubaneswar, Odisha",
     phone: "+91 674 254 3000",
     email: "india@pmvmaritime.com",
     image: bbsr,
+    status: "DG Shipping India Approved",
   },
 ];
 
@@ -403,43 +405,49 @@ export default function Contact() {
               </div>
 
               {/* Card Details */}
-              <div className="p-6 md:p-8 flex flex-col justify-between flex-grow">
+              <div className="p-2 md:p-4 flex flex-col justify-between flex-grow">
                 <div>
                   <div className="flex items-center gap-2 mb-1">
                     <LuMapPin className="text-primary text-xl flex-shrink-0" />
                     <h4 className="text-secondary font-bold text-lg md:text-xl font-oswald group-hover:text-primary transition-colors duration-200">
-                      {office.city}
+                      {office.country}
                     </h4>
                   </div>
                   <p className="text-gray-400 text-xs font-semibold uppercase tracking-wider pl-7">
-                    {office.country}
+                    {office.city}
                   </p>
 
                   <div className="border-b border-gray-200 my-4"></div>
+                  <div className="flex flex-col gap-2">
+                    {/* Address */}
+                    <div className="flex items-start gap-3 text-[13px] text-gray-600 font-medium leading-relaxed">
+                      <LuMapPin className="text-gray-400 text-base flex-shrink-0 mt-0.5" />
+                      <span>{office.address}</span>
+                    </div>
 
-                  {/* Address */}
-                  <div className="flex items-start gap-3 mb-3 text-[13px] text-gray-600 font-medium leading-relaxed">
-                    <LuMapPin className="text-gray-400 text-base flex-shrink-0 mt-0.5" />
-                    <span>{office.address}</span>
-                  </div>
+                    {/* Phone */}
+                    <div className="flex items-center gap-3 text-[13px] text-gray-600 font-medium">
+                      <LuPhone className="text-gray-400 text-base flex-shrink-0" />
+                      <a href={`tel:${office.phone.replace(/\s+/g, '')}`} className="hover:text-primary transition-colors">
+                        {office.phone}
+                      </a>
+                    </div>
 
-                  {/* Phone */}
-                  <div className="flex items-center gap-3 mb-3 text-[13px] text-gray-600 font-medium">
-                    <LuPhone className="text-gray-400 text-base flex-shrink-0" />
-                    <a href={`tel:${office.phone.replace(/\s+/g, '')}`} className="hover:text-primary transition-colors">
-                      {office.phone}
-                    </a>
-                  </div>
-
-                  {/* Email */}
-                  <div className="flex items-center gap-3 text-[13px] text-gray-600 font-medium">
-                    <LuMail className="text-gray-400 text-base flex-shrink-0" />
-                    <a href={`mailto:${office.email}`} className="hover:text-primary transition-colors break-all">
-                      {office.email}
-                    </a>
+                    {/* Email */}
+                    <div className="flex items-center gap-3 text-[13px] text-gray-600 font-medium">
+                      <LuMail className="text-gray-400 text-base flex-shrink-0" />
+                      <a href={`mailto:${office.email}`} className="hover:text-primary transition-colors break-all">
+                        {office.email}
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
+              {office.status?.trim() && (
+                <div className="flex w-full justify-center text-gray-700 border-t bg-gray-50 border-gray-200 px-3 py-1 text-[13px] font-semibold">
+                  {office.status}
+                </div>
+              )}
             </div>
           ))}
         </div>
