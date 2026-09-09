@@ -73,7 +73,49 @@ const teamMembers = [
       x: "https://x.com/elenarostova",
       website: "https://elenarostova.dev"
     }
-  }
+  },
+  {
+    name: "Samir Raj Deasi",
+    role: "Ganeral Manager",
+    image: member1,
+    socials: {
+      email: "info@pmvmaritime.com",
+      linkedin: "https://linkedin.com/in/vikpatra",
+      x: "https://x.com/vikpatra",
+      facebook: "https://facebook.com/vikpatra",
+    }
+  },
+  {
+    name: "Capt. Rajesh Sharma",
+    role: "Head of Port Operations",
+    image: member2,
+    socials: {
+      email: "r.sharma@pmvmaritime.com",
+      linkedin: "https://linkedin.com/in/rajeshsharma",
+      whatsapp: "https://whatsapp.com/rajeshsharma"
+    }
+  },
+  {
+    name: "Sarah Jenkins",
+    role: "Director of Fleet Management",
+    image: member3,
+    socials: {
+      email: "s.jenkins@pmvmaritime.com",
+      linkedin: "https://linkedin.com/in/sarahjenkins",
+      instagram: "https://instagram.com/sarahjenkins"
+    }
+  },
+  {
+    name: "Elena Rostova",
+    role: "Chief Digital Officer",
+    image: member4,
+    socials: {
+      email: "e.rostova@pmvmaritime.com",
+      linkedin: "https://linkedin.com/in/elenarostova",
+      x: "https://x.com/elenarostova",
+      website: "https://elenarostova.dev"
+    }
+  },
 ];
 
 export default function About() {
