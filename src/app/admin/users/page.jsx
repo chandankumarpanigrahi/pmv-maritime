@@ -590,7 +590,7 @@ export default function UsersPage() {
 
                       <td className="flex items-center gap-1.5 py-3.5 px-4">
                         <span
-                          className={`px-2.5 py-1 text-[10px] font-black uppercase tracking-wider border ${u.role === SYSTEM_ROLES.SUPER_ADMIN
+                          className={`px-2 pt-1 pb-0.5 flex justify-center items-center text-[11px] font-black uppercase tracking-wider border ${u.role === SYSTEM_ROLES.SUPER_ADMIN
                             ? "bg-purple-50 text-purple-800 border-purple-200"
                             : u.role === SYSTEM_ROLES.ADMIN
                               ? "bg-sky-50 text-[#005978] border-sky-200"
@@ -600,7 +600,7 @@ export default function UsersPage() {
                           {u.role}
                         </span>
                         {u.isActive === false && (
-                          <span className="px-2 py-0.5 text-[9px] font-black uppercase tracking-wider bg-red-100 text-red-700 border border-red-300">
+                          <span className="px-2 pt-1 pb-0.5 flex justify-center items-center text-[11px] font-black uppercase tracking-wider bg-red-100 text-red-700 border border-red-300">
                             Restricted
                           </span>
                         )}
