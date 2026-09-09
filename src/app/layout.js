@@ -1,4 +1,5 @@
 import { Nunito_Sans, Oswald } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import ClientLayout from "../components/ClientLayout";
 import { getMaintenanceStatus, checkMaintenanceBypass } from "@/lib/maintenance";
@@ -148,6 +149,19 @@ export default async function RootLayout({ children }) {
         />
       </head>
       <body className="flex flex-col relative">
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-W8T8S6RFGY"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-W8T8S6RFGY');
+          `}
+        </Script>
         <ClientLayout maintenanceMode={maintenanceMode} showLoader={SHOW_LOADER}>
           {children}
         </ClientLayout>
