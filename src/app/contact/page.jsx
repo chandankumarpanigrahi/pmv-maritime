@@ -444,7 +444,7 @@ export default function Contact() {
                 </div>
               </div>
               {office.status?.trim() && (
-                <div className="flex w-full justify-center text-gray-700 border-t bg-gray-50 border-gray-200 px-3 py-1 text-[13px] font-semibold">
+                <div className="flex w-full justify-center text-primary group-hover:text-white border-t bg-gray-50 group-hover:bg-primary-hover border-gray-200 px-3 py-1 text-[13px] font-bold">
                   {office.status}
                 </div>
               )}

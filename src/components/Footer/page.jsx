@@ -289,13 +289,13 @@ export default function Footer() {
               <div className="w-px h-10 bg-gray-200 hidden lg:block mx-4"></div>
 
               <div className="flex flex-wrap items-center gap-6 justify-center lg:justify-end">
-                <div className="flex flex-wrap items-center gap-2 sm:gap-3 justify-center lg:justify-end">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-4 justify-center lg:justify-end">
                   <Image src={abs} alt="ABS" className="h-9 sm:h-11 w-auto object-contain" title="American Bureau of Shipping" />
-                  <div className="w-px h-8 bg-gray-200 hidden sm:block"></div>
+                  <div className="w-px h-8 bg-gray-300 hidden sm:block"></div>
                   <Image src={nimasa} alt="NIMASA" className="h-9 sm:h-11 w-auto object-contain" title="Nigerian Maritime Administration and Safety Agency" />
-                  <div className="w-px h-8 bg-gray-200 hidden sm:block"></div>
+                  <div className="w-px h-8 bg-gray-300 hidden sm:block"></div>
                   <Image src={dgshipping} alt="DG Shipping" className="h-9 sm:h-11 w-auto object-contain" title="Directorate General of Shipping" />
-                  <div className="w-px h-8 bg-gray-200 hidden sm:block"></div>
+                  <div className="w-px h-8 bg-gray-300 hidden sm:block"></div>
                   <Image src={imarest} alt="IMAREST" className="h-9 sm:h-11 w-auto object-contain" title="Institute of Marine Engineering, Science and Technology" />
                 </div>
               </div>
