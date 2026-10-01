@@ -41,7 +41,7 @@ const offices = [
   {
     city: "London (HQ)",
     country: "UNITED KINGDOM",
-    address: "30 St Mary Axe, London EC3A 8BF",
+    address: "71-75, Shelton Street, Covent Garden, London, United Kingdom, WC2H 9JQ",
     phone: "+44 20 722 7000",
     email: "uk@pmvmaritime.com",
     image: london,
@@ -50,7 +50,7 @@ const offices = [
   {
     city: "Dubai",
     country: "UAE",
-    address: "IFZA Properties, Dubai Silicon Oasis, UAE",
+    address: "Meydan Grandstand, 6th floor, Meydan Road, Nad Al Sheba, Dubai, U.A.E",
     phone: "+971 50 534 2726",
     email: "info@pmvmaritime.com",
     image: dubai,
@@ -58,7 +58,7 @@ const offices = [
   {
     city: "Lagos (Nigeria)",
     country: "AFRICA",
-    address: "Plot 1649, Olosa Street, Victoria Island, Lagos",
+    address: "8, Duala Road, Off Abraham Adesanya Street, Lagos, Lagos State, Nigeria",
     phone: "+234 1 461 4100",
     email: "africa@pmvmaritime.com",
     image: lagos,
@@ -67,7 +67,7 @@ const offices = [
   {
     city: "Bhubaneswar",
     country: "INDIA",
-    address: "75/2, Bharatpur, Bhubaneswar, Odisha",
+    address: "75/2 SAI VIHAR , Lords valley, Bharatpur, Bhubaneswar, Odisha, India 751003",
     phone: "+91 674 254 3000",
     email: "india@pmvmaritime.com",
     image: bbsr,
@@ -426,7 +426,7 @@ export default function Contact() {
                     </div>
 
                     {/* Phone */}
-                    <div className="flex items-center gap-3 text-[13px] text-gray-600 font-medium">
+                    <div className="hidden items-center gap-3 text-[13px] text-gray-600 font-medium">
                       <LuPhone className="text-gray-400 text-base flex-shrink-0" />
                       <a href={`tel:${office.phone.replace(/\s+/g, '')}`} className="hover:text-primary transition-colors">
                         {office.phone}
