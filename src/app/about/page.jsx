@@ -17,6 +17,8 @@ import member1 from "../../../public/assets/members/member1.png";
 import member2 from "../../../public/assets/members/member2.png";
 import member3 from "../../../public/assets/members/member3.png";
 import member4 from "../../../public/assets/members/member4.png";
+import member5 from "../../../public/assets/members/member5.png";
+import member6 from "../../../public/assets/members/member6.png";
 
 const directionImages = [image1, image2, image3];
 
@@ -33,24 +35,19 @@ import ContactUs from "@/components/Contact Us/page";
 
 const teamMembers = [
   {
-    name: "Samir Raj Deasi",
-    role: "Ganeral Manager",
+    name: "Mr. Saswat Ranjan Barik",
+    role: "Head of Marine Personnel and Commercial Operations, Nigeria",
     image: member1,
     socials: {
-      email: "info@pmvmaritime.com",
-      linkedin: "https://linkedin.com/in/vikpatra",
-      x: "https://x.com/vikpatra",
-      facebook: "https://facebook.com/vikpatra",
+      email: "info@pmvmaritime.com"
     }
   },
   {
-    name: "Capt. Rajesh Sharma",
-    role: "Head of Port Operations",
+    name: "Capt. Duryodhan Tarai",
+    role: "Master Mariner & Marine Consultant",
     image: member2,
     socials: {
-      email: "r.sharma@pmvmaritime.com",
-      linkedin: "https://linkedin.com/in/rajeshsharma",
-      whatsapp: "https://whatsapp.com/rajeshsharma"
+      email: "info@pmvmaritime.com"
     }
   },
   {
@@ -77,7 +74,7 @@ const teamMembers = [
   {
     name: "Samir Raj Deasi",
     role: "Ganeral Manager",
-    image: member1,
+    image: member3,
     socials: {
       email: "info@pmvmaritime.com",
       linkedin: "https://linkedin.com/in/vikpatra",
@@ -88,7 +85,7 @@ const teamMembers = [
   {
     name: "Capt. Rajesh Sharma",
     role: "Head of Port Operations",
-    image: member2,
+    image: member5,
     socials: {
       email: "r.sharma@pmvmaritime.com",
       linkedin: "https://linkedin.com/in/rajeshsharma",
@@ -98,7 +95,7 @@ const teamMembers = [
   {
     name: "Sarah Jenkins",
     role: "Director of Fleet Management",
-    image: member3,
+    image: member6,
     socials: {
       email: "s.jenkins@pmvmaritime.com",
       linkedin: "https://linkedin.com/in/sarahjenkins",
@@ -229,7 +226,7 @@ export default function About() {
         </div>
       </div>
       <Projects />
-      <div className="container max-w-7xl mx-auto border border-t-0 border-gray-200 bg-white relative">
+      <div className="container max-w-7xl mx-auto border border-t-0 border-gray-200 bg-white relative" id="team">
         <div className="flex flex-col md:flex-row w-full gap-3 md:gap-0 py-8 px-4 md:px-8">
           <div className="flex flex-col w-full">
             <SubHeading title="Our Team" className="mb-4 md:mb-6" />
@@ -245,50 +242,52 @@ export default function About() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 bg-gray-200 gap-px border-t border-gray-200">
           {teamMembers.map((member, index) => (
-            <div key={index} className="flex flex-col gap-1 p-4 md:px-8 md:pb-4 md:pt-6 bg-white group">
+            <div key={index} className="flex flex-col gap-2 p-4 md:px-8 md:pb-4 md:pt-6 bg-white group">
               <div className="min-h-[200px] relative bg-gradient-to-t from-neutral-200 via-transparent to-neutral-300 overflow-hidden">
                 <div className="h-[10px] w-[1000px] bg-secondary -rotate-43 absolute -bottom-64 -right-40 z-10 group-hover:h-[200px] group-hover:translate-29 transition-all linear duration-500"></div>
                 <div className="h-[20px] w-[1000px] bg-primary -rotate-43 absolute -bottom-58 -right-40 z-10 group-hover:h-[1000px] group-hover:-translate-24 transition-all linear duration-500"></div>
                 <Image src={member.image} alt={member.name} className="h-full object-contain object-bottom relative z-10" fill />
               </div>
-              <h3 className="text-xl font-bold font-oswald text-gray-900">{member.name}</h3>
-              <p className="text-[13px] text-secondary uppercase font-semibold mb-2">{member.role}</p>
-              <div className="flex flex-wrap flex-row gap-1 md:gap-2">
-                {member.socials.email && (
-                  <a href={`mailto:${member.socials.email}`} target="_blank" className="bg-primary/7 hover:bg-primary transition-all duration-300 hover:text-white p-1.5 text-primary">
-                    <MdOutlineEmail className="scale-120" />
-                  </a>
-                )}
-                {member.socials.linkedin && (
-                  <a href={member.socials.linkedin} target="_blank" className="bg-primary/7 hover:bg-[#0077b5] transition-all duration-300 hover:text-white p-1.5 text-primary">
-                    <FaLinkedinIn />
-                  </a>
-                )}
-                {member.socials.x && (
-                  <a href={member.socials.x} target="_blank" className="bg-primary/7 hover:bg-black transition-all duration-300 hover:text-white p-1.5 text-primary">
-                    <FaXTwitter />
-                  </a>
-                )}
-                {member.socials.facebook && (
-                  <a href={member.socials.facebook} target="_blank" className="bg-primary/7 hover:bg-[#1877f2] transition-all duration-300 hover:text-white p-1.5 text-primary">
-                    <FaFacebookF />
-                  </a>
-                )}
-                {member.socials.instagram && (
-                  <a href={member.socials.instagram} target="_blank" className="bg-primary/7 hover:bg-gradient-to-tr hover:from-[#e28827] hover:via-[#d41d39] hover:to-[#aa0c78] transition-all duration-300 hover:text-white p-1.5 text-primary">
-                    <GrInstagram />
-                  </a>
-                )}
-                {member.socials.whatsapp && (
-                  <a href={member.socials.whatsapp} target="_blank" className="bg-primary/7 hover:bg-[#0ea545] transition-all duration-300 hover:text-white p-1.5 text-primary">
-                    <FaWhatsapp />
-                  </a>
-                )}
-                {member.socials.website && (
-                  <a href={member.socials.website} target="_blank" className="bg-primary/7 hover:bg-primary transition-all duration-300 hover:text-white p-1.5 text-primary">
-                    <BsGlobe2 />
-                  </a>
-                )}
+              <div className="flex flex-col gap-1 h-full">
+                <h3 className="text-xl font-bold font-oswald text-gray-900">{member.name}</h3>
+                <p className="text-[13px] text-secondary uppercase font-semibold mb-1">{member.role}</p>
+                <div className="flex flex-wrap flex-row gap-1 md:gap-2 mt-auto">
+                  {member.socials.email && (
+                    <a href={`mailto:${member.socials.email}`} target="_blank" className="bg-primary/7 hover:bg-primary transition-all duration-300 hover:text-white p-1.5 text-primary">
+                      <MdOutlineEmail className="scale-120" />
+                    </a>
+                  )}
+                  {member.socials.linkedin && (
+                    <a href={member.socials.linkedin} target="_blank" className="bg-primary/7 hover:bg-[#0077b5] transition-all duration-300 hover:text-white p-1.5 text-primary">
+                      <FaLinkedinIn />
+                    </a>
+                  )}
+                  {member.socials.x && (
+                    <a href={member.socials.x} target="_blank" className="bg-primary/7 hover:bg-black transition-all duration-300 hover:text-white p-1.5 text-primary">
+                      <FaXTwitter />
+                    </a>
+                  )}
+                  {member.socials.facebook && (
+                    <a href={member.socials.facebook} target="_blank" className="bg-primary/7 hover:bg-[#1877f2] transition-all duration-300 hover:text-white p-1.5 text-primary">
+                      <FaFacebookF />
+                    </a>
+                  )}
+                  {member.socials.instagram && (
+                    <a href={member.socials.instagram} target="_blank" className="bg-primary/7 hover:bg-gradient-to-tr hover:from-[#e28827] hover:via-[#d41d39] hover:to-[#aa0c78] transition-all duration-300 hover:text-white p-1.5 text-primary">
+                      <GrInstagram />
+                    </a>
+                  )}
+                  {member.socials.whatsapp && (
+                    <a href={member.socials.whatsapp} target="_blank" className="bg-primary/7 hover:bg-[#0ea545] transition-all duration-300 hover:text-white p-1.5 text-primary">
+                      <FaWhatsapp />
+                    </a>
+                  )}
+                  {member.socials.website && (
+                    <a href={member.socials.website} target="_blank" className="bg-primary/7 hover:bg-primary transition-all duration-300 hover:text-white p-1.5 text-primary">
+                      <BsGlobe2 />
+                    </a>
+                  )}
+                </div>
               </div>
             </div>
           ))}
