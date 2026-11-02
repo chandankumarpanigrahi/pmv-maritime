@@ -17,6 +17,7 @@ import member1 from "../../../public/assets/members/member1.png";
 import member2 from "../../../public/assets/members/member2.png";
 import member3 from "../../../public/assets/members/member3.png";
 import member4 from "../../../public/assets/members/member4.png";
+import member5 from "../../../public/assets/members/member5.png";
 
 const directionImages = [image1, image2, image3];
 
@@ -97,7 +98,7 @@ const teamMembers = [
   },
   {
     name: "Mr. Saswat Ranjan Barik",
-    role: "Head – Marine Personnel & Commercial Operations, Nigeria",
+    role: "Head - Marine Personnel & Commercial Operations, Nigeria",
     image: member4,
     description: "Mr. Saswat Ranjan Barik is an experienced maritime professional, Master Mariner and certified Lead Auditor with nearly two decades of experience across marine operations, crew management, regulatory compliance, quality assurance, maritime training and commercial operations. His experience combines practical seagoing knowledge with shore-based leadership in India and Nigeria. With expertise in international maritime regulations and quality management systems, he leads marine personnel and commercial operations while supporting regulatory compliance, operational excellence and sustainable business growth within the organisation.",
     expertise: [
@@ -114,6 +115,25 @@ const teamMembers = [
     ],
     socials: {
       email: "saswat@pmvmaritime.com"
+    }
+  },
+  {
+    name: "Capt. Iftikhar Khan",
+    role: "Maritime Security & Commercial Operations - UK",
+    image: member5,
+    description: "Capt. Iftikhar Khan is an accomplished maritime professional and Master Mariner with extensive international experience across ship operations, commercial shipping, maritime security and business development. Combining a strong seafaring background with senior shore-based leadership, his expertise spans voyage management, marine operations, security and risk management, commercial development and maritime education. His operational knowledge and leadership experience support the organisation's commitment to safe, secure and efficient maritime services and sustainable business growth.",
+    expertise: [
+      "Maritime Security & Risk Management",
+      "Commercial Shipping Operations",
+      "Ship & Marine Operations",
+      "Voyage Management",
+      "Business Development",
+      "Maritime Safety & Operational Management",
+      "Maritime Education",
+      "Strategic Leadership"
+    ],
+    socials: {
+      email: "info@pmvmaritime.com"
     }
   },
 ];
@@ -381,11 +401,11 @@ export default function About() {
                         <h3 className="text-xl sm:text-2xl lg:text-[28px] font-bold font-oswald text-gray-900 leading-tight mb-3">
                           {selectedMember.name}
                         </h3>
-                        <span className="inline-block px-2.5 py-1 text-[11px] font-bold uppercase tracking-widest text-secondary-dark bg-secondary/10 border-l-2 border-secondary mb-2">
+                        <span className="inline-block px-2.5 py-1 text-[11px] font-bold uppercase tracking-widest text-secondary-dark bg-secondary/10 border-l-2 border-secondary mb-0 sm:mb-2">
                           {selectedMember.role}
                         </span>
                       </div>
-                      <div className="flex flex-col gap-2">
+                      <div className="flex flex-row sm:flex-col gap-2">
                         {selectedMember.socials.email && (
                           <a
                             href={`mailto:${selectedMember.socials.email}`}
@@ -393,7 +413,7 @@ export default function About() {
                             title={selectedMember.socials.email}
                           >
                             <MdOutlineEmail className="text-primary group-hover:text-white text-base shrink-0 transition-colors" />
-                            <span className="truncate">{selectedMember.socials.email}</span>
+                            <span className="hidden sm:inline">{selectedMember.socials.email}</span>
                           </a>
                         )}
                         {selectedMember.socials.linkedin && (
