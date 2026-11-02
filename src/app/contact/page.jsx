@@ -62,7 +62,7 @@ const offices = [
     phone: "+234 1 461 4100",
     email: "info@pmvmaritime.com",
     image: lagos,
-    status: "Nimasha Approved",
+    status: "NIMASA Approved",
   },
   {
     city: "Bhubaneswar",
@@ -71,7 +71,7 @@ const offices = [
     phone: "+91 674 254 3000",
     email: "info@pmvmaritime.com",
     image: bbsr,
-    status: "DG Shipping India Approved",
+    status: "DGMA India Approved",
   },
 ];
 
