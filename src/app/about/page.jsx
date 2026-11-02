@@ -27,6 +27,7 @@ import { GrInstagram } from "react-icons/gr";
 import { MdOutlineEmail } from "react-icons/md";
 import { FaXTwitter } from "react-icons/fa6";
 import { FaArrowRight } from "react-icons/fa";
+import { X } from "lucide-react";
 import Accreditation from "@/components/Accreditation/page";
 import GallerySection from "@/components/GallerySection/page";
 import ContactUs from "@/components/Contact Us/page";
@@ -36,27 +37,59 @@ const teamMembers = [
     name: "Dr Ade Dosunmu, MON",
     role: "Director",
     image: member1,
+    description: "Dr Ade Dosunmu is an accomplished maritime administrator, public policy expert and academic with extensive experience in maritime governance, public administration and institutional leadership. A former Director-General/Chief Executive Officer of NIMASA, he has represented Nigeria at international maritime and labour forums, including the IMO and ILO. With a doctorate in Public Administration and extensive executive-level experience, he brings a strong combination of maritime knowledge, policy expertise and strategic leadership to the organisation.",
+    expertise: [
+      "Maritime Administration & Governance",
+      "Maritime Policy & Regulatory Affairs",
+      "Public Policy & Administration",
+      "Strategic Leadership & Institutional Development",
+      "Corporate Governance & Administration",
+      "International Maritime Relations",
+      "Government & Stakeholder Relations",
+      "Shipping, Transport & Logistics"
+    ],
     socials: {
       email: "info@pmvmaritime.com",
       linkedin: "https://www.linkedin.com/in/dr-ade-dosunmu-234977131",
-      // instagram: "https://instagram.com/sarahjenkins"
+      x: "https://x.com/dradedosunmu23"
     }
   },
   {
     name: "Capt. Gaurav Chhabra",
-    role: "Golbal Head - Maritime Strategy & Innovation",
+    role: "Global Head - Maritime Strategy & Innovation",
     image: member2,
+    description: "Capt. Gaurav Chhabra is a Master Mariner with over 20 years of global maritime experience spanning seagoing operations, maritime training, simulation, business development and digital innovation. His career combines practical shipboard experience with shore-based leadership and technology-driven maritime education. With a strong focus on operational excellence, training development and innovation, he brings practical maritime knowledge and a forward-looking approach to developing effective solutions for the evolving needs of the maritime industry.",
+    expertise: [
+      "Maritime Operations",
+      "Maritime Training & Simulation",
+      "Digital Innovation & Transformation",
+      "Business Development",
+      "Strategic Leadership",
+      "Maritime Education & Training Development",
+      "Technology-Enabled Learning",
+      "Sea-to-Shore Operations"
+    ],
     socials: {
       email: "info@pmvmaritime.com",
       linkedin: "https://www.linkedin.com/in/gaurav-chhabra-658948213",
-      // x: "https://x.com/elenarostova",
-      // website: "https://elenarostova.dev"
     }
   },
   {
     name: "Capt. Duryodhan Tarai",
-    role: "Master Mariner & Marine Consultant",
+    role: "Global Head of Offshore & Marine Operations",
     image: member3,
+    description: "Capt. Duryodhan Tarai is an experienced maritime professional with extensive expertise in offshore operations, vessel management and marine assurance. His career includes command of Dive Support Vessels (DSVs) as Master, followed by senior shore-based assignments with ADNOC Offshore and Saudi Aramco. His experience encompasses complex offshore operations, Dynamic Positioning (DP) trials, vessel inspections, marine and offshore surveys, Marine Warranty Surveys, project risk assessment and regulatory compliance. He brings a strong combination of practical command experience, technical expertise and operational leadership to the organisation.",
+    expertise: [
+      "Offshore & Marine Operations",
+      "Vessel Management & Operations",
+      "Dynamic Positioning (DP) Operations & Trials",
+      "Dive Support Vessel (DSV) Operations",
+      "Marine & Offshore Surveys",
+      "Marine Warranty Surveys",
+      "Vessel Inspection & Compliance",
+      "Offshore Project Execution & Risk Assessment",
+      "Marine Safety & Operational Assurance"
+    ],
     socials: {
       email: "info@pmvmaritime.com",
       linkedin: "https://www.linkedin.com/in/capt-duryodhan-tarai-18205068",
@@ -64,8 +97,21 @@ const teamMembers = [
   },
   {
     name: "Mr. Saswat Ranjan Barik",
-    role: "Head of Marine Personnel and Commercial Operations, Nigeria",
+    role: "Head – Marine Personnel & Commercial Operations, Nigeria",
     image: member4,
+    description: "Mr. Saswat Ranjan Barik is an experienced maritime professional, Master Mariner and certified Lead Auditor with nearly two decades of experience across marine operations, crew management, regulatory compliance, quality assurance, maritime training and commercial operations. His experience combines practical seagoing knowledge with shore-based leadership in India and Nigeria. With expertise in international maritime regulations and quality management systems, he leads marine personnel and commercial operations while supporting regulatory compliance, operational excellence and sustainable business growth within the organisation.",
+    expertise: [
+      "Marine Personnel & Crew Management",
+      "Commercial & Marine Operations",
+      "Maritime Regulatory Compliance",
+      "ISO 9001 & ISO 17025 Quality Management Systems",
+      "Maritime Audits & Inspections",
+      "STCW & MLC 2006 Compliance",
+      "ISM, ISPS & MARPOL Compliance",
+      "Maritime Training & Accreditation",
+      "Port & Marine Operations",
+      "Business Development & Operational Strategy"
+    ],
     socials: {
       email: "saswat@pmvmaritime.com"
     }
@@ -75,16 +121,33 @@ const teamMembers = [
 export default function About() {
   const [activeTab, setActiveTab] = useState("mission");
   const [currentImageIdx, setCurrentImageIdx] = useState(0);
+  const [selectedMember, setSelectedMember] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
-  // Auto-play interval for image slideshow (5-second duration)
+  const openModal = (member) => {
+    setSelectedMember(member);
+    setModalOpen(true);
+    document.body.style.overflow = "hidden";
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    document.body.style.overflow = "unset";
+    setTimeout(() => {
+      setSelectedMember(null);
+    }, 300);
+  };
+
+  // Close on ESC key
   useEffect(() => {
-    const totalImages = directionImages.length;
-    const interval = setInterval(() => {
-      setCurrentImageIdx((prev) => (prev + 1) % totalImages);
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, []);
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape" && modalOpen) {
+        closeModal();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [modalOpen]);
 
   const tabContents = {
     mission:
@@ -199,51 +262,60 @@ export default function About() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 bg-gray-200 gap-px border-t border-gray-200">
           {teamMembers.map((member, index) => (
-            <div key={index} className="flex flex-col gap-2 p-4 md:px-8 md:pb-4 md:pt-6 bg-white group">
+            <div
+              key={index}
+              onClick={() => openModal(member)}
+              className="flex flex-col gap-2 p-4 md:px-8 md:pb-4 md:pt-6 bg-white group cursor-pointer transition-all duration-300 relative"
+            >
               <div className="min-h-[200px] relative bg-gradient-to-t from-neutral-200 via-transparent to-neutral-300 overflow-hidden">
                 <div className="h-[10px] w-[1000px] bg-secondary -rotate-43 absolute -bottom-64 -right-40 z-10 group-hover:h-[200px] group-hover:translate-29 transition-all linear duration-500"></div>
                 <div className="h-[20px] w-[1000px] bg-primary -rotate-43 absolute -bottom-58 -right-40 z-10 group-hover:h-[1000px] group-hover:-translate-24 transition-all linear duration-500"></div>
                 <Image src={member.image} alt={member.name} className="h-full object-contain object-bottom relative z-10" fill />
               </div>
               <div className="flex flex-col gap-1 h-full">
-                <h3 className="text-xl font-bold font-oswald text-gray-900">{member.name}</h3>
+                <h3 className="text-xl font-bold font-oswald text-gray-900 group-hover:text-primary transition-colors duration-300">{member.name}</h3>
                 <p className="text-[13px] text-secondary uppercase font-semibold mb-1">{member.role}</p>
-                <div className="flex flex-wrap flex-row gap-1 md:gap-2 mt-auto">
-                  {member.socials.email && (
-                    <a href={`mailto:${member.socials.email}`} target="_blank" className="bg-primary/7 hover:bg-primary transition-all duration-300 hover:text-white p-1.5 text-primary">
-                      <MdOutlineEmail className="scale-120" />
-                    </a>
-                  )}
-                  {member.socials.linkedin && (
-                    <a href={member.socials.linkedin} target="_blank" className="bg-primary/7 hover:bg-[#0077b5] transition-all duration-300 hover:text-white p-1.5 text-primary">
-                      <FaLinkedinIn />
-                    </a>
-                  )}
-                  {member.socials.x && (
-                    <a href={member.socials.x} target="_blank" className="bg-primary/7 hover:bg-black transition-all duration-300 hover:text-white p-1.5 text-primary">
-                      <FaXTwitter />
-                    </a>
-                  )}
-                  {member.socials.facebook && (
-                    <a href={member.socials.facebook} target="_blank" className="bg-primary/7 hover:bg-[#1877f2] transition-all duration-300 hover:text-white p-1.5 text-primary">
-                      <FaFacebookF />
-                    </a>
-                  )}
-                  {member.socials.instagram && (
-                    <a href={member.socials.instagram} target="_blank" className="bg-primary/7 hover:bg-gradient-to-tr hover:from-[#e28827] hover:via-[#d41d39] hover:to-[#aa0c78] transition-all duration-300 hover:text-white p-1.5 text-primary">
-                      <GrInstagram />
-                    </a>
-                  )}
-                  {member.socials.whatsapp && (
-                    <a href={member.socials.whatsapp} target="_blank" className="bg-primary/7 hover:bg-[#0ea545] transition-all duration-300 hover:text-white p-1.5 text-primary">
-                      <FaWhatsapp />
-                    </a>
-                  )}
-                  {member.socials.website && (
-                    <a href={member.socials.website} target="_blank" className="bg-primary/7 hover:bg-primary transition-all duration-300 hover:text-white p-1.5 text-primary">
-                      <BsGlobe2 />
-                    </a>
-                  )}
+                <div className="flex items-center justify-between mt-auto pt-2">
+                  <div className="flex flex-wrap flex-row gap-1 md:gap-2" onClick={(e) => e.stopPropagation()}>
+                    {member.socials.email && (
+                      <a href={`mailto:${member.socials.email}`} target="_blank" className="bg-primary/7 hover:bg-primary transition-all duration-300 hover:text-white p-1.5 text-primary">
+                        <MdOutlineEmail className="scale-120" />
+                      </a>
+                    )}
+                    {member.socials.linkedin && (
+                      <a href={member.socials.linkedin} target="_blank" className="bg-primary/7 hover:bg-[#0077b5] transition-all duration-300 hover:text-white p-1.5 text-primary">
+                        <FaLinkedinIn />
+                      </a>
+                    )}
+                    {member.socials.x && (
+                      <a href={member.socials.x} target="_blank" className="bg-primary/7 hover:bg-black transition-all duration-300 hover:text-white p-1.5 text-primary">
+                        <FaXTwitter />
+                      </a>
+                    )}
+                    {member.socials.facebook && (
+                      <a href={member.socials.facebook} target="_blank" className="bg-primary/7 hover:bg-[#1877f2] transition-all duration-300 hover:text-white p-1.5 text-primary">
+                        <FaFacebookF />
+                      </a>
+                    )}
+                    {member.socials.instagram && (
+                      <a href={member.socials.instagram} target="_blank" className="bg-primary/7 hover:bg-gradient-to-tr hover:from-[#e28827] hover:via-[#d41d39] hover:to-[#aa0c78] transition-all duration-300 hover:text-white p-1.5 text-primary">
+                        <GrInstagram />
+                      </a>
+                    )}
+                    {member.socials.whatsapp && (
+                      <a href={member.socials.whatsapp} target="_blank" className="bg-primary/7 hover:bg-[#0ea545] transition-all duration-300 hover:text-white p-1.5 text-primary">
+                        <FaWhatsapp />
+                      </a>
+                    )}
+                    {member.socials.website && (
+                      <a href={member.socials.website} target="_blank" className="bg-primary/7 hover:bg-primary transition-all duration-300 hover:text-white p-1.5 text-primary">
+                        <BsGlobe2 />
+                      </a>
+                    )}
+                  </div>
+                  <span className="text-xs font-semibold text-primary flex items-center gap-1 group-hover:-rotate-45 transition-transform duration-300">
+                    <FaArrowRight size={16} />
+                  </span>
                 </div>
               </div>
             </div>
@@ -253,6 +325,182 @@ export default function About() {
       <Accreditation />
       <GallerySection />
       <ContactUs />
+
+      {/* Team Member Details Modal */}
+      {(modalOpen || selectedMember) && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+          {/* Backdrop */}
+          <div
+            onClick={closeModal}
+            className={`fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-300 ${modalOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+              }`}
+          />
+
+          {/* Modal Box */}
+          <div
+            className={`relative w-full max-w-5xl bg-white rounded-none shadow-2xl overflow-hidden z-10 transform transition-all duration-300 my-auto ${modalOpen ? "scale-100 opacity-100 translate-y-0" : "scale-95 opacity-0 translate-y-4"
+              }`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button
+              onClick={closeModal}
+              className="absolute top-3.5 right-3.5 z-30 p-2 rounded-none bg-white/90 hover:bg-primary text-gray-700 hover:text-white border border-gray-200/80 hover:border-primary transition-all duration-200 cursor-pointer shadow-sm"
+              aria-label="Close modal"
+            >
+              <X size={18} />
+            </button>
+
+            {/* Modal Content Row */}
+            {selectedMember && (
+              <div className="flex flex-col md:flex-row max-h-[88vh] md:max-h-[640px] overflow-y-auto md:overflow-hidden">
+                {/* Left Side: Executive Portrait & Direct Contact Panel */}
+                <div className="w-full md:w-[330px] lg:w-[360px] bg-slate-50 border-b md:border-b-0 md:border-r border-gray-200 flex flex-col shrink-0">
+                  {/* Portrait Showcase with Seamless Bottom Dissolve */}
+                  <div className="relative h-[280px] sm:h-[310px] md:h-[330px] bg-gradient-to-b from-slate-200 via-neutral-100 to-slate-50 flex items-end justify-center overflow-hidden shrink-0">
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_35%,rgba(0,123,167,0.14),transparent_70%)] pointer-events-none" />
+
+                    {/* Cutout Image */}
+                    <div className="relative w-full h-full flex items-end justify-center px-4">
+                      <Image
+                        src={selectedMember.image}
+                        alt={selectedMember.name}
+                        className="h-[95%] scale-108 sm:-translate-y-4 w-auto max-w-full object-contain object-bottom relative z-10 drop-shadow-[0_8px_16px_rgba(0,0,0,0.12)]"
+                        priority
+                      />
+                    </div>  
+
+                    {/* Smooth Bottom Dissolve Gradient (Eliminates the harsh torso cutoff line) */}
+                    <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-slate-50 via-slate-50/80 to-transparent z-15 pointer-events-none" />
+                  </div>
+
+                  {/* Left Bottom: Contact Options & Executive Affiliation */}
+                  <div className="p-5 flex flex-col justify-between flex-1 gap-4">
+                    <div>
+                      <div className="mb-5 pr-8">
+                        <h3 className="text-xl sm:text-2xl lg:text-[28px] font-bold font-oswald text-gray-900 leading-tight mb-3">
+                          {selectedMember.name}
+                        </h3>
+                        <span className="inline-block px-2.5 py-1 text-[11px] font-bold uppercase tracking-widest text-secondary-dark bg-secondary/10 border-l-2 border-secondary mb-2">
+                          {selectedMember.role}
+                        </span>
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        {selectedMember.socials.email && (
+                          <a
+                            href={`mailto:${selectedMember.socials.email}`}
+                            className="flex items-center justify-center sm:justify-start gap-2.5 px-3.5 py-2 sm:px-3 sm:py-2 bg-white hover:bg-primary hover:text-white text-gray-700 text-xs font-semibold border border-gray-200/90 hover:border-primary transition-all duration-200 group shadow-2xs"
+                            title={selectedMember.socials.email}
+                          >
+                            <MdOutlineEmail className="text-primary group-hover:text-white text-base shrink-0 transition-colors" />
+                            <span className="truncate">{selectedMember.socials.email}</span>
+                          </a>
+                        )}
+                        {selectedMember.socials.linkedin && (
+                          <a
+                            href={selectedMember.socials.linkedin}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center sm:justify-start gap-2.5 px-3.5 py-2 sm:px-3 sm:py-2 bg-white hover:bg-[#0077b5] hover:text-white text-gray-700 text-xs font-semibold border border-gray-200/90 hover:border-[#0077b5] transition-all duration-200 group shadow-2xs"
+                            title="LinkedIn"
+                          >
+                            <FaLinkedinIn className="text-[#0077b5] group-hover:text-white text-sm shrink-0 transition-colors" />
+                            <span className="hidden sm:inline">LinkedIn</span>
+                          </a>
+                        )}
+                        {selectedMember.socials.x && (
+                          <a
+                            href={selectedMember.socials.x}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center sm:justify-start gap-2.5 px-3.5 py-2 sm:px-3 sm:py-2 bg-white hover:bg-black hover:text-white text-gray-700 text-xs font-semibold border border-gray-200/90 hover:border-black transition-all duration-200 group shadow-2xs"
+                            title="Twitter / X"
+                          >
+                            <FaXTwitter className="text-black group-hover:text-white text-sm shrink-0 transition-colors" />
+                            <span className="hidden sm:inline">Twitter / X</span>
+                          </a>
+                        )}
+                        {selectedMember.socials.facebook && (
+                          <a
+                            href={selectedMember.socials.facebook}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center sm:justify-start gap-2.5 px-3.5 py-2 sm:px-3 sm:py-2 bg-white hover:bg-[#1877f2] hover:text-white text-gray-700 text-xs font-semibold border border-gray-200/90 hover:border-[#1877f2] transition-all duration-200 group shadow-2xs"
+                            title="Facebook"
+                          >
+                            <FaFacebookF className="text-[#1877f2] group-hover:text-white text-sm shrink-0 transition-colors" />
+                            <span className="hidden sm:inline">Facebook</span>
+                          </a>
+                        )}
+                        {selectedMember.socials.whatsapp && (
+                          <a
+                            href={selectedMember.socials.whatsapp}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center sm:justify-start gap-2.5 px-3.5 py-2 sm:px-3 sm:py-2 bg-white hover:bg-[#0ea545] hover:text-white text-gray-700 text-xs font-semibold border border-gray-200/90 hover:border-[#0ea545] transition-all duration-200 group shadow-2xs"
+                            title="WhatsApp"
+                          >
+                            <FaWhatsapp className="text-[#0ea545] group-hover:text-white text-sm shrink-0 transition-colors" />
+                            <span className="hidden sm:inline">WhatsApp</span>
+                          </a>
+                        )}
+                        {selectedMember.socials.website && (
+                          <a
+                            href={selectedMember.socials.website}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center sm:justify-start gap-2.5 px-3.5 py-2 sm:px-3 sm:py-2 bg-white hover:bg-primary hover:text-white text-gray-700 text-xs font-semibold border border-gray-200/90 hover:border-primary transition-all duration-200 group shadow-2xs"
+                            title="Website"
+                          >
+                            <BsGlobe2 className="text-primary group-hover:text-white text-sm shrink-0 transition-colors" />
+                            <span className="hidden sm:inline">Website</span>
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Side: Detailed Bio & Core Competencies */}
+                <div className="flex-1 p-6 md:p-8 lg:p-10 flex flex-col justify-start bg-white overflow-y-visible md:overflow-y-auto">
+
+                  {/* Profile Statement */}
+                  <div className="mb-6">
+                    <h4 className="text-[12px] uppercase tracking-wider font-bold text-gray-400 mb-2 flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+                      Profile
+                    </h4>
+                    <p className="text-sm md:text-[14px] text-gray-600 leading-relaxed font-medium text-justify">
+                      {selectedMember.description}
+                    </p>
+                  </div>
+
+                  {/* Key Areas of Expertise */}
+                  {selectedMember.expertise && selectedMember.expertise.length > 0 && (
+                    <div>
+                      <h4 className="text-[11px] uppercase tracking-wider font-bold text-gray-400 mb-3 flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-secondary" />
+                        Key Areas of Expertise
+                      </h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {selectedMember.expertise.map((item, idx) => (
+                          <div
+                            key={idx}
+                            className="flex items-start gap-2.5 p-2.5 bg-slate-50 border border-gray-200/80 text-gray-800 text-xs sm:text-[13px] font-medium leading-snug hover:border-secondary/40 hover:bg-secondary/5 transition-all duration-200 group"
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-secondary group-hover:bg-primary mt-1.5 shrink-0 transition-colors" />
+                            <span>{item}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </>
   );
 }
