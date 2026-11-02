@@ -38,7 +38,7 @@ const teamMembers = [
     image: member1,
     socials: {
       email: "info@pmvmaritime.com",
-      // linkedin: "https://linkedin.com/in/sarahjenkins",
+      linkedin: "https://www.linkedin.com/in/dr-ade-dosunmu-234977131",
       // instagram: "https://instagram.com/sarahjenkins"
     }
   },
@@ -48,7 +48,7 @@ const teamMembers = [
     image: member2,
     socials: {
       email: "info@pmvmaritime.com",
-      // linkedin: "https://linkedin.com/in/elenarostova",
+      linkedin: "https://www.linkedin.com/in/gaurav-chhabra-658948213",
       // x: "https://x.com/elenarostova",
       // website: "https://elenarostova.dev"
     }
@@ -58,7 +58,8 @@ const teamMembers = [
     role: "Master Mariner & Marine Consultant",
     image: member3,
     socials: {
-      email: "info@pmvmaritime.com"
+      email: "info@pmvmaritime.com",
+      linkedin: "https://www.linkedin.com/in/capt-duryodhan-tarai-18205068",
     }
   },
   {
