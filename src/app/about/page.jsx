@@ -17,8 +17,6 @@ import member1 from "../../../public/assets/members/member1.png";
 import member2 from "../../../public/assets/members/member2.png";
 import member3 from "../../../public/assets/members/member3.png";
 import member4 from "../../../public/assets/members/member4.png";
-import member5 from "../../../public/assets/members/member5.png";
-import member6 from "../../../public/assets/members/member6.png";
 
 const directionImages = [image1, image2, image3];
 
@@ -35,82 +33,40 @@ import ContactUs from "@/components/Contact Us/page";
 
 const teamMembers = [
   {
-    name: "Mr. Saswat Ranjan Barik",
-    role: "Head of Marine Personnel and Commercial Operations, Nigeria",
+    name: "Dr Ade Dosunmu, MON",
+    role: "Director",
     image: member1,
     socials: {
-      email: "info@pmvmaritime.com"
+      email: "info@pmvmaritime.com",
+      // linkedin: "https://linkedin.com/in/sarahjenkins",
+      // instagram: "https://instagram.com/sarahjenkins"
+    }
+  },
+  {
+    name: "Capt. Gaurav Chhabra",
+    role: "Golbal Head - Maritime Strategy & Innovation",
+    image: member2,
+    socials: {
+      email: "info@pmvmaritime.com",
+      // linkedin: "https://linkedin.com/in/elenarostova",
+      // x: "https://x.com/elenarostova",
+      // website: "https://elenarostova.dev"
     }
   },
   {
     name: "Capt. Duryodhan Tarai",
     role: "Master Mariner & Marine Consultant",
-    image: member2,
+    image: member3,
     socials: {
       email: "info@pmvmaritime.com"
     }
   },
   {
-    name: "Sarah Jenkins",
-    role: "Director of Fleet Management",
-    image: member3,
-    socials: {
-      email: "s.jenkins@pmvmaritime.com",
-      linkedin: "https://linkedin.com/in/sarahjenkins",
-      instagram: "https://instagram.com/sarahjenkins"
-    }
-  },
-  {
-    name: "Elena Rostova",
-    role: "Chief Digital Officer",
+    name: "Mr. Saswat Ranjan Barik",
+    role: "Head of Marine Personnel and Commercial Operations, Nigeria",
     image: member4,
     socials: {
-      email: "e.rostova@pmvmaritime.com",
-      linkedin: "https://linkedin.com/in/elenarostova",
-      x: "https://x.com/elenarostova",
-      website: "https://elenarostova.dev"
-    }
-  },
-  {
-    name: "Samir Raj Deasi",
-    role: "Ganeral Manager",
-    image: member3,
-    socials: {
-      email: "info@pmvmaritime.com",
-      linkedin: "https://linkedin.com/in/vikpatra",
-      x: "https://x.com/vikpatra",
-      facebook: "https://facebook.com/vikpatra",
-    }
-  },
-  {
-    name: "Capt. Rajesh Sharma",
-    role: "Head of Port Operations",
-    image: member5,
-    socials: {
-      email: "r.sharma@pmvmaritime.com",
-      linkedin: "https://linkedin.com/in/rajeshsharma",
-      whatsapp: "https://whatsapp.com/rajeshsharma"
-    }
-  },
-  {
-    name: "Sarah Jenkins",
-    role: "Director of Fleet Management",
-    image: member6,
-    socials: {
-      email: "s.jenkins@pmvmaritime.com",
-      linkedin: "https://linkedin.com/in/sarahjenkins",
-      instagram: "https://instagram.com/sarahjenkins"
-    }
-  },
-  {
-    name: "Elena Rostova",
-    role: "Chief Digital Officer",
-    image: member4,
-    socials: {
-      email: "e.rostova@pmvmaritime.com",
-      linkedin: "https://linkedin.com/in/elenarostova",
-      x: "https://x.com/elenarostova",
-      website: "https://elenarostova.dev"
+      email: "saswat@pmvmaritime.com"
     }
   },
 ];
