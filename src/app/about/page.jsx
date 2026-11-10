@@ -147,16 +147,26 @@ export default function About() {
   const openModal = (member) => {
     setSelectedMember(member);
     setModalOpen(true);
-    document.body.style.overflow = "hidden";
   };
 
   const closeModal = () => {
     setModalOpen(false);
-    document.body.style.overflow = "unset";
     setTimeout(() => {
       setSelectedMember(null);
     }, 300);
   };
+
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (modalOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [modalOpen]);
 
   // Close on ESC key
   useEffect(() => {
