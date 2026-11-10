@@ -11,12 +11,7 @@
 > Official web platform for **Pinnacle Marine Ventures (PMV)**, operating as **PMV Maritime Solutions**. A modern, full-stack enterprise web application delivering integrated marine & vessel services, technical management, crewing, shipbuilding, port operations, and marine consultancy worldwide.
 
 ---
-
-<!-- ================================================================= -->
-<!-- [SCREENSHOT PLACEHOLDER: Paste Homepage / Hero Banner Image Here] -->
-<!-- Example: ![PMV Maritime Homepage](public/assets/images/readme/hero-preview.png) -->
-<!-- ================================================================= -->
-
+<img width="1439" height="962" alt="image" src="https://github.com/user-attachments/assets/c681e1dd-f39b-4ed6-b51d-3ef6941e6000" />
 ---
 
 ## 📋 Table of Contents
