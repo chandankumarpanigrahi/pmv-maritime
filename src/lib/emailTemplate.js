@@ -214,6 +214,7 @@ export function generateUserCredentialsEmailHTML({ fullName, username, email, pa
   `;
 }
 
+
 export function generatePasswordChangedEmailHTML({ fullName, email, dateTime, loginUrl = "https://pmvmaritime.com/admin" }) {
     return `
 <!DOCTYPE html>
@@ -288,6 +289,7 @@ export function generatePasswordChangedEmailHTML({ fullName, email, dateTime, lo
 </html>
   `;
 }
+
 
 export function generatePasswordResetOTPEmailHTML({ fullName, email, otp, expiryMinutes = 10, loginUrl = "https://pmvmaritime.com/admin" }) {
     return `
@@ -379,5 +381,91 @@ export function generatePasswordResetOTPEmailHTML({ fullName, email, otp, expiry
 </html>
   `;
 }
+
+export function generateBrochureOtpEmailHTML({ fullName, serviceName, otp, expiryMinutes = 10 }) {
+  return `
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brochure Download Verification Code</title>
+</head>
+
+<body
+  style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f4f6f9; margin: 0; padding: 25px 15px; color: #334155;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0"
+    style="max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #e2e8f0; border-collapse: collapse; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);">
+
+    <!-- Header -->
+    <tr>
+      <td
+        style="background-color: #02506b; padding: 24px 30px; text-align: center; border-bottom: 5px solid #AD1D41;">
+        <h1
+          style="color: #ffffff; margin: 0; font-size: 22px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;">
+          PMV Maritime Solutions
+        </h1>
+        <p
+          style="color: #cbd5e1; margin: 6px 0 0 0; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px;">
+          Brochure Download Verification
+        </p>
+      </td>
+    </tr>
+
+    <!-- Content -->
+    <tr>
+      <td style="padding: 32px 30px 24px 30px;">
+        <h2 style="font-size: 18px; color: #0f172a; margin: 0 0 12px 0; font-weight: 700;">
+          Hello ${fullName || "Valued Partner"},
+        </h2>
+        <p style="font-size: 14px; line-height: 1.6; color: #475569; margin: 0 0 16px 0;">
+          Thank you for your interest in <strong>${serviceName || "PMV Maritime Services"}</strong>. Please use the verification code below to complete your brochure download:
+        </p>
+
+        <!-- OTP Code Display Box -->
+        <div style="background-color: #f8fafc; border: 2px dashed #02506b; border-radius: 4px; padding: 24px 20px; text-align: center; margin: 24px 0;">
+          <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #64748b; margin-bottom: 8px;">
+            Your One-Time Verification Code
+          </div>
+          <div style="font-size: 36px; font-weight: 800; letter-spacing: 8px; color: #ad1d41; font-family: monospace; line-height: 1.2;">
+            ${otp}
+          </div>
+          <div style="font-size: 12px; color: #94a3b8; font-weight: 600; margin-top: 8px;">
+            Valid for ${expiryMinutes} minutes • Single-use only
+          </div>
+        </div>
+
+        <div style="background-color: #fffbeb; border: 1px solid #fef3c7; border-left: 4px solid #f59e0b; padding: 14px 16px; margin: 20px 0;">
+          <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #92400e; font-weight: 600;">
+            <strong>Note:</strong> If you did not request this brochure, please disregard this email.
+          </p>
+        </div>
+
+        <p style="font-size: 13px; color: #64748b; line-height: 1.5; margin: 20px 0 0 0;">
+          Warm regards,<br>
+          <strong>The PMV Maritime Team</strong><br>
+          <a href="https://pmvmaritime.com" style="color: #02506b; text-decoration: none;">pmvmaritime.com</a>
+        </p>
+      </td>
+    </tr>
+
+    <!-- Footer -->
+    <tr>
+      <td
+        style="background-color: #ad1d41; padding: 14px 20px; text-align: center; font-size: 11px; color: #ffffff; line-height: 1.5;">
+        &copy; ${new Date().getFullYear()} <strong>PMV Maritime Solutions</strong>. All rights reserved.<br>
+        IFZA Properties, Dubai Silicon Oasis, UAE
+      </td>
+    </tr>
+
+  </table>
+</body>
+
+</html>
+  `;
+}
+
+
 
 

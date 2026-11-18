@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import SubBanner from "@/components/Sub Banner/page";
 import SubHeading from "@/design/sub-heading/page";
@@ -34,9 +35,23 @@ import {
   TbAward,
   TbUserShield,
 } from "react-icons/tb";
-import { LuHandshake, LuShipWheel, LuLoader } from "react-icons/lu";
+import {
+  LuHandshake,
+  LuShipWheel,
+  LuLoader,
+  LuX,
+  LuMail,
+  LuPhone,
+  LuUser,
+  LuFileText,
+  LuArrowRight,
+  LuClock,
+  LuRefreshCw,
+  LuCircleAlert,
+} from "react-icons/lu";
 import { MdOutlineAnchor } from "react-icons/md";
 import ContactUs from "@/components/Contact Us/page";
+import toast from "react-hot-toast";
 
 // ─── STATIC SECTIONS (same for every service) ────────────────────────────────
 
@@ -69,6 +84,20 @@ export default function ServiceDetailPage() {
   const [notFound, setNotFound] = useState(false);
   const [activeStepIdx, setActiveStepIdx] = useState(0);
 
+  // ── Brochure Download & OTP State ──────────────────────────────────────────
+  const [isBrochureModalOpen, setIsBrochureModalOpen] = useState(false);
+  const [brochureStep, setBrochureStep] = useState("form"); // "form" | "otp" | "success"
+  const [leadForm, setLeadForm] = useState({ fullName: "", phone: "", email: "" });
+  const [formErrors, setFormErrors] = useState({ fullName: "", phone: "", email: "" });
+  const [otpValue, setOtpValue] = useState("");
+  const [otpError, setOtpError] = useState("");
+  const [isSendingOtp, setIsSendingOtp] = useState(false);
+  const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
+  const [isConverting, setIsConverting] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
+  const [isVerified, setIsVerified] = useState(false);
+  const [verifiedDownloadUrl, setVerifiedDownloadUrl] = useState("");
+
   useEffect(() => {
     async function fetchService() {
       setLoading(true);
@@ -95,13 +124,157 @@ export default function ServiceDetailPage() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleDownload = (filePath, fileName) => {
-    const link = document.createElement("a");
-    link.href = filePath;
-    link.download = fileName;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  // Cooldown countdown timer for Resend OTP
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+    const timer = setInterval(() => {
+      setResendCooldown((prev) => Math.max(0, prev - 1));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [resendCooldown]);
+
+  const handleOpenBrochure = (url) => {
+    const targetUrl = url || service?.brochureUrl || "/docs/services.pdf";
+    if (targetUrl.startsWith("http://") || targetUrl.startsWith("https://")) {
+      window.open(targetUrl, "_blank", "noopener,noreferrer");
+    } else {
+      const link = document.createElement("a");
+      link.href = targetUrl;
+      link.download = `${service?.name || "PMV-Maritime-Service"}-Brochure.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+
+  const validateField = (field, value) => {
+    const val = (value || "").trim();
+    if (field === "fullName") {
+      if (!val) return "Full Name is required.";
+      if (val.length < 2) return "Name must be at least 2 characters long.";
+      if (!/^[a-zA-Z\s.'-]+$/.test(val)) return "Please enter a valid name (letters only).";
+      return "";
+    }
+    if (field === "phone") {
+      if (!val) return "Mobile / WhatsApp number is required.";
+      if (!/^[+0-9\s\-()]{7,18}$/.test(val)) return "Please enter a valid phone number (min 7 digits).";
+      return "";
+    }
+    if (field === "email") {
+      if (!val) return "Email address is required.";
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) return "Please enter a valid email address (e.g. name@company.com).";
+      return "";
+    }
+    return "";
+  };
+
+  const handleInputChange = (field, value) => {
+    setLeadForm((prev) => ({ ...prev, [field]: value }));
+    if (formErrors[field]) {
+      setFormErrors((prev) => ({ ...prev, [field]: "" }));
+    }
+  };
+
+  const handleInputBlur = (field) => {
+    const err = validateField(field, leadForm[field]);
+    setFormErrors((prev) => ({ ...prev, [field]: err }));
+  };
+
+  const handleSendOtp = async (e) => {
+    if (e) e.preventDefault();
+
+    const nameErr = validateField("fullName", leadForm.fullName);
+    const phoneErr = validateField("phone", leadForm.phone);
+    const emailErr = validateField("email", leadForm.email);
+
+    if (nameErr || phoneErr || emailErr) {
+      setFormErrors({ fullName: nameErr, phone: phoneErr, email: emailErr });
+      return;
+    }
+
+    setIsSendingOtp(true);
+    try {
+      const res = await fetch("/api/brochure/otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "send-otp",
+          fullName: leadForm.fullName.trim(),
+          phone: leadForm.phone.trim(),
+          email: leadForm.email.trim(),
+          serviceName: service?.name || "PMV Maritime Service",
+          serviceSlug: slug,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to send verification code.");
+      }
+
+      toast.success("Verification code sent to your email!");
+      setResendCooldown(60);
+      setBrochureStep("otp");
+      setOtpError("");
+    } catch (err) {
+      toast.error(err.message || "Failed to send verification code.");
+    } finally {
+      setIsSendingOtp(false);
+    }
+  };
+
+  const handleVerifyOtp = async (e) => {
+    if (e) e.preventDefault();
+
+    const cleanOtp = otpValue.trim();
+    if (!cleanOtp) {
+      setOtpError("Please enter the 6-digit verification code.");
+      return;
+    }
+    if (cleanOtp.length !== 6) {
+      setOtpError("Verification code must be exactly 6 digits.");
+      return;
+    }
+
+    setOtpError("");
+    setIsVerifyingOtp(true);
+    try {
+      const res = await fetch("/api/brochure/otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "verify-otp",
+          email: leadForm.email.trim(),
+          otp: cleanOtp,
+          serviceSlug: slug,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Incorrect or expired verification code.");
+      }
+
+      toast.success("Verification successful!");
+      setIsVerified(true);
+      const dlUrl = data.downloadUrl || service?.brochureUrl || "/docs/services.pdf";
+      setVerifiedDownloadUrl(dlUrl);
+
+      // Transition loader step
+      setBrochureStep("success");
+      setIsConverting(true);
+
+      // After 1.2s loader, automatically trigger opening/downloading the PDF
+      setTimeout(() => {
+        setIsConverting(false);
+        handleOpenBrochure(dlUrl);
+      }, 1200);
+    } catch (err) {
+      setOtpError(err.message || "Verification failed. Please check the code.");
+      toast.error(err.message || "Verification failed. Please check the code.");
+    } finally {
+      setIsVerifyingOtp(false);
+    }
   };
 
   // ── Loading ────────────────────────────────────────────────────────────────
@@ -134,9 +307,9 @@ export default function ServiceDetailPage() {
           <MdOutlineAnchor className="text-5xl text-gray-300 mx-auto mb-4" />
           <h2 className="font-oswald text-2xl font-bold text-secondary-dark mb-2">Service Not Found</h2>
           <p className="text-gray-500 text-sm mb-6">The service you are looking for does not exist or has been removed.</p>
-          <a href="/services" className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white font-bold text-sm uppercase tracking-wider hover:bg-primary-hover transition-all">
+          <Link href="/services" className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white font-bold text-sm uppercase tracking-wider hover:bg-primary-hover transition-all">
             View All Services
-          </a>
+          </Link>
         </div>
       </>
     );
@@ -178,14 +351,30 @@ export default function ServiceDetailPage() {
                   <IoMdCall />
                   Talk to an Expert
                 </a>
-                <button
-                  type="button"
-                  onClick={() => handleDownload("/docs/services.pdf", "PMV Maritime Services.pdf")}
-                  className="group w-full md:w-fit justify-center text-[16px] md:text-[14px] flex gap-3 items-center pl-3 md:pl-4 pr-2 md:pr-3 py-1.5 md:py-2 bg-white hover:bg-primary-hover text-primary hover:text-white font-bold tracking-wider shadow-lg cursor-pointer"
-                >
-                  <PiDownloadSimpleBold />
-                  Download Brochure
-                </button>
+                {isVerified ? (
+                  <button
+                    type="button"
+                    onClick={() => handleOpenBrochure(verifiedDownloadUrl || service?.brochureUrl)}
+                    className="group w-full md:w-fit justify-center text-[16px] md:text-[14px] flex gap-3 items-center pl-3 md:pl-4 pr-2 md:pr-3 py-1.5 md:py-2 bg-primary hover:bg-primary-hover text-white font-bold tracking-wider shadow-lg cursor-pointer transition-all"
+                    title="Download Service Brochure"
+                  >
+                    <PiDownloadSimpleBold className="text-lg" />
+                    Download PDF
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setBrochureStep("form");
+                      setIsBrochureModalOpen(true);
+                    }}
+                    className="group w-full md:w-fit justify-center text-[16px] md:text-[14px] flex gap-3 items-center pl-3 md:pl-4 pr-2 md:pr-3 py-1.5 md:py-2 bg-white hover:bg-primary-hover text-primary hover:text-white font-bold tracking-wider shadow-lg cursor-pointer transition-all"
+                    title="Download Service Brochure"
+                  >
+                    <PiDownloadSimpleBold />
+                    Download Brochure
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -361,6 +550,314 @@ export default function ServiceDetailPage() {
           </div>
         </div>
       </section>
+
+      {/* ── BROCHURE LEAD & OTP VERIFICATION MODAL ───────────────────────── */}
+      {isBrochureModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn">
+          {/* Backdrop click to close */}
+          <div
+            className="absolute inset-0 cursor-pointer"
+            onClick={() => {
+              if (!isSendingOtp && !isVerifyingOtp) {
+                setIsBrochureModalOpen(false);
+              }
+            }}
+          />
+
+          <div className="relative w-full max-w-lg bg-white border border-gray-200 shadow-2xl z-10 overflow-hidden flex flex-col">
+            {/* Header Accent Bar */}
+            <div className="h-1.5 w-full bg-primary" />
+
+            {/* Modal Header */}
+            <div className="flex items-start justify-between p-5 md:p-6 border-b border-gray-200 bg-[#f7f5f8]">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-primary/10 text-primary border border-primary/20 flex items-center justify-center shrink-0">
+                  <LuFileText className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="font-oswald text-xl font-bold text-secondary-dark uppercase tracking-wide leading-tight">
+                    {brochureStep === "otp"
+                      ? "Verify Email"
+                      : brochureStep === "success"
+                        ? "Brochure Ready"
+                        : "Download Brochure"}
+                  </h3>
+                  <p className="text-xs text-gray-500 font-medium truncate max-w-[260px] sm:max-w-[340px]">
+                    {service?.name || "PMV Maritime Service"}
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setIsBrochureModalOpen(false)}
+                disabled={isSendingOtp || isVerifyingOtp}
+                className="p-1.5 text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer disabled:opacity-40"
+              >
+                <LuX className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-5 md:p-6">
+              {/* ── PHASE 1: LEAD FORM ───────────────────────────────────────── */}
+              {brochureStep === "form" && (
+                <form onSubmit={handleSendOtp} noValidate className="space-y-4">
+                  <p className="text-xs text-gray-600 leading-relaxed font-medium">
+                    Please provide your contact details below. A 6-digit verification code will be sent to your email to verify and unlock the brochure download.
+                  </p>
+
+                  {/* Full Name */}
+                  <div>
+                    <label className="text-[11px] font-bold text-gray-500 uppercase tracking-widest block mb-1">
+                      Full Name <span className="text-primary">*</span>
+                    </label>
+                    <div className="relative">
+                      <LuUser className={`absolute left-3.5 top-1/2 -translate-y-1/2 text-sm ${formErrors.fullName ? "text-red-500" : "text-gray-400"}`} />
+                      <input
+                        type="text"
+                        value={leadForm.fullName}
+                        onChange={(e) => handleInputChange("fullName", e.target.value)}
+                        onBlur={() => handleInputBlur("fullName")}
+                        placeholder="e.g. Captain David Miller"
+                        className={`w-full bg-slate-50 border outline-none pl-10 pr-4 py-2.5 text-xs md:text-sm text-gray-900 placeholder-gray-400 font-medium transition-all ${formErrors.fullName
+                          ? "border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500 bg-red-50/20"
+                          : "border-gray-200 focus:border-secondary focus:ring-1 focus:ring-secondary"
+                          }`}
+                      />
+                    </div>
+                    {formErrors.fullName && (
+                      <p className="text-red-500 text-[11px] font-semibold mt-1 flex items-center gap-1 animate-fadeIn">
+                        <LuCircleAlert className="text-xs shrink-0" />
+                        <span>{formErrors.fullName}</span>
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Mobile Number */}
+                  <div>
+                    <label className="text-[11px] font-bold text-gray-500 uppercase tracking-widest block mb-1">
+                      Mobile / WhatsApp Number <span className="text-primary">*</span>
+                    </label>
+                    <div className="relative">
+                      <LuPhone className={`absolute left-3.5 top-1/2 -translate-y-1/2 text-sm ${formErrors.phone ? "text-red-500" : "text-gray-400"}`} />
+                      <input
+                        type="tel"
+                        value={leadForm.phone}
+                        onChange={(e) => handleInputChange("phone", e.target.value)}
+                        onBlur={() => handleInputBlur("phone")}
+                        placeholder="e.g. +971 50 123 4567"
+                        className={`w-full bg-slate-50 border outline-none pl-10 pr-4 py-2.5 text-xs md:text-sm text-gray-900 placeholder-gray-400 font-medium transition-all ${formErrors.phone
+                          ? "border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500 bg-red-50/20"
+                          : "border-gray-200 focus:border-secondary focus:ring-1 focus:ring-secondary"
+                          }`}
+                      />
+                    </div>
+                    {formErrors.phone && (
+                      <p className="text-red-500 text-[11px] font-semibold mt-1 flex items-center gap-1 animate-fadeIn">
+                        <LuCircleAlert className="text-xs shrink-0" />
+                        <span>{formErrors.phone}</span>
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Email Address */}
+                  <div>
+                    <label className="text-[11px] font-bold text-gray-500 uppercase tracking-widest block mb-1">
+                      Business Email Address <span className="text-primary">*</span>
+                    </label>
+                    <div className="relative">
+                      <LuMail className={`absolute left-3.5 top-1/2 -translate-y-1/2 text-sm ${formErrors.email ? "text-red-500" : "text-gray-400"}`} />
+                      <input
+                        type="email"
+                        value={leadForm.email}
+                        onChange={(e) => handleInputChange("email", e.target.value)}
+                        onBlur={() => handleInputBlur("email")}
+                        placeholder="e.g. david.miller@shippingco.com"
+                        className={`w-full bg-slate-50 border outline-none pl-10 pr-4 py-2.5 text-xs md:text-sm text-gray-900 placeholder-gray-400 font-medium transition-all ${formErrors.email
+                          ? "border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500 bg-red-50/20"
+                          : "border-gray-200 focus:border-secondary focus:ring-1 focus:ring-secondary"
+                          }`}
+                      />
+                    </div>
+                    {formErrors.email && (
+                      <p className="text-red-500 text-[11px] font-semibold mt-1 flex items-center gap-1 animate-fadeIn">
+                        <LuCircleAlert className="text-xs shrink-0" />
+                        <span>{formErrors.email}</span>
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Submit Button */}
+                  <div className="pt-2">
+                    <button
+                      type="submit"
+                      disabled={isSendingOtp}
+                      className="w-full py-3 bg-primary hover:bg-primary-hover text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer active:scale-98"
+                    >
+                      {isSendingOtp ? (
+                        <>
+                          <LuLoader className="text-base animate-spin" />
+                          <span>Sending Verification Code...</span>
+                        </>
+                      ) : (
+                        <>
+                          <span>Send Verification Code</span>
+                          <LuArrowRight className="text-sm" />
+                        </>
+                      )}
+                    </button>
+                  </div>
+
+                  <p className="text-[10px] text-gray-400 text-center">
+                    Your information is protected under PMV Maritime privacy guidelines.
+                  </p>
+                </form>
+              )}
+
+              {/* ── PHASE 2: OTP VERIFICATION ───────────────────────────────── */}
+              {brochureStep === "otp" && (
+                <form onSubmit={handleVerifyOtp} noValidate className="space-y-5 text-center">
+                  <div className="bg-slate-50 p-4 border border-gray-200 text-left">
+                    <p className="text-xs text-gray-600 font-medium">
+                      We have dispatched a 6-digit verification code to:
+                    </p>
+                    <p className="text-sm font-bold text-secondary-dark mt-0.5 break-all">
+                      {leadForm.email}
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="text-[11px] font-bold text-gray-500 uppercase tracking-widest block mb-2">
+                      Enter 6-Digit Verification Code
+                    </label>
+                    <input
+                      type="text"
+                      maxLength={6}
+                      value={otpValue}
+                      onChange={(e) => {
+                        setOtpValue(e.target.value.replace(/\D/g, ""));
+                        if (otpError) setOtpError("");
+                      }}
+                      placeholder="• • • • • •"
+                      autoFocus
+                      required
+                      className={`w-full max-w-[260px] mx-auto text-center tracking-[10px] text-2xl font-mono font-bold bg-slate-50 border-2 outline-none px-4 py-3 text-secondary-dark transition-all ${otpError
+                        ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 bg-red-50/20"
+                        : "border-primary/40 focus:border-primary focus:ring-2 focus:ring-primary/20"
+                        }`}
+                    />
+                    {otpError && (
+                      <p className="text-red-500 text-xs font-semibold mt-2 flex items-center justify-center gap-1 animate-fadeIn">
+                        <LuCircleAlert className="text-xs shrink-0" />
+                        <span>{otpError}</span>
+                      </p>
+                    )}
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={isVerifyingOtp || otpValue.length < 6}
+                    className="w-full py-3 bg-primary hover:bg-primary-hover text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer active:scale-98"
+                  >
+                    {isVerifyingOtp ? (
+                      <>
+                        <LuLoader className="text-base animate-spin" />
+                        <span>Verifying Code...</span>
+                      </>
+                    ) : (
+                      <span>Verify & Download Brochure</span>
+                    )}
+                  </button>
+
+                  {/* Resend button with visible countdown timer */}
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-gray-200">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setBrochureStep("form");
+                        setOtpError("");
+                      }}
+                      className="text-xs font-semibold text-gray-500 hover:text-secondary-dark transition-colors cursor-pointer flex items-center gap-1"
+                    >
+                      <span>←</span>
+                      <span>Change Details</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handleSendOtp}
+                      disabled={resendCooldown > 0 || isSendingOtp}
+                      className={`px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all border ${resendCooldown > 0 || isSendingOtp
+                        ? "bg-slate-100 text-gray-400 border-gray-200 cursor-not-allowed"
+                        : "bg-white text-primary border-primary hover:bg-primary hover:text-white shadow-xs cursor-pointer active:scale-95"
+                        }`}
+                    >
+                      {isSendingOtp ? (
+                        <>
+                          <LuLoader className="text-xs animate-spin" />
+                          <span>Resending...</span>
+                        </>
+                      ) : resendCooldown > 0 ? (
+                        <>
+                          <LuClock className="text-xs text-gray-400 animate-pulse" />
+                          <span>
+                            Resend Code ({String(Math.floor(resendCooldown / 60)).padStart(2, "0")}:{String(resendCooldown % 60).padStart(2, "0")})
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <LuRefreshCw className="text-xs" />
+                          <span>Resend OTP</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </form>
+              )}
+
+              {/* ── PHASE 3: VERIFICATION SUCCESS & CONVERTED DOWNLOAD BUTTON ── */}
+              {brochureStep === "success" && (
+                <div className="text-center py-4 space-y-5">
+                  <div className="w-16 h-16 bg-emerald-50 text-emerald-600 border border-emerald-200 rounded-full flex items-center justify-center mx-auto text-3xl">
+                    <TbCheck className="stroke-[3]" />
+                  </div>
+
+                  <div>
+                    <h4 className="font-oswald text-xl font-bold text-secondary-dark uppercase tracking-wide">
+                      Verification Successful!
+                    </h4>
+                    <p className="text-xs text-gray-600 font-medium mt-1">
+                      Thank you, <strong className="text-gray-900">{leadForm.fullName}</strong>. Your brochure is ready.
+                    </p>
+                  </div>
+
+                  {/* Dynamic Loader converting into Download PDF button */}
+                  {isConverting ? (
+                    <div className="w-full py-3.5 bg-slate-100 text-primary font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2.5 border border-gray-200">
+                      <LuLoader className="text-base animate-spin" />
+                      <span>Preparing Brochure Download...</span>
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => handleOpenBrochure(verifiedDownloadUrl)}
+                      className="w-full py-3.5 bg-primary hover:bg-primary-hover text-white font-bold text-xs uppercase tracking-wider transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      <PiDownloadSimpleBold className="text-lg" />
+                      <span>Download PDF</span>
+                    </button>
+                  )}
+
+                  <p className="text-[11px] text-gray-400">
+                    If your download does not open automatically, click the button above.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       <ContactUs />
     </>

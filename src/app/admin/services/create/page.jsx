@@ -12,6 +12,8 @@ import {
   LuSearch,
   LuLayers3,
   LuLoader,
+  LuFileText,
+  LuExternalLink,
 } from "react-icons/lu";
 
 import { PRESET_ICONS, renderIconById } from "@/lib/maritimeIcons";
@@ -52,6 +54,7 @@ export default function CreateServicePage() {
   const [longDesc, setLongDesc] = useState("");
   const [deliverablesText, setDeliverablesText] = useState("");
   const [promiseText, setPromiseText] = useState("");
+  const [brochureUrl, setBrochureUrl] = useState("");
   const [highlights, setHighlights] = useState(DEFAULT_HIGHLIGHTS);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isFetchingEdit, setIsFetchingEdit] = useState(false);
@@ -97,6 +100,7 @@ export default function CreateServicePage() {
           Array.isArray(data.deliverables) ? data.deliverables.join("\n") : data.deliverables || ""
         );
         setPromiseText(data.promise || "");
+        setBrochureUrl(data.brochureUrl || "");
         setHighlights(
           Array.isArray(data.highlights) && data.highlights.length === 3
             ? data.highlights
@@ -216,6 +220,7 @@ export default function CreateServicePage() {
       highlights,
       deliverables,
       promise: promiseText,
+      brochureUrl: brochureUrl.trim(),
     };
 
     try {
@@ -443,6 +448,38 @@ export default function CreateServicePage() {
                 className="w-full bg-slate-50 border border-gray-200 focus:border-secondary focus:ring-1 focus:ring-secondary outline-none px-4 py-2.5 text-sm transition-all text-gray-900 placeholder-gray-400 font-medium resize-none"
               />
             </div>
+          </div>
+
+          {/* Google Drive / Brochure PDF Link */}
+          <div className="pt-2 border-t border-gray-100">
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="text-xs font-bold text-gray-500 uppercase tracking-widest flex items-center gap-1.5">
+                <LuFileText className="text-primary text-sm" />
+                <span>Google Drive Link / Brochure PDF URL</span>
+                <span className="text-gray-400 font-normal normal-case">(Public PDF link)</span>
+              </label>
+              {brochureUrl && (
+                <a
+                  href={brochureUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs font-bold text-primary hover:underline flex items-center gap-1"
+                >
+                  <LuExternalLink className="text-xs" />
+                  <span>Preview PDF</span>
+                </a>
+              )}
+            </div>
+            <input
+              type="url"
+              value={brochureUrl}
+              onChange={(e) => setBrochureUrl(e.target.value)}
+              placeholder="e.g. https://drive.google.com/file/d/1A2B3C4D5E.../view?usp=sharing"
+              className="w-full bg-slate-50 border border-gray-200 focus:border-secondary focus:ring-1 focus:ring-secondary outline-none px-4 py-2.5 text-sm transition-all text-gray-900 placeholder-gray-400 font-medium"
+            />
+            <p className="text-[11px] text-gray-400 mt-1">
+              Provide a publicly accessible Google Drive or PDF link. This will be linked to the Admin Services Table PDF button and provided for download on the public service page after OTP verification.
+            </p>
           </div>
         </div>
 

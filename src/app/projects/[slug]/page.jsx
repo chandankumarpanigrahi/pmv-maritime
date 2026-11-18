@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import SubBanner from "@/components/Sub Banner/page";
 import SubHeading from "@/design/sub-heading/page";
@@ -199,9 +200,9 @@ export default function ProjectDetailPage() {
           <MdOutlineAnchor className="text-5xl text-gray-300 mx-auto mb-4" />
           <h2 className="font-oswald text-2xl font-bold text-secondary-dark mb-2">Project Not Found</h2>
           <p className="text-gray-500 text-sm mb-6">The project you are looking for does not exist or has been removed.</p>
-          <a href="/projects" className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white font-bold text-sm uppercase tracking-wider hover:bg-primary-hover transition-all">
+          <Link href="/projects" className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white font-bold text-sm uppercase tracking-wider hover:bg-primary-hover transition-all">
             View All Projects
-          </a>
+          </Link>
         </div>
       </>
     );
@@ -239,7 +240,7 @@ export default function ProjectDetailPage() {
                 {project.shortDesc || project.description || ""}
               </p>
             </div>
-            <div className="relative z-5 w-full md:w-5/12 flex flex-col justify-end items-end mt-6 md:mt-0">
+            <div className="hidden relative z-5 w-full md:w-5/12 flex flex-col justify-end items-end mt-6 md:mt-0">
               <div className="w-full md:w-fit">
                 <a
                   href="tel:+971505342726"

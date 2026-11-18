@@ -18,6 +18,7 @@ import {
   LuArrowUpRight,
   LuX,
   LuRefreshCw,
+  LuFileText,
 } from "react-icons/lu";
 
 import { renderIconById } from "@/lib/maritimeIcons";
@@ -225,6 +226,26 @@ export default function AdminServicesPage() {
               <LuArrowUpRight className="text-sm" />
             </Link>
 
+            {/* View Google Drive PDF */}
+            {row.brochureUrl ? (
+              <a
+                href={row.brochureUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-1.5 bg-red-50 hover:bg-primary hover:text-white text-primary border border-red-200 transition-colors cursor-pointer"
+                title="Open Google Drive Brochure PDF (New Tab)"
+              >
+                <LuFileText className="text-sm" />
+              </a>
+            ) : (
+              <span
+                className="p-1.5 bg-slate-100 text-gray-300 border border-gray-200 cursor-not-allowed"
+                title="No Brochure PDF link provided"
+              >
+                <LuFileText className="text-sm" />
+              </span>
+            )}
+
             {activeTab === "active" ? (
               <>
                 {canEdit && (
@@ -415,6 +436,35 @@ export default function AdminServicesPage() {
                 </div>
               </div>
             )}
+
+            {/* Brochure PDF Link */}
+            <div>
+              <label className="text-xs font-bold text-gray-400 uppercase tracking-widest block mb-1">
+                Brochure PDF / Google Drive Link
+              </label>
+              {service.brochureUrl ? (
+                <div className="flex items-center justify-between gap-3 p-3 bg-red-50/60 border border-red-200">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <LuFileText className="text-primary text-base shrink-0" />
+                    <span className="text-xs font-mono text-gray-700 truncate">
+                      {service.brochureUrl}
+                    </span>
+                  </div>
+                  <a
+                    href={service.brochureUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="shrink-0 px-3 py-1 bg-primary hover:bg-primary-hover text-white text-xs font-bold uppercase tracking-wider transition-all"
+                  >
+                    Open PDF
+                  </a>
+                </div>
+              ) : (
+                <p className="text-xs text-gray-400 italic bg-slate-50 p-2.5 border border-gray-200">
+                  No brochure PDF link configured for this service.
+                </p>
+              )}
+            </div>
 
             {service.promise && (
               <div>

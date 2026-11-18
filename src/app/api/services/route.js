@@ -59,7 +59,7 @@ export async function GET(request) {
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { name, category, icon, shortDesc, longDesc, highlights, deliverables, promise } = body;
+    const { name, category, icon, shortDesc, longDesc, highlights, deliverables, promise, brochureUrl } = body;
 
     if (!name?.trim()) {
       return NextResponse.json({ error: "Service Name is required." }, { status: 400 });
@@ -81,6 +81,7 @@ export async function POST(request) {
       highlights: Array.isArray(highlights) ? highlights : [],
       deliverables: Array.isArray(deliverables) ? deliverables : [],
       promise: promise || "",
+      brochureUrl: (brochureUrl || "").trim(),
       archived: false,
       order: nextOrder,
       createdAt: new Date().toISOString(),
@@ -114,7 +115,7 @@ export async function POST(request) {
 export async function PUT(request) {
   try {
     const body = await request.json();
-    const { id, name, category, icon, shortDesc, longDesc, highlights, deliverables, promise } = body;
+    const { id, name, category, icon, shortDesc, longDesc, highlights, deliverables, promise, brochureUrl } = body;
 
     if (!id || !name?.trim()) {
       return NextResponse.json({ error: "ID and Name are required." }, { status: 400 });
@@ -133,6 +134,7 @@ export async function PUT(request) {
       highlights: Array.isArray(highlights) ? highlights : [],
       deliverables: Array.isArray(deliverables) ? deliverables : [],
       promise: promise || "",
+      brochureUrl: (brochureUrl || "").trim(),
       updatedAt: new Date().toISOString(),
     };
 
