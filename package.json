@@ -20,7 +20,7 @@
     "lucide-react": "^1.31.0",
     "mongodb": "^7.5.0",
     "motion": "^13.1.0",
-    "next": "^16.3.4",
+    "next": "^16.4.6",
     "nodemailer": "^10.0.12",
     "react": "19.2.4",
     "react-dom": "19.2.4",
@@ -33,13 +33,13 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "eslint": "^9",
-    "eslint-config-next": "^15.5.29",
+    "eslint-config-next": "^16.4.6",
     "tailwindcss": "^4.3.3",
     "typescript": "^5.9.3"
   },
   "overrides": {
     "braces": "^3.0.3",
-    "glob": "^10.4.6",
+    "glob": "^14.0.6",
     "postcss": "^8.5.18",
     "sharp": "^0.35.0"
   }
